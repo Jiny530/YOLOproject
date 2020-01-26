@@ -6,55 +6,59 @@ var config = {
     disableContextMenu: true,
     scene: {
         preload: preload,
-        create: create
+        create: create,
+        update:update,
     }
 };
 
 var game = new Phaser.Game(config);
 
+var rand_noodle1;
+var rand_noodle2;
+var speed1;
+var speed2;
+
+/*
+var noodle_list=[  //누들 이미지 이름 담은 array
+    'noodle1',
+    'noodle2'
+]*/
+
 function preload ()
 {
-    this.load.spritesheet('balls', 'assets/blackjack/stop.png', { frameWidth: 512, frameHeight: 512 });
+    this.load.image('noodleex', 'assets/store24/라면_까불닭.png');
+    this.load.image('noodleex2', 'assets/store24/라면_육개장.png');
 }
 
 function create ()
 {
-    var graphics = this.add.graphics();
 
-    var color = 0xffff00;
-    var thickness = 2;
-    var alpha = 1;
-    button=this.add.image(300,250,'balls',0);
-    //  Events
+   rand_noodle1=this.add.image(32,100,'noodleex').setOrigin(0);
+   rand_noodle1.setScale(0.3,0.3);
+   speed1 = Phaser.Math.GetSpeed(600, 3);
 
-    var sx = 0;
-    var sy = 0;
-    var draw = false;
+   rand_noodle2=this.add.image(400,250,'noodleex2').setOrigin(0);
+   rand_noodle2.setScale(0.3,0.3);
+   speed2 = Phaser.Math.GetSpeed(-600, 3);
+}
 
-    //  Stop the right-click from triggering the context menu
-    //  You can also set this in the game config
-    this.input.mouse.disableContextMenu();
+/*
+function pick_rand_noodle(){
+    var rand_noodle=this.noodle[];//랜덤으로 이미지 선택
 
-    this.input.on('pointerdown', function (pointer) {
+}*/
 
-        
-        button.visible=false;
-    });
 
-    this.input.on('pointerup', function () {
-
-        button.visible=true;
-
-    });
-
-    this.input.on('pointermove', function (pointer) {
-
-        if (draw && pointer.noButtonDown() === false)
-        {
-            graphics.clear();
-            graphics.lineStyle(thickness, color, alpha);
-            graphics.strokeRect(sx, sy, pointer.x - sx, pointer.y - sy);
-        }
-
-    });
+function update(time,delta)
+{
+    rand_noodle1.x+=speed1*delta;
+    if (rand_noodle1.x >768)
+    {
+        rand_noodle1.x = -150;
+    }
+    rand_noodle2.x+=speed2*delta;
+    if (rand_noodle2.x+150 < 0)
+    {
+        rand_noodle2.x = 768;
+    }
 }
