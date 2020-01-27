@@ -12,8 +12,8 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-var bg_매대위;
-var bg_매대아래;
+var bg_매대오;
+var bg_매대왼;
 var bg_판1;
 var bg_판2;
 var bg_판3;
@@ -47,6 +47,7 @@ function preload ()
     this.load.image('긴판', 'assets/store24/긴판.png');
     this.load.image('오른마무리판', 'assets/store24/오른마무리판.png');
     this.load.image('매대', 'assets/store24/매대.png');
+    this.load.image('매대반전', 'assets/store24/매대반전.png');
 
     this.load.image('편순이', 'assets/store24/편순이.png');
 
@@ -83,10 +84,10 @@ function create ()
     bg_판4=this.add.image(630,480,'오른마무리판').setOrigin(0);
     bg_판4.setScale(1/7,1/7);
 
-    bg_매대위=this.add.image(512,0,'매대').setOrigin(0);
-    bg_매대위.setScale(1/3,1/3);
-    bg_매대아래=this.add.image(0,0,'매대').setOrigin(0);
-    bg_매대아래.setScale(1/3,1/3);
+    bg_매대오=this.add.image(512,64,'매대').setOrigin(0);
+    bg_매대오.setScale(1/3,1/3);
+    bg_매대왼=this.add.image(0,64,'매대반전').setOrigin(0);
+    bg_매대왼.setScale(1/3,1/3);
 
     편순이=this.add.image(280,100,'편순이').setOrigin(0);
     편순이.setScale(1/5,1/5);
@@ -98,11 +99,27 @@ function create ()
     //this.time.events.loop(Phaser.Timer.SECOND*2, createProduct, this); //주기적으로 함수 호출 
 }
 
+
 /*
 function createProduct(){    
     var product=this.add.image(0,480,'과자_홈런볼').setOrigin(0);
     product.setScale(1/7,1/7);
 }*/
+
+function failProduct(){
+    //시간내에 못해서 아웃된 상품 처리코드
+    //destroy
+    //reduceLife()호출
+}
+
+function checkInput(){
+    //키보드 입력과 해당 상품 기대 입력값이 같으면 성공
+    //아니면 실패->생명하나 감소 reduceLife()호출
+}
+
+function reduceLife(){
+    //생명하나감소 
+}
 
 function update(time,delta)
 {
@@ -110,5 +127,8 @@ function update(time,delta)
    if (product.x > 768)
     {
         product.x =-30;
+        //실패->failProduct() 호출
     }
 }
+
+
