@@ -14,6 +14,9 @@ var game = new Phaser.Game(config);
 
 var bg_매대오;
 var bg_매대왼;
+//var 판그룹;  나중에
+
+
 var bg_판1;
 var bg_판2;
 var bg_판3;
@@ -44,8 +47,8 @@ function preload ()
     this.load.image('과자_도리', 'assets/store24/과자_도리.png');
 
 
-    this.load.image('긴판', 'assets/store24/긴판.png');
-    this.load.image('오른마무리판', 'assets/store24/오른마무리판.png');
+    this.load.image('판1', 'assets/store24/판1.png');
+    this.load.image('판2', 'assets/store24/판2.png');
     this.load.image('매대', 'assets/store24/매대.png');
     this.load.image('매대반전', 'assets/store24/매대반전.png');
 
@@ -75,14 +78,16 @@ function create ()
         }
     }
 
-    bg_판1=this.add.image(0,480,'긴판').setOrigin(0);
+    //판그룹=game.add.group();  나중에 무빙효과낼때
+
+    bg_판1=this.add.image(0,430,'판1').setOrigin(0);
     bg_판1.setScale(1/3,1/3);
-    bg_판2=this.add.image(256,480,'오른마무리판').setOrigin(0);
-    bg_판2.setScale(1/7,1/7);
-    bg_판3=this.add.image(384,480,'긴판').setOrigin(0);
+    bg_판2=this.add.image(256,430,'판1').setOrigin(0);
+    bg_판2.setScale(1/3,1/3);
+    bg_판3=this.add.image(384,430,'판1').setOrigin(0);
     bg_판3.setScale(1/3,1/3);
-    bg_판4=this.add.image(630,480,'오른마무리판').setOrigin(0);
-    bg_판4.setScale(1/7,1/7);
+    bg_판4=this.add.image(512,430,'판1').setOrigin(0);
+    bg_판4.setScale(1/3,1/3);
 
     bg_매대오=this.add.image(512,64,'매대').setOrigin(0);
     bg_매대오.setScale(1/3,1/3);
