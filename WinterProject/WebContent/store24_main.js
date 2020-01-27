@@ -20,7 +20,10 @@ var bg_판3;
 var bg_판4;
 
 var 편순이;
+
 var 물건속도=3; //작을수록 빠름
+var speed;
+var product;
 
 function preload ()
 {
@@ -88,18 +91,24 @@ function create ()
     편순이=this.add.image(280,100,'편순이').setOrigin(0);
     편순이.setScale(1/5,1/5);
 
-    var product=this.add.image(0,350,'과자_도리').setOrigin(0);
+    product=this.add.image(0,350,'과자_도리').setOrigin(0);
     product.setScale(1/7,1/7);
-    
-    this.time.events.loop(Phaser.Timer.SECOND*2, createProduct, this); //주기적으로 함수 호출 
+    speed = Phaser.Math.GetSpeed(600, 물건속도);
+
+    //this.time.events.loop(Phaser.Timer.SECOND*2, createProduct, this); //주기적으로 함수 호출 
 }
 
+/*
 function createProduct(){    
     var product=this.add.image(0,480,'과자_홈런볼').setOrigin(0);
     product.setScale(1/7,1/7);
-}
+}*/
 
-function update()
+function update(time,delta)
 {
-   
+   product.x += speed * delta;
+   if (product.x > 768)
+    {
+        product.x =-30;
+    }
 }
