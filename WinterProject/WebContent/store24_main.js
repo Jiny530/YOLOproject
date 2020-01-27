@@ -1,9 +1,7 @@
 var config = {
-    type: Phaser.WEBGL,
-    parent: 'phaser-example',
+    type: Phaser.AUTO,
     width: 768,
     height: 512,
-    disableContextMenu: true,
     scene: {
         preload: preload,
         create: create,
@@ -11,12 +9,8 @@ var config = {
     }
 };
 
-var game = new Phaser.Game(config);
 
-var rand_noodle1;
-var rand_noodle2;
-var speed1;
-var speed2;
+var game = new Phaser.Game(config);
 
 var bg_매대위;
 var bg_매대아래;
@@ -27,12 +21,6 @@ var bg_판4;
 
 var 편순이;
 var 물건속도=3; //작을수록 빠름
-
-/*
-var noodle_list=[  //누들 이미지 이름 담은 array
-    'noodle1',
-    'noodle2'
-]*/
 
 function preload ()
 {
@@ -58,44 +46,58 @@ function preload ()
     this.load.image('매대', 'assets/store24/매대.png');
 
     this.load.image('편순이', 'assets/store24/편순이.png');
+
+    this.load.image('노란타일', 'assets/store24/노란타일.png');
+    this.load.image('초록타일', 'assets/store24/초록타일.png');
 }
+
+
 
 function create ()
 {
-   bg_판1=this.add.image(0,480,'긴판').setOrigin(0);
-   bg_판1.setScale(1/3,1/3);
-   bg_판2=this.add.image(256,480,'오른마무리판').setOrigin(0);
-   bg_판2.setScale(1/7,1/7);
-   bg_판3=this.add.image(384,480,'긴판').setOrigin(0);
-   bg_판3.setScale(1/3,1/3);
-   bg_판4=this.add.image(630,480,'오른마무리판').setOrigin(0);
-   bg_판4.setScale(1/7,1/7);
+    for(var i =0;i<8;i++){
+        if(i<4){
+            for(var j=0;j<12;j++){
+                var tile=this.add.image(j*64,i*64,'노란타일').setOrigin(0);
+                tile.setScale(1/4,1/4);
+            }
+        }
+        else{
+            for(var j=0;j<12;j++){
+                var tile=this.add.image(j*64,i*64,'초록타일').setOrigin(0);
+                tile.setScale(1/4,1/4);
+            }
+        }
+    }
 
-   bg_매대위=this.add.image(512,0,'매대').setOrigin(0);
-   bg_매대위.setScale(1/3,1/3);
-   bg_매대아래=this.add.image(0,0,'매대').setOrigin(0);
-   bg_매대아래.setScale(1/3,1/3);
+    bg_판1=this.add.image(0,480,'긴판').setOrigin(0);
+    bg_판1.setScale(1/3,1/3);
+    bg_판2=this.add.image(256,480,'오른마무리판').setOrigin(0);
+    bg_판2.setScale(1/7,1/7);
+    bg_판3=this.add.image(384,480,'긴판').setOrigin(0);
+    bg_판3.setScale(1/3,1/3);
+    bg_판4=this.add.image(630,480,'오른마무리판').setOrigin(0);
+    bg_판4.setScale(1/7,1/7);
 
-   편순이=this.add.image(280,100,'편순이').setOrigin(0);
-   편순이.setScale(1/5,1/5);
+    bg_매대위=this.add.image(512,0,'매대').setOrigin(0);
+    bg_매대위.setScale(1/3,1/3);
+    bg_매대아래=this.add.image(0,0,'매대').setOrigin(0);
+    bg_매대아래.setScale(1/3,1/3);
 
-   rand_noodle2=this.add.image(0,380,'라면_육개장').setOrigin(0);
-   rand_noodle2.setScale(1/8,1/8);
-   speed2 = Phaser.Math.GetSpeed(600, 물건속도);
+    편순이=this.add.image(280,100,'편순이').setOrigin(0);
+    편순이.setScale(1/5,1/5);
+
+    
+    game.time.events.loop(Phaser.Timer.SECOND*2, createProduct, this); //주기적으로 함수 호출 
 }
 
-/*
-function pick_rand_noodle(){
-    var rand_noodle=this.noodle[];//랜덤으로 이미지 선택
+function createProduct(){    
+    var product=this.add.image(0,480,'과자_홈런볼').setOrigin(0);
+    product.setScale(1/7,1/7);
 
-}*/
+}
 
-
-function update(time,delta)
+function update()
 {
-    rand_noodle2.x+=speed2*delta;
-    if (rand_noodle2.x > 768)
-    {
-        rand_noodle2.x = 0;
-    }
+   
 }
