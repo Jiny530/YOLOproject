@@ -27,6 +27,7 @@ var 편순이;
 var 물건속도=3; //작을수록 빠름
 var speed;
 var life=3;
+var heart;
 
 var products; //group
 var rand_product;//랜덤으로 뽑을 상품
@@ -64,6 +65,7 @@ function preload ()
     this.load.image('매대반전', 'assets/store24/매대반전.png');
 
     this.load.image('편순이', 'assets/store24/편순이.png');
+    this.load.image('생명', 'assets/store24/생명.png');
 
     this.load.image('노란타일', 'assets/store24/노란타일.png');
     this.load.image('초록타일', 'assets/store24/초록타일.png');
@@ -89,6 +91,11 @@ function create ()
         }
     }
 
+    for(var i=0;i<3;i++){
+        heart=this.add.image(i*64,0,'생명').setOrigin(0);
+        heart.setScale(1/10,1/10);
+    }
+    
     //상품그룹화
     products=this.add.group();
     //판그룹=game.add.group();  나중에 무빙효과낼때
@@ -130,14 +137,13 @@ function createProduct(){
 
 //시간내에 못해서 아웃된 상품 처리코드
 function failProduct(){
-    life -=1; //생명하나 감소
+    life -=1;
+    reduceHeart(); // 하트감소함수호출
     if (life == 0){
         //몫숨 다 소모하면 gameover 
         game.destroy();
         console.log("게임오버");
     }
-    //destroy
-    //reduceLife()호출
 }
 
 function checkInput(){
@@ -145,8 +151,8 @@ function checkInput(){
     //아니면 실패->생명하나 감소 reduceLife()호출
 }
 
-function reduceLife(){
-    //생명하나감소 
+function reduceHeart(){
+    //하트이미지변환(흑백으로)
 }
 
 //위치중 제일 오른쪽에 있는 child 받아와서 input 입력값과 
