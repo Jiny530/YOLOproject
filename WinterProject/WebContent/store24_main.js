@@ -34,9 +34,10 @@ var rand_product;//랜덤으로 뽑을 상품
 var timedEvent; //timer event
 
  //상품 리스트
- var productList=["snackList","noodleList"];
+ 
  var snackList=["과자_꼬깔콘","과자_다이제","과자_도리","과자_오징어","과자_초코송이","과자_포카칩","과자_홈런볼"];
  var noodleList=["라면_까불닭","라면_미역국","라면_신라면","라면_오짬","라면_육개장","라면_진라면","라면_참깨라면"];
+ var productList=[snackList,noodleList]; //배열변수자체를 배열의 요소로!
 
 function preload ()
 {
@@ -125,7 +126,6 @@ function createProduct(){
     var temp=this.add.image(-120,340,rand_product).setOrigin(0);
     temp.setScale(1/7,1/7);
     products.add(temp,{addToScene:true}); //group에 넣고 displaylist에 넣기 true 처리
-    console.log("상품생성완료");
 }
 
 //시간내에 못해서 아웃된 상품 처리코드
@@ -154,14 +154,12 @@ function reduceLife(){
 function update(time,delta)
 {
     var childs=products.getChildren();
-    //console.log(childs);
-    //console.log(childs.length);
+    
     for (var i=0; i<childs.length; i++){
-        //console.log(childs[i].x);
         childs[i].x += speed*delta;
         if(childs[i].x > 786){
             childs[i].destroy();
-            console.log("아웃");
+            //console.log("아웃");
             failProduct();
         }
 
@@ -174,14 +172,14 @@ function update(time,delta)
 
 function pickProductList(){
     var tempindex=getRandomInt(0,productList.length); //상품종류선택 index이용
-    console.log(productList[tempindex]);
+    //console.log(productList[tempindex]);
     return productList[tempindex]; //고른 list이름 반환
 }
 function randomProduct(listname){
-    var tempindex=getRandomInt(0,this.listname.length);
-    console.log(tempindex);
-    console.log(this.listname[tempindex]);
-    return this.listname[tempindex]; //특정제품이름반환
+    var tempindex=getRandomInt(0,listname.length);
+    //console.log(tempindex);
+    //console.log(listname[tempindex]);
+    return listname[tempindex]; //특정제품이름반환
 }
 function getRandomInt(min, max) {
     min = Math.ceil(min);
