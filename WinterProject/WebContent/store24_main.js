@@ -26,7 +26,10 @@ var 편순이;
 
 var 물건속도=3; //작을수록 빠름
 var speed;
-var product;
+
+var products; //group
+
+var timedEvent; //timer event
 
 function preload ()
 {
@@ -78,6 +81,8 @@ function create ()
         }
     }
 
+    //상품그룹화
+    products=this.add.group();
     //판그룹=game.add.group();  나중에 무빙효과낼때
 
     bg_판1=this.add.image(0,430,'판1').setOrigin(0);
@@ -97,19 +102,20 @@ function create ()
     편순이=this.add.image(280,100,'편순이').setOrigin(0);
     편순이.setScale(1/5,1/5);
 
-    product=this.add.image(0,350,'과자_도리').setOrigin(0);
-    product.setScale(1/7,1/7);
+    //주기적으로 상품 생성하는 함수 호출
+    timedEvent=this.time.addEvent({ delay: 1000, callback: createProduct, callbackScope: this, loop: true }); 
     speed = Phaser.Math.GetSpeed(600, 물건속도);
-
-    //this.time.events.loop(Phaser.Timer.SECOND*2, createProduct, this); //주기적으로 함수 호출 
 }
 
 
-/*
-function createProduct(){    
-    var product=this.add.image(0,480,'과자_홈런볼').setOrigin(0);
-    product.setScale(1/7,1/7);
-}*/
+//상품child생성
+function createProduct(){
+    var temp=this.add.image(0,430,'과자_홈런볼').setOrigin(0);
+    temp.setScale(1/7,1/7);
+    products.add(temp,{addToScene:true}); //group에 넣고 displaylist에 넣기 true 처리
+    console.log("상품생성완료");
+}
+
 
 function failProduct(){
     //시간내에 못해서 아웃된 상품 처리코드
@@ -126,14 +132,22 @@ function reduceLife(){
     //생명하나감소 
 }
 
+//위치중 제일 오른쪽에 있는 child 받아와서 input 입력값과 
+
 function update(time,delta)
 {
-   product.x += speed * delta;
-   if (product.x > 768)
-    {
-        product.x =-30;
-        //실패->failProduct() 호출
+    var childs=products.getChildren();
+    //console.log(childs);
+    console.log(childs.length);
+    for (var i=0; i<childs.length; i++){
+        console.log(childs[i].x);
+        childs[i].x += speed*delta;
+        if(childs[i].x > 786){
+            childs[i].destroy();
+        }
+
     }
+
+
+    
 }
-
-
