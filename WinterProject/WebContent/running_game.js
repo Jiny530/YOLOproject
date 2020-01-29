@@ -16,10 +16,10 @@ window.onload = function() {
     // object containing configuration options
     let gameConfig = {
         type: Phaser.AUTO,
-        width: 1334,
-        height: 750,
+        width: 768,
+        height: 512,
         scene: playGame,
-        backgroundColor: 0x444444,
+        backgroundColor: 0x000000,
 
         // physics settings
         physics: {
@@ -28,8 +28,8 @@ window.onload = function() {
     }
     game = new Phaser.Game(gameConfig);
     window.focus();
-    resize();
-    window.addEventListener("resize", resize, false);
+    //resize();
+    //window.addEventListener("resize", resize, false);
 }
 
 // playGame scene
