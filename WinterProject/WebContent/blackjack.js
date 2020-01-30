@@ -69,31 +69,35 @@ function create ()
 
 }
 
+function random_card(){
+    rand = Math.floor(Math.random() * (11))+1;
+    var cardname;
+    if(rand==10)
+        cardname='cardk'
+    else if(rand==11)
+        cardname='carda'
+    else
+        cardname='card'+rand
+    cardlocate+=100;
+    
+    // 카드의 합 계산
+    if(rand==11){
+        sum1+=1
+        sum2+=11
+    }else{
+        sum1+=rand
+        sum2+=rand
+    }
+    return cardname;
+}
+
 function update(){
    var rand;
    if(gameState==GAME_START){
         if(click_go){  // 클릭 시 카드 추가
-            rand = Math.floor(Math.random() * (11))+1;
-            var cardname;
-            if(rand==10)
-                cardname='cardk'
-            else if(rand==11)
-                cardname='carda'
-            else
-                cardname='card'+rand
-
-            cardlocate+=100;
+            var cardname=random_card();
             card=this.add.image(cardlocate,400,cardname,0);
-            card.scale=0.2;
-
-            // 카드의 합 계산
-            if(rand==11){
-                sum1+=1
-                sum2+=11
-            }else{
-                sum1+=rand
-                sum2+=rand
-            }
+            card.scale=0.2
             sum.setText("합계1: "+sum1+" 합계2: "+sum2,{fill:'#fff'})
 
             click_go=false;
@@ -112,18 +116,9 @@ function update(){
             // 딜러 카드 오픈
             cardlocate=0
             while(dealerSum1<=11){
-                rand = Math.floor(Math.random() * (11))+1;
-                var cardname;
-                if(rand==10)
-                    cardname='cardk'
-                else if(rand==11)
-                    cardname='carda'
-                else
-                    cardname='card'+rand
-    
-                cardlocate+=100;
-                card=this.add.image(cardlocate,200,cardname,0);
-                card.scale=0.2;
+                var cardname=random_card();
+                card=this.add.image(cardlocate,400,cardname,0);
+                card.scale=0.2
     
                 // 카드의 합 계산
                 if(rand==11){
@@ -137,18 +132,9 @@ function update(){
             while(dealerSum1<=21){
                 rand = Math.floor(Math.random())
                 if(rand==1){
-                    rand = Math.floor(Math.random() * (11))+1;
-                    var cardname;
-                    if(rand==10)
-                        cardname='cardk'
-                    else if(rand==11)
-                        cardname='carda'
-                    else
-                        cardname='card'+rand
-        
-                    cardlocate+=100;
+                    var cardname=random_card();
                     card=this.add.image(cardlocate,400,cardname,0);
-                    card.scale=0.2;
+                    card.scale=0.2
         
                     // 카드의 합 계산
                     if(rand==11){
@@ -176,6 +162,7 @@ function update(){
     }
     if(gameState==TURN_STOP){
         if(click_go){
+            sum1=sum2=dealerSum1=dealerSum2=cardlocate=0;
             click_go=false
             gameState=GAME_START
             sum.setText("합계1: "+sum1+" 합계2: "+sum2,{fill:'#fff'})
