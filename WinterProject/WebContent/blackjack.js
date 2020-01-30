@@ -15,6 +15,8 @@ var config = {
 var game = new Phaser.Game(config);
 var sum1=0
 var sum2=0
+var dealerSum1=0
+var dealerSum2=0
 var sum
 function preload ()
 {
@@ -107,7 +109,68 @@ function update(){
         
         if(click_stop){
             gameState=TURN_STOP
-            sum.setText("턴 종료")
+            // 딜러 카드 오픈
+            cardlocate=0
+            while(dealerSum1<=11){
+                rand = Math.floor(Math.random() * (11))+1;
+                var cardname;
+                if(rand==10)
+                    cardname='cardk'
+                else if(rand==11)
+                    cardname='carda'
+                else
+                    cardname='card'+rand
+    
+                cardlocate+=100;
+                card=this.add.image(cardlocate,200,cardname,0);
+                card.scale=0.2;
+    
+                // 카드의 합 계산
+                if(rand==11){
+                    dealerSum1+=1
+                    dealerSum2+=11
+                }else{
+                    dealerSum1+=rand
+                    dealerSum2+=rand
+                }
+            }
+            while(dealerSum1<=21){
+                rand = Math.floor(Math.random())
+                if(rand==1){
+                    rand = Math.floor(Math.random() * (11))+1;
+                    var cardname;
+                    if(rand==10)
+                        cardname='cardk'
+                    else if(rand==11)
+                        cardname='carda'
+                    else
+                        cardname='card'+rand
+        
+                    cardlocate+=100;
+                    card=this.add.image(cardlocate,400,cardname,0);
+                    card.scale=0.2;
+        
+                    // 카드의 합 계산
+                    if(rand==11){
+                        dealerSum1+=1
+                        dealerSum2+=11
+                    }else{
+                        dealerSum1+=rand
+                        dealerSum2+=rand
+                    }
+                }
+                else{
+                    break;
+                }
+            }
+            if(sum2<=21)
+                sum1=sum2
+            if(dealerSum2<=21)
+                dealerSum1=dealerSum2
+            if(sum1>dealerSum1)
+                sum.setText("플레이어 승리")
+            else
+                sum.setText("딜러 승리")
             click_stop=false
         }
     }
