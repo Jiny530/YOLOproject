@@ -16,6 +16,7 @@ var bg_매대오;
 var bg_매대왼;
 //var 판그룹;  나중에
 
+var music;
 
 var bg_판1;
 var bg_판2;
@@ -26,20 +27,30 @@ var 편순이;
 
 var 물건속도=3; //작을수록 빠름
 var speed;
-var life=3;
+var life=3;  //생명갯수변수
+var hearts; //이미지그룹
+var diehearts;
+var 점수항목; //score 이미지
+var score=0; //실제점수
+var scoreText; //점수쓸공간
 
 var products; //group
 var rand_product;//랜덤으로 뽑을 상품
 
 var timedEvent; //timer event
+var inputKey; //키보드 입력
 
  //상품 리스트
- var productList=["snackList","noodleList"];
+ 
  var snackList=["과자_꼬깔콘","과자_다이제","과자_도리","과자_오징어","과자_초코송이","과자_포카칩","과자_홈런볼"];
  var noodleList=["라면_까불닭","라면_미역국","라면_신라면","라면_오짬","라면_육개장","라면_진라면","라면_참깨라면"];
+ var productList=[snackList,noodleList]; //배열변수자체를 배열의 요소로!
 
 function preload ()
 {
+
+    this.load.audio('store24_bgm','assets/music/store24_bgm(Chibi Ninja).mp3')
+    
     this.load.image('라면_까불닭', 'assets/store24/라면_까불닭.png');
     this.load.image('라면_육개장', 'assets/store24/라면_육개장.png');
     this.load.image('라면_미역국', 'assets/store24/라면_미역국.png');
@@ -63,15 +74,24 @@ function preload ()
     this.load.image('매대반전', 'assets/store24/매대반전.png');
 
     this.load.image('편순이', 'assets/store24/편순이.png');
+    this.load.image('생명컬러', 'assets/store24/생명컬러.png');
+    this.load.image('생명흑백', 'assets/store24/생명흑백.png');
 
     this.load.image('노란타일', 'assets/store24/노란타일.png');
     this.load.image('초록타일', 'assets/store24/초록타일.png');
+
+    this.load.image('점수항목', 'assets/store24/scoretext.png');
 }
 
 
 
 function create ()
 {   
+    music = this.sound.add('store24_bgm');
+    music.loop=true;
+    this.sound.mute=false;
+    music.play();
+
     //배경타일설정
     for(var i =0;i<8;i++){
         if(i<4){
@@ -88,32 +108,41 @@ function create ()
         }
     }
 
+    //생명그룹
+    hearts=this.add.group();
+    for(var i=0;i<3;i++){
+        var temp=this.add.image(i*64,0,'생명컬러').setOrigin(0).setScale(1/10,1/10);
+        hearts.add(temp,{addToScene:true});  //왼쪽부터 0,1,2 heart
+    }
+
+    diehearts=this.add.group();
+    for(var i=0;i<3;i++){
+        var temp=this.add.image(i*64,-100,'생명흑백').setOrigin(0).setScale(1/10,1/10);
+        diehearts.add(temp,{addToScene:true});  //왼쪽부터 0,1,2 heart
+    }
+    
     //상품그룹화
     products=this.add.group();
     //판그룹=game.add.group();  나중에 무빙효과낼때
 
-    bg_판1=this.add.image(0,430,'판1').setOrigin(0);
-    bg_판1.setScale(1/3,1/3);
-    bg_판2=this.add.image(256,430,'판1').setOrigin(0);
-    bg_판2.setScale(1/3,1/3);
-    bg_판3=this.add.image(384,430,'판1').setOrigin(0);
-    bg_판3.setScale(1/3,1/3);
-    bg_판4=this.add.image(512,430,'판1').setOrigin(0);
-    bg_판4.setScale(1/3,1/3);
+    bg_판1=this.add.image(0,430,'판1').setOrigin(0).setScale(1/3,1/3);
+    bg_판2=this.add.image(256,430,'판1').setOrigin(0).setScale(1/3,1/3);
+    bg_판3=this.add.image(384,430,'판1').setOrigin(0).setScale(1/3,1/3);
+    bg_판4=this.add.image(512,430,'판1').setOrigin(0).setScale(1/3,1/3);
 
-    bg_매대오=this.add.image(512,64,'매대').setOrigin(0);
-    bg_매대오.setScale(1/3,1/3);
-    bg_매대왼=this.add.image(0,64,'매대반전').setOrigin(0);
-    bg_매대왼.setScale(1/3,1/3);
+    bg_매대오=this.add.image(512,64,'매대').setOrigin(0).setScale(1/3,1/3);
+    bg_매대왼=this.add.image(0,64,'매대반전').setOrigin(0).setScale(1/3,1/3);
 
-    편순이=this.add.image(280,100,'편순이').setOrigin(0);
-    편순이.setScale(1/5,1/5);
+    편순이=this.add.image(280,100,'편순이').setOrigin(0).setScale(1/5,1/5);
+
+    점수항목=this.add.image(8*64,0,'점수항목').setOrigin(0).setScale(1/4,1/4);
+    scoreText = this.add.text(10*64, 13, '0', { fontSize: '40px', fill: '#000' });
 
     //주기적으로 상품 생성하는 함수 호출
     timedEvent=this.time.addEvent({ delay: 1000, callback: createProduct, callbackScope: this, loop: true }); 
     speed = Phaser.Math.GetSpeed(600, 물건속도);
 
-
+    //키보드
 }
 
 
@@ -125,19 +154,17 @@ function createProduct(){
     var temp=this.add.image(-120,340,rand_product).setOrigin(0);
     temp.setScale(1/7,1/7);
     products.add(temp,{addToScene:true}); //group에 넣고 displaylist에 넣기 true 처리
-    console.log("상품생성완료");
 }
 
 //시간내에 못해서 아웃된 상품 처리코드
 function failProduct(){
-    life -=1; //생명하나 감소
+    life -=1;
+    reduceHeart(); // 하트감소함수호출
     if (life == 0){
         //몫숨 다 소모하면 gameover 
         game.destroy();
         console.log("게임오버");
     }
-    //destroy
-    //reduceLife()호출
 }
 
 function checkInput(){
@@ -145,8 +172,10 @@ function checkInput(){
     //아니면 실패->생명하나 감소 reduceLife()호출
 }
 
-function reduceLife(){
-    //생명하나감소 
+//하트이미지변환(흑백으로)
+function reduceHeart(){
+    var dieheartchilds=diehearts.getChildren();
+    dieheartchilds[life].setY(0);
 }
 
 //위치중 제일 오른쪽에 있는 child 받아와서 input 입력값과 
@@ -154,34 +183,35 @@ function reduceLife(){
 function update(time,delta)
 {
     var childs=products.getChildren();
-    //console.log(childs);
-    //console.log(childs.length);
+    
     for (var i=0; i<childs.length; i++){
-        //console.log(childs[i].x);
         childs[i].x += speed*delta;
         if(childs[i].x > 786){
             childs[i].destroy();
-            console.log("아웃");
-            failProduct();
+            //console.log("아웃");
+            //failProduct();
+            score+=10;
+            scoreText.setText(score);
         }
 
     }
 
-
+    //키보드 인풋
+    
     
 }
 
 
 function pickProductList(){
     var tempindex=getRandomInt(0,productList.length); //상품종류선택 index이용
-    console.log(productList[tempindex]);
+    //console.log(productList[tempindex]);
     return productList[tempindex]; //고른 list이름 반환
 }
 function randomProduct(listname){
-    var tempindex=getRandomInt(0,this.listname.length);
-    console.log(tempindex);
-    console.log(this.listname[tempindex]);
-    return this.listname[tempindex]; //특정제품이름반환
+    var tempindex=getRandomInt(0,listname.length);
+    //console.log(tempindex);
+    //console.log(listname[tempindex]);
+    return listname[tempindex]; //특정제품이름반환
 }
 function getRandomInt(min, max) {
     min = Math.ceil(min);
