@@ -52,14 +52,12 @@ function preload ()
     this.load.image('background', 'assets/running/background4.png');
     this.load.image('bg', 'assets/running/bg5.png');
     this.load.image('ground2','assets/running/ground4.png');
-    //this.load.image('hi','assets/running/limit2.png');
     this.load.image('heart', 'assets/running/heart.png');
     //this.load.image('banana', 'assets/running/banana.png');
     //this.load.image('rock', 'assets/running/rock.png');
-    //this.load.image('cloud', 'assets/running/cloud.png');
     //this.load.image('star', 'assets/running/star.png');
     this.load.spritesheet('dude', 'assets/running/dude.png', { frameWidth: 32, frameHeight: 48 });
-    //this.load.image('ground', 'assets/running/platform.png');
+    this.load.spritesheet('character', 'assets/running/character.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('cat', 'assets/running/cat.png');
     this.load.image('cloud', 'assets/running/cloud3.png');
     this.load.image('tree', 'assets/running/tree.png');
@@ -69,29 +67,25 @@ function preload ()
     this.load.image('tree4', 'assets/running/tree4.png');
     this.load.image('grass', 'assets/running/grass.png');
     this.load.image('bench', 'assets/running/bench2.png');
+    this.load.image('bench', 'assets/running/bench2.png');
+    this.load.image('timebar', 'assets/running/timebar2.png');
     
  }
         
 function create ()
 {
-    platforms = this.physics.add.staticGroup();
+    platforms = this.physics.add.staticGroup(); //캐릭터가 뛰는 바닥 static
        
-    this.add.image(384,256,'background');
-    this.add.image(384,256,'bg');
-    //this.add.image(384, 256, 'hi');
-    platforms.create(384, 426, 'ground2');
-          
-    //this.add.image(384,256,'heart');
-    //this.add.image(384,256,'star');
-   
-    this.add.image(663,20,'heart');
+    this.add.image(384,256,'background'); //검정 바탕
+    this.add.image(384,256,'bg'); //하늘색 바탕
+    platforms.create(384, 426, 'ground2'); //캐릭터가 뛰는 바닥
+    speed = Phaser.Math.GetSpeed(600, movingspeed); //움직이는 애들 스피드
+    //  The score
+    scoreText = this.add.text(678, 20, ': 0', { fontSize: '25px', fill: '#fff' });
+    this.add.image(663,30,'heart'); //획득한 하트
+    timebar=this.add.image(485,30,'timebar'); //타임바
 
-    //move=this.add.group();
-    //move.add(this.add.image(200,160,'cloud'));
-    //move.add(this.add.image(360,200,'cloud'));
-    //move.add(this.add.image(580,180,'cloud'));
-    //move.add(this.add.image(250,312,'tree'));
-    //move.add(this.add.image(500,312,'tree2'));
+    /* 뒤에서 움직이는 애들 */
     cloud1=this.add.image(200,160,'cloud');
     cloud2=this.add.image(360,200,'cloud');
     cloud3=this.add.image(580,180,'cloud');
@@ -110,13 +104,13 @@ function create ()
     //this.add.image(200,300,'cat');
 
     player = this.physics.add.sprite(100, 300, 'dude');
+
+    /* 움직이는 애들 검정색 뒤로 사라지게 검정색 하나 더 놔둠*/
     limit=this.physics.add.staticGroup();
     limit.create(35, 256, 'limitbg');
     limit.create(740, 256, 'limitbg');
-    
 
-
-    //limit2= this.physics.add.sprite(384, 256, 'dude');
+    character=this.physics.add.sprite(100, 300, 'character');
         
     //  Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
@@ -147,13 +141,12 @@ function create ()
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
     this.physics.add.collider(player, platforms);
+    this.physics.add.collider(character, platforms);
     //this.physics.add.collider(limit, cloud1);
     //this.physics.add.collider(player, limit2);
             
         
-    //  The score
-    scoreText = this.add.text(678, 10, ': 0', { fontSize: '25px', fill: '#fff' });
-    speed = Phaser.Math.GetSpeed(600, movingspeed);
+    
 }
         
 function update (time, delta)
