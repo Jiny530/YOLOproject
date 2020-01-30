@@ -16,7 +16,6 @@ var gameOver = false;
 var pizza;
 var score = 0;
 var scoreText;
-var si = 0;
 var pizzaflag = 0;
 var domino;
 var mr;
@@ -31,8 +30,10 @@ var mrGroup;
 var hetGroup;
 var schoolGroup;
 var timerEvent;
-var timeBar;
 var graphics;
+var arrowdelay;
+var si=0; //화살표 패턴 점수 인덱스
+var ai=0; //화살표 생성시 활성화된 화살표 인덱스
 
 function preload() {
     this.load.image('Domino', 'assets/pizza/Domino.png');
@@ -87,6 +88,7 @@ function create() {
     childMaking(hutGroup, hutSequence);
     childMaking(schoolGroup, schoolSequence);
 
+    
     this.input.keyboard.on('keyup_UP', function (event) {
         if (!gameOver)
         {
@@ -171,21 +173,21 @@ function update() {
         return;
     }
 
-    if (pizzaflag == 0) {
+    if (pizzaflag == 0 ) {
         pizzaflag = 1;
         pizza = Phaser.Math.Between(1, 4);
+        
         if (pizza == 1) {
-            setting(domino, dominoGroup);
+            arrowdelay = this.time.addEvent({delay: 100, callback: onEvent, callbackScope: this, repeat: 10});
         }
         else if (pizza == 2) {
-            mr.visible = true;
-            setting(mr, mrGroup);
+            arrowdelay = this.time.addEvent({delay: 100, callback: onEvent, callbackScope: this, repeat: 10});
         }
         else if (pizza == 3) {
-            setting(hut, hutGroup);
+            arrowdelay = this.time.addEvent({delay: 100, callback : onEvent, callbackScope: this, repeat: 10});
         }
         else if (pizza == 4) {
-            setting(school, schoolGroup);
+            arrowdelay = this.time.addEvent({delay: 100, callback: onEvent, callbackScope: this, repeat: 10});
         }
     }
     
@@ -200,17 +202,192 @@ function update() {
     }
 }
 
+function onEvent(){
+    if (pizza==1){
+        setting(domino,dominoGroup);
+    }
+    else if (pizza==2){
+        setting(domino,dominoGroup);   
+    }
+    else if (pizza==3){
+        setting(domino,dominoGroup);   
+    }
+    else if (pizza==4){
+        setting(domino,dominoGroup);   
+    }
+}
+
 function setting(pizza, group) {
     pizza.visible = true;
+    var arrowflag=0;
     group.children.iterate(function (child) {
-        child.visible = true;
+        console.log(child.visible);
+        if (child.visible == false && arrowflag==0 )
+        {
+            child.visible = true;
+            arrowflag=1;
+            ai+=1;
+        }
+        if (ai==10) //화살표 모두 활성화 시켰으면 인덱스 원상복귀
+        {
+            ai=0;
+        }
     });
+
+
 }
 function resetting(pizza, group) {
     pizza.visible = false;
     group.children.iterate(function (child) {
         child.visible = false;
     });
+}
+
+
+
+function up_right(pizza, group, sequence) {
+    var now = 0;
+    var flag = 0;
+    group.children.iterate(function (child) {
+
+        //현재 자식과 같은지
+        if (flag == 0 && now == si) {
+            if (sequence[now] == 1) //위쪽화살표이면
+            {
+                child.visible = false;
+                si++;
+                score += 10;
+                flag = 1;
+                if (now == 9) {
+                    score += 100;
+                    si = 0;
+                    pizzaflag = 0;
+                    arrowflag = 0;
+                    pizza.visible = false;
+                }
+                console.log(score);
+            }
+            else {
+                //child.tint = 0xff0000;
+                resetting(pizza, group);
+                si = 0;
+                score -= 50;
+                pizzaflag = 0;
+                arrowflag = 0;
+                console.log(score);
+            }
+        }
+        now++; //현재 판단해야하는 자식이 아니면 다음자식으로
+    });
+
+}
+function down_right(pizza, group, sequence) {
+    var now = 0;
+    var flag = 0;
+    group.children.iterate(function (child) {
+
+        //현재 자식과 같은지
+        if (flag == 0 && now == si) {
+            if (sequence[now] == 2) //위쪽화살표이면
+            {
+                child.visible = false;
+                si++;
+                score += 10;
+                flag = 1;
+                if (now == 9) {
+                    score += 100;
+                    si = 0;
+                    pizzaflag = 0;
+                    arrowflag = 0;
+                    pizza.visible = false;
+                }
+                console.log(score);
+            }
+            else {
+                //child.tint = 0xff0000;
+                resetting(pizza, group);
+                si = 0;
+                score -= 50;
+                pizzaflag = 0;
+                arrowflag = 0;
+                console.log(score);
+            }
+        }
+        now++; //현재 판단해야하는 자식이 아니면 다음자식으로
+    });
+
+}
+function left_right(pizza, group, sequence) {
+    var now = 0;
+    var flag = 0;
+    group.children.iterate(function (child) {
+
+        //현재 자식과 같은지
+        if (flag == 0 && now == si) {
+            if (sequence[now] == 3) //위쪽화살표이면
+            {
+                child.visible = false;
+                si++;
+                score += 10;
+                flag = 1;
+                if (now == 9) {
+                    score += 100;
+                    si = 0;
+                    pizzaflag = 0;
+                    arrowflag = 0;
+                    pizza.visible = false;
+                }
+                console.log(score);
+            }
+            else {
+                //child.tint = 0xff0000;
+                resetting(pizza, group);
+                si = 0;
+                score -= 50;
+                pizzaflag = 0;
+                arrowflag = 0;
+                console.log(score);
+            }
+        }
+        now++; //현재 판단해야하는 자식이 아니면 다음자식으로
+    });
+
+}
+function right_right(pizza, group, sequence) {
+    var now = 0;
+    var flag = 0;
+    group.children.iterate(function (child) {
+
+        //현재 자식과 같은지
+        if (flag == 0 && now == si) {
+            if (sequence[now] == 4) //위쪽화살표이면
+            {
+                child.visible = false;
+                si++;
+                score += 10;
+                flag = 1;
+                if (now == 9) {
+                    score += 100;
+                    si = 0;
+                    pizzaflag = 0;
+                    arrowflag = 0;
+                    pizza.visible = false;
+                }
+                console.log(score);
+            }
+            else {
+                //child.tint = 0xff0000;
+                resetting(pizza, group);
+                si = 0;
+                score -= 50;
+                pizzaflag = 0;
+                arrowflag = 0;
+                console.log(score);
+            }
+        }
+        now++; //현재 판단해야하는 자식이 아니면 다음자식으로
+    });
+
 }
 
 function childMaking(group, sequence) {
@@ -241,141 +418,4 @@ function childMaking(group, sequence) {
         child.visible = false;
         i++;
     });
-}
-
-function up_right(pizza, group, sequence) {
-    var now = 0;
-    var flag = 0;
-    group.children.iterate(function (child) {
-
-        //현재 자식과 같은지
-        if (flag == 0 && now == si) {
-            if (sequence[now] == 1) //위쪽화살표이면
-            {
-                child.visible = false;
-                si++;
-                score += 10;
-                flag = 1;
-                if (now == 9) {
-                    score += 100;
-                    si = 0;
-                    pizzaflag = 0;
-                    pizza.visible = false;
-                }
-                console.log(score);
-            }
-            else {
-                //child.tint = 0xff0000;
-                resetting(pizza, group);
-                si = 0;
-                score -= 50;
-                pizzaflag = 0;
-                console.log(score);
-            }
-        }
-        now++; //현재 판단해야하는 자식이 아니면 다음자식으로
-    });
-
-}
-function down_right(pizza, group, sequence) {
-    var now = 0;
-    var flag = 0;
-    group.children.iterate(function (child) {
-
-        //현재 자식과 같은지
-        if (flag == 0 && now == si) {
-            if (sequence[now] == 2) //위쪽화살표이면
-            {
-                child.visible = false;
-                si++;
-                score += 10;
-                flag = 1;
-                if (now == 9) {
-                    score += 100;
-                    si = 0;
-                    pizzaflag = 0;
-                    pizza.visible = false;
-                }
-                console.log(score);
-            }
-            else {
-                //child.tint = 0xff0000;
-                resetting(pizza, group);
-                si = 0;
-                score -= 50;
-                pizzaflag = 0;
-                console.log(score);
-            }
-        }
-        now++; //현재 판단해야하는 자식이 아니면 다음자식으로
-    });
-
-}
-function left_right(pizza, group, sequence) {
-    var now = 0;
-    var flag = 0;
-    group.children.iterate(function (child) {
-
-        //현재 자식과 같은지
-        if (flag == 0 && now == si) {
-            if (sequence[now] == 3) //위쪽화살표이면
-            {
-                child.visible = false;
-                si++;
-                score += 10;
-                flag = 1;
-                if (now == 9) {
-                    score += 100;
-                    si = 0;
-                    pizzaflag = 0;
-                    pizza.visible = false;
-                }
-                console.log(score);
-            }
-            else {
-                //child.tint = 0xff0000;
-                resetting(pizza, group);
-                si = 0;
-                score -= 50;
-                pizzaflag = 0;
-                console.log(score);
-            }
-        }
-        now++; //현재 판단해야하는 자식이 아니면 다음자식으로
-    });
-
-}
-function right_right(pizza, group, sequence) {
-    var now = 0;
-    var flag = 0;
-    group.children.iterate(function (child) {
-
-        //현재 자식과 같은지
-        if (flag == 0 && now == si) {
-            if (sequence[now] == 4) //위쪽화살표이면
-            {
-                child.visible = false;
-                si++;
-                score += 10;
-                flag = 1;
-                if (now == 9) {
-                    score += 100;
-                    si = 0;
-                    pizzaflag = 0;
-                    pizza.visible = false;
-                }
-                console.log(score);
-            }
-            else {
-                //child.tint = 0xff0000;
-                resetting(pizza, group);
-                si = 0;
-                score -= 50;
-                pizzaflag = 0;
-                console.log(score);
-            }
-        }
-        now++; //현재 판단해야하는 자식이 아니면 다음자식으로
-    });
-
 }
