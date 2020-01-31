@@ -14,6 +14,7 @@ var game = new Phaser.Game(config);
 
 var bg_매대오;
 var bg_매대왼;
+var bg_음료매대;
 //var 판그룹;  나중에
 
 var music;
@@ -45,7 +46,9 @@ var timedEvent; //timer event
  
 var snackList=["과자_꼬깔콘","과자_다이제","과자_도리","과자_오징어","과자_초코송이","과자_포카칩","과자_홈런볼"];
 var noodleList=["라면_까불닭","라면_미역국","라면_신라면","라면_오짬","라면_육개장","라면_진라면","라면_참깨라면"];
-var productList=[snackList,noodleList]; //배열변수자체를 배열의 요소로!
+var drinkList=["음료_데미사과","음료_데미오렌지","음료_데자와","음료_사이다","음료_콜라","음료_포카리","음료_핫6"];
+var noList=["기타_갈고양이","기타_강아지","기타_검고양이","기타_쓰레기봉지"];
+var productList=[snackList,noodleList,drinkList,noList]; //배열변수자체를 배열의 요소로!
 
 var inputList=[]; //랜덤상품고를때마다 눌러야할 키 넣기
 
@@ -70,11 +73,24 @@ function preload ()
     this.load.image('과자_다이제', 'assets/store24/과자_다이제.png');
     this.load.image('과자_도리', 'assets/store24/과자_도리.png');
 
+    this.load.image('음료_데미사과', 'assets/store24/음료_데미사과.png');
+    this.load.image('음료_데미오렌지', 'assets/store24/음료_데미오렌지.png');
+    this.load.image('음료_데자와', 'assets/store24/음료_데자와.png');
+    this.load.image('음료_사이다', 'assets/store24/음료_사이다.png');
+    this.load.image('음료_콜라', 'assets/store24/음료_콜라.png');
+    this.load.image('음료_포카리', 'assets/store24/음료_포카리.png');
+    this.load.image('음료_핫6', 'assets/store24/음료_핫6.png');
+
+    this.load.image('기타_갈고양이', 'assets/store24/기타_갈고양이.png');
+    this.load.image('기타_검고양이', 'assets/store24/기타_검고양이.png');
+    this.load.image('기타_강아지', 'assets/store24/기타_강아지.png');
+    this.load.image('기타_쓰레기봉지', 'assets/store24/기타_쓰레기봉지.png');
 
     this.load.image('판1', 'assets/store24/판1.png');
     this.load.image('판2', 'assets/store24/판2.png');
     this.load.image('매대', 'assets/store24/매대.png');
     this.load.image('매대반전', 'assets/store24/매대반전.png');
+    this.load.image('음료매대', 'assets/store24/음료판매대.png');
 
     this.load.image('편순이', 'assets/store24/편순이.png');
     this.load.image('생명컬러', 'assets/store24/생명컬러.png');
@@ -134,6 +150,7 @@ function create ()
     bg_판4=this.add.image(512,430,'판1').setOrigin(0).setScale(1/3,1/3);
 
     bg_매대오=this.add.image(512,64,'매대').setOrigin(0).setScale(1/3,1/3);
+    bg_음료매대=this.add.image(200,20,'음료매대').setOrigin(0).setScale(1/3,1/3);
     bg_매대왼=this.add.image(0,64,'매대반전').setOrigin(0).setScale(1/3,1/3);
 
     편순이=this.add.image(280,100,'편순이').setOrigin(0).setScale(1/5,1/5);
@@ -159,6 +176,11 @@ function create ()
             tempkey='RIGHT';
             checkInput(tempkey);
             //console.log("오른");
+        }
+        else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.UP){
+            tempkey='UP';
+            checkInput(tempkey);
+            //console.log("위");
         }
         else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE){
             tempkey='SPACE';
@@ -246,13 +268,21 @@ function pickProductList(){
         //1:noodle
         inputList.push('RIGHT');
     } 
+    else if (tempindex ==2){
+        //2:drink
+        inputList.push('UP');
+    } 
+    else if (tempindex ==3){
+        //3:no
+        inputList.push('SPACE');
+    } 
     console.log(inputList);
     return productList[tempindex]; //고른 list이름 반환
 }
 function randomProduct(listname){
     var tempindex=getRandomInt(0,listname.length);
     //console.log(tempindex);
-    //console.log(listname[tempindex]);
+    console.log(listname[tempindex]);
     return listname[tempindex]; //특정제품이름반환
 }
 function getRandomInt(min, max) {
