@@ -36,15 +36,18 @@ var scoreText; //점수쓸공간
 
 var products; //group
 var rand_product;//랜덤으로 뽑을 상품
+var childs; //상품getchildren()
 
 var timedEvent; //timer event
-var inputKey; //키보드 입력
+
 
  //상품 리스트
  
- var snackList=["과자_꼬깔콘","과자_다이제","과자_도리","과자_오징어","과자_초코송이","과자_포카칩","과자_홈런볼"];
- var noodleList=["라면_까불닭","라면_미역국","라면_신라면","라면_오짬","라면_육개장","라면_진라면","라면_참깨라면"];
- var productList=[snackList,noodleList]; //배열변수자체를 배열의 요소로!
+var snackList=["과자_꼬깔콘","과자_다이제","과자_도리","과자_오징어","과자_초코송이","과자_포카칩","과자_홈런볼"];
+var noodleList=["라면_까불닭","라면_미역국","라면_신라면","라면_오짬","라면_육개장","라면_진라면","라면_참깨라면"];
+var productList=[snackList,noodleList]; //배열변수자체를 배열의 요소로!
+
+var inputList=[]; //랜덤상품고를때마다 눌러야할 키 넣기
 
 function preload ()
 {
@@ -121,8 +124,8 @@ function create ()
         diehearts.add(temp,{addToScene:true});  //왼쪽부터 0,1,2 heart
     }
     
-    //상품그룹화
-    products=this.add.group();
+    //랜덤으로 선택된 상품그룹화
+    products=this.add.group();  //디폴트스페이스로처리
     //판그룹=game.add.group();  나중에 무빙효과낼때
 
     bg_판1=this.add.image(0,430,'판1').setOrigin(0).setScale(1/3,1/3);
@@ -143,6 +146,26 @@ function create ()
     speed = Phaser.Math.GetSpeed(600, 물건속도);
 
     //키보드
+    this.input.keyboard.on('keydown', function (event) {
+        var tempkey;
+        if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.LEFT)
+        {   
+            tempkey='LEFT';
+            checkInput(tempkey);
+            //console.log("스페이스바");
+        }
+        else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.RIGHT)
+        {
+            tempkey='RIGHT';
+            checkInput(tempkey);
+            //console.log("오른");
+        }
+        else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE){
+            tempkey='SPACE';
+            checkInput(tempkey);
+            //console.log("왼");
+        }
+    });
 }
 
 
@@ -154,7 +177,7 @@ function createProduct(){
     var temp=this.add.image(-120,340,rand_product).setOrigin(0);
     temp.setScale(1/7,1/7);
     products.add(temp,{addToScene:true}); //group에 넣고 displaylist에 넣기 true 처리
-}
+    }
 
 //시간내에 못해서 아웃된 상품 처리코드
 function failProduct(){
@@ -167,8 +190,19 @@ function failProduct(){
     }
 }
 
-function checkInput(){
+function checkInput(inkey){
+    
     //키보드 입력과 해당 상품 기대 입력값이 같으면 성공
+    if (inkey == inputList[0]){
+        childs[0].destroy();
+        inputList.shift();
+        console.log("성공");
+        score+=10;
+        scoreText.setText(score);
+    }
+    else{
+        console.log("실패");
+    }
     //아니면 실패->생명하나 감소 reduceLife()호출
 }
 
@@ -176,27 +210,26 @@ function checkInput(){
 function reduceHeart(){
     var dieheartchilds=diehearts.getChildren();
     dieheartchilds[life].setY(0);
+    console.log("하트하나없앰");
 }
 
 //위치중 제일 오른쪽에 있는 child 받아와서 input 입력값과 
 
 function update(time,delta)
 {
-    var childs=products.getChildren();
+    childs=products.getChildren();
     
     for (var i=0; i<childs.length; i++){
         childs[i].x += speed*delta;
         if(childs[i].x > 786){
+            console.log(i); //사라지는 인덱스 출력
             childs[i].destroy();
-            //console.log("아웃");
-            //failProduct();
-            score+=10;
-            scoreText.setText(score);
+            console.log("아웃");
+            failProduct();
         }
 
     }
 
-    //키보드 인풋
     
     
 }
@@ -205,6 +238,15 @@ function update(time,delta)
 function pickProductList(){
     var tempindex=getRandomInt(0,productList.length); //상품종류선택 index이용
     //console.log(productList[tempindex]);
+    if (tempindex ==0){
+        //0:snake
+        inputList.push('LEFT');
+    }
+    else if (tempindex ==1){
+        //1:noodle
+        inputList.push('RIGHT');
+    } 
+    console.log(inputList);
     return productList[tempindex]; //고른 list이름 반환
 }
 function randomProduct(listname){
