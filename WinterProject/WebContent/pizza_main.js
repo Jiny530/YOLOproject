@@ -16,8 +16,8 @@ var gameOver = false;
 var pizza;
 var score = 0;
 var scoreText;
-var si = 0;
-var pizzaflag = 0;
+var pizzaflag = 0; //피자 새로 불러올지 말지 결정
+var arrowflag; //방향키 입력 받을지 안받을지 결정
 var domino;
 var mr;
 var hut;
@@ -31,8 +31,10 @@ var mrGroup;
 var hetGroup;
 var schoolGroup;
 var timerEvent;
-var timeBar;
 var graphics;
+var arrowdelay;
+var si=0; //화살표 패턴 점수 인덱스
+var ai=0; //화살표 생성시 활성화된 화살표 인덱스
 
 function preload() {
     this.load.image('Domino', 'assets/pizza/Domino.png');
@@ -87,8 +89,9 @@ function create() {
     childMaking(hutGroup, hutSequence);
     childMaking(schoolGroup, schoolSequence);
 
+    
     this.input.keyboard.on('keyup_UP', function (event) {
-        if (!gameOver)
+        if ((!gameOver) && (arrowflag==0))
         {
             if (pizza == 1) {
                 up_right(domino, dominoGroup, dominoSequence);
@@ -105,7 +108,7 @@ function create() {
         }
     });
     this.input.keyboard.on('keyup_DOWN', function (event) {
-        if(!gameOver)
+        if(!gameOver && arrowflag==0)
         {
             if (pizza == 1) {
                 down_right(domino, dominoGroup, dominoSequence);
@@ -122,7 +125,7 @@ function create() {
         }
     });
     this.input.keyboard.on('keyup_LEFT', function (event) {
-        if (!gameOver)
+        if (!gameOver && arrowflag==0)
         {
             if (pizza == 1) {
                 left_right(domino, dominoGroup, dominoSequence);
@@ -139,7 +142,7 @@ function create() {
         }
     });
     this.input.keyboard.on('keyup_RIGHT', function (event) {
-        if(!gameOver)
+        if(!gameOver && arrowflag==0)
         {
             if (pizza == 1) {
                 right_right(domino, dominoGroup, dominoSequence);
@@ -158,7 +161,7 @@ function create() {
 
     //타이머
     timerEvent = this.time.addEvent({ delay: 30000 });
-    graphics = this.add.graphics({ x: 20, y: 492 });
+    graphics = this.add.graphics({ x: 30, y: 492 });
     
     graphics.angle=-90;
 }
@@ -171,22 +174,11 @@ function update() {
         return;
     }
 
-    if (pizzaflag == 0) {
+    if (pizzaflag == 0 ) { //새로운 피자박스 및 방향키 패턴 불러오기
         pizzaflag = 1;
+        arrowflag=1;
         pizza = Phaser.Math.Between(1, 4);
-        if (pizza == 1) {
-            setting(domino, dominoGroup);
-        }
-        else if (pizza == 2) {
-            mr.visible = true;
-            setting(mr, mrGroup);
-        }
-        else if (pizza == 3) {
-            setting(hut, hutGroup);
-        }
-        else if (pizza == 4) {
-            setting(school, schoolGroup);
-        }
+        arrowdelay = this.time.addEvent({delay: 200, callback: onEvent, callbackScope: this, repeat: 10});
     }
     
     //타이머
@@ -200,11 +192,39 @@ function update() {
     }
 }
 
+function onEvent(){
+    if (pizza==1){
+        setting(domino,dominoGroup);
+    }
+    else if (pizza==2){
+        setting(mr,mrGroup);   
+    }
+    else if (pizza==3){
+        setting(hut,hutGroup);   
+    }
+    else if (pizza==4){
+        setting(school,schoolGroup); 
+    }
+}
+
 function setting(pizza, group) {
     pizza.visible = true;
+    var flag=0;
     group.children.iterate(function (child) {
-        child.visible = true;
+        if (child.visible == false && flag==0 )
+        {
+            child.visible = true;
+            flag=1;
+            ai+=1;
+        }
+        if (ai==10) //화살표 모두 활성화 시켰으면 인덱스 원상복귀
+        {            
+            arrowflag=0;
+            ai=0;
+        }
     });
+
+
 }
 function resetting(pizza, group) {
     pizza.visible = false;
@@ -213,35 +233,7 @@ function resetting(pizza, group) {
     });
 }
 
-function childMaking(group, sequence) {
-    var i = 0;
-    var color = [0xef658c, 0xff9a52, 0xffdf00, 0x31ef8c];
 
-    group.children.iterate(function (child) {
-        //도미노피자 화살표 순서에 따라 자식들 염색
-        if (sequence[i] == 1) //위
-        {
-            child.tint = color[0];
-        }
-        else if (sequence[i] == 2) //아래
-        {
-            child.tint = color[1];
-            child.angle = 180;
-        }
-        else if (sequence[i] == 3) //왼쪽
-        {
-            child.tint = color[2];
-            child.angle = 270;
-        }
-        else if (sequence[i] == 4) //오른쪽
-        {
-            child.tint = color[3];
-            child.angle = 90;
-        }
-        child.visible = false;
-        i++;
-    });
-}
 
 function up_right(pizza, group, sequence) {
     var now = 0;
@@ -378,4 +370,34 @@ function right_right(pizza, group, sequence) {
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
     });
 
+}
+
+function childMaking(group, sequence) {
+    var i = 0;
+    var color = [0xe74c3c, 0xf1c40f, 0x3498db, 0x2ecc71];
+
+    group.children.iterate(function (child) {
+        //도미노피자 화살표 순서에 따라 자식들 염색
+        if (sequence[i] == 1) //위
+        {
+            child.tint = color[0];
+        }
+        else if (sequence[i] == 2) //아래
+        {
+            child.tint = color[1];
+            child.angle = 180;
+        }
+        else if (sequence[i] == 3) //왼쪽
+        {
+            child.tint = color[2];
+            child.angle = 270;
+        }
+        else if (sequence[i] == 4) //오른쪽
+        {
+            child.tint = color[3];
+            child.angle = 90;
+        }
+        child.visible = false;
+        i++;
+    });
 }
