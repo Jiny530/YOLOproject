@@ -14,6 +14,7 @@ var game = new Phaser.Game(config);
 
 var bg_매대오;
 var bg_매대왼;
+var bg_음료매대;
 //var 판그룹;  나중에
 
 var music;
@@ -36,15 +37,20 @@ var scoreText; //점수쓸공간
 
 var products; //group
 var rand_product;//랜덤으로 뽑을 상품
+var childs; //상품getchildren()
 
 var timedEvent; //timer event
-var inputKey; //키보드 입력
+
 
  //상품 리스트
  
- var snackList=["과자_꼬깔콘","과자_다이제","과자_도리","과자_오징어","과자_초코송이","과자_포카칩","과자_홈런볼"];
- var noodleList=["라면_까불닭","라면_미역국","라면_신라면","라면_오짬","라면_육개장","라면_진라면","라면_참깨라면"];
- var productList=[snackList,noodleList]; //배열변수자체를 배열의 요소로!
+var snackList=["과자_꼬깔콘","과자_다이제","과자_도리","과자_오징어","과자_초코송이","과자_포카칩","과자_홈런볼"];
+var noodleList=["라면_까불닭","라면_미역국","라면_신라면","라면_오짬","라면_육개장","라면_진라면","라면_참깨라면"];
+var drinkList=["음료_데미사과","음료_데미오렌지","음료_데자와","음료_사이다","음료_콜라","음료_포카리","음료_핫6"];
+var noList=["기타_갈고양이","기타_강아지","기타_검고양이","기타_쓰레기봉지"];
+var productList=[snackList,noodleList,drinkList,noList]; //배열변수자체를 배열의 요소로!
+
+var inputList=[]; //랜덤상품고를때마다 눌러야할 키 넣기
 
 function preload ()
 {
@@ -67,11 +73,24 @@ function preload ()
     this.load.image('과자_다이제', 'assets/store24/과자_다이제.png');
     this.load.image('과자_도리', 'assets/store24/과자_도리.png');
 
+    this.load.image('음료_데미사과', 'assets/store24/음료_데미사과.png');
+    this.load.image('음료_데미오렌지', 'assets/store24/음료_데미오렌지.png');
+    this.load.image('음료_데자와', 'assets/store24/음료_데자와.png');
+    this.load.image('음료_사이다', 'assets/store24/음료_사이다.png');
+    this.load.image('음료_콜라', 'assets/store24/음료_콜라.png');
+    this.load.image('음료_포카리', 'assets/store24/음료_포카리.png');
+    this.load.image('음료_핫6', 'assets/store24/음료_핫6.png');
+
+    this.load.image('기타_갈고양이', 'assets/store24/기타_갈고양이.png');
+    this.load.image('기타_검고양이', 'assets/store24/기타_검고양이.png');
+    this.load.image('기타_강아지', 'assets/store24/기타_강아지.png');
+    this.load.image('기타_쓰레기봉지', 'assets/store24/기타_쓰레기봉지.png');
 
     this.load.image('판1', 'assets/store24/판1.png');
     this.load.image('판2', 'assets/store24/판2.png');
     this.load.image('매대', 'assets/store24/매대.png');
     this.load.image('매대반전', 'assets/store24/매대반전.png');
+    this.load.image('음료매대', 'assets/store24/음료판매대.png');
 
     this.load.image('편순이', 'assets/store24/편순이.png');
     this.load.image('생명컬러', 'assets/store24/생명컬러.png');
@@ -121,8 +140,8 @@ function create ()
         diehearts.add(temp,{addToScene:true});  //왼쪽부터 0,1,2 heart
     }
     
-    //상품그룹화
-    products=this.add.group();
+    //랜덤으로 선택된 상품그룹화
+    products=this.add.group();  //디폴트스페이스로처리
     //판그룹=game.add.group();  나중에 무빙효과낼때
 
     bg_판1=this.add.image(0,430,'판1').setOrigin(0).setScale(1/3,1/3);
@@ -131,6 +150,7 @@ function create ()
     bg_판4=this.add.image(512,430,'판1').setOrigin(0).setScale(1/3,1/3);
 
     bg_매대오=this.add.image(512,64,'매대').setOrigin(0).setScale(1/3,1/3);
+    bg_음료매대=this.add.image(200,20,'음료매대').setOrigin(0).setScale(1/3,1/3);
     bg_매대왼=this.add.image(0,64,'매대반전').setOrigin(0).setScale(1/3,1/3);
 
     편순이=this.add.image(280,100,'편순이').setOrigin(0).setScale(1/5,1/5);
@@ -143,6 +163,31 @@ function create ()
     speed = Phaser.Math.GetSpeed(600, 물건속도);
 
     //키보드
+    this.input.keyboard.on('keydown', function (event) {
+        var tempkey;
+        if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.LEFT)
+        {   
+            tempkey='LEFT';
+            checkInput(tempkey);
+            //console.log("스페이스바");
+        }
+        else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.RIGHT)
+        {
+            tempkey='RIGHT';
+            checkInput(tempkey);
+            //console.log("오른");
+        }
+        else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.UP){
+            tempkey='UP';
+            checkInput(tempkey);
+            //console.log("위");
+        }
+        else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE){
+            tempkey='SPACE';
+            checkInput(tempkey);
+            //console.log("왼");
+        }
+    });
 }
 
 
@@ -154,7 +199,7 @@ function createProduct(){
     var temp=this.add.image(-120,340,rand_product).setOrigin(0);
     temp.setScale(1/7,1/7);
     products.add(temp,{addToScene:true}); //group에 넣고 displaylist에 넣기 true 처리
-}
+    }
 
 //시간내에 못해서 아웃된 상품 처리코드
 function failProduct(){
@@ -167,8 +212,19 @@ function failProduct(){
     }
 }
 
-function checkInput(){
+function checkInput(inkey){
+    
     //키보드 입력과 해당 상품 기대 입력값이 같으면 성공
+    if (inkey == inputList[0]){
+        childs[0].destroy();
+        inputList.shift();
+        console.log("성공");
+        score+=10;
+        scoreText.setText(score);
+    }
+    else{
+        console.log("실패");
+    }
     //아니면 실패->생명하나 감소 reduceLife()호출
 }
 
@@ -176,27 +232,26 @@ function checkInput(){
 function reduceHeart(){
     var dieheartchilds=diehearts.getChildren();
     dieheartchilds[life].setY(0);
+    console.log("하트하나없앰");
 }
 
 //위치중 제일 오른쪽에 있는 child 받아와서 input 입력값과 
 
 function update(time,delta)
 {
-    var childs=products.getChildren();
+    childs=products.getChildren();
     
     for (var i=0; i<childs.length; i++){
         childs[i].x += speed*delta;
         if(childs[i].x > 786){
+            console.log(i); //사라지는 인덱스 출력
             childs[i].destroy();
-            //console.log("아웃");
-            //failProduct();
-            score+=10;
-            scoreText.setText(score);
+            console.log("아웃");
+            failProduct();
         }
 
     }
 
-    //키보드 인풋
     
     
 }
@@ -205,12 +260,29 @@ function update(time,delta)
 function pickProductList(){
     var tempindex=getRandomInt(0,productList.length); //상품종류선택 index이용
     //console.log(productList[tempindex]);
+    if (tempindex ==0){
+        //0:snake
+        inputList.push('LEFT');
+    }
+    else if (tempindex ==1){
+        //1:noodle
+        inputList.push('RIGHT');
+    } 
+    else if (tempindex ==2){
+        //2:drink
+        inputList.push('UP');
+    } 
+    else if (tempindex ==3){
+        //3:no
+        inputList.push('SPACE');
+    } 
+    console.log(inputList);
     return productList[tempindex]; //고른 list이름 반환
 }
 function randomProduct(listname){
     var tempindex=getRandomInt(0,listname.length);
     //console.log(tempindex);
-    //console.log(listname[tempindex]);
+    console.log(listname[tempindex]);
     return listname[tempindex]; //특정제품이름반환
 }
 function getRandomInt(min, max) {
