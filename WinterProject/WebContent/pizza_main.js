@@ -35,20 +35,39 @@ var graphics;
 var arrowdelay;
 var si=0; //화살표 패턴 점수 인덱스
 var ai=0; //화살표 생성시 활성화된 화살표 인덱스
-
+var bacc1;
+var back2;
 function preload() {
     this.load.image('Domino', 'assets/pizza/Domino.png');
     this.load.image('Mr', 'assets/pizza/Mr.Pizza.png');
     this.load.image('School', 'assets/pizza/School.png');
     this.load.image('Hut', 'assets/pizza/Hut.png');
     this.load.image('arrow', 'assets/pizza/arrow.png');
+    this.load.image('back1', 'assets/pizza/back1.png');
+    this.load.image('back2', 'assets/pizza/back2.png');
     //this.load.image('timeBar','assets/pizza/timeBar.png')
 }
 //키보드 버튼 하나 누르는 거에 반응하는 곳
 function create() {
-
     //Phaser.Actions.GridAlign(group.getChildren(), { width: 12, cellWidth: 70, cellHeight: 70, x: -20, y: 0 });
-
+    this.add.image(100,100,'back1');
+    
+    for (var k=0;k<4;k++){
+        for(var j=0;j<6;j++){
+            if (k%2==1 && j%2==1){
+                this.add.image(64+128*j,64+128*k,'back1');
+            }
+            else if (k%2==1 && j%2==0){
+                this.add.image(64+128*j,64+128*k,'back2');
+            }
+            else if (k%2==0 && j%2==1){
+                this.add.image(64+128*j,64+128*k,'back2');
+            }
+            else if (k%2==0 && j%2==0){
+                this.add.image(64+128*j,64+128*k,'back1');
+            }
+        }
+    }
     domino = this.add.image(384, 200, 'Domino').setScale(0.7,0.7);
     mr = this.add.image(384, 200, 'Mr').setScale(0.7,0.7);;
     hut = this.add.image(384, 200, 'Hut').setScale(0.7,0.7);
@@ -397,6 +416,7 @@ function childMaking(group, sequence) {
             child.tint = color[3];
             child.angle = 90;
         }
+        //i 증가할때마다 위치 바꾸기
         child.visible = false;
         i++;
     });
