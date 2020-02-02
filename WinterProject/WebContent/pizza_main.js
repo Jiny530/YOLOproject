@@ -42,18 +42,20 @@ function preload() {
     this.load.image('Mr', 'assets/pizza/Mr.Pizza.png');
     this.load.image('School', 'assets/pizza/School.png');
     this.load.image('Hut', 'assets/pizza/Hut.png');
-    this.load.image('arrow', 'assets/pizza/arrow.png');
+    this.load.image('arrow', 'assets/pizza/arrow2.png');
     this.load.image('back1', 'assets/pizza/back1.png');
     this.load.image('back2', 'assets/pizza/back2.png');
+    this.load.image('back3', 'assets/pizza/back3.png');
     //this.load.image('timeBar','assets/pizza/timeBar.png')
 }
 //키보드 버튼 하나 누르는 거에 반응하는 곳
 function create() {
     //Phaser.Actions.GridAlign(group.getChildren(), { width: 12, cellWidth: 70, cellHeight: 70, x: -20, y: 0 });
-    this.add.image(100,100,'back1');
+    //this.add.image(100,100,'back1');
     
     for (var k=0;k<4;k++){
         for(var j=0;j<6;j++){
+            
             if (k%2==1 && j%2==1){
                 this.add.image(64+128*j,64+128*k,'back1');
             }
@@ -66,12 +68,17 @@ function create() {
             else if (k%2==0 && j%2==0){
                 this.add.image(64+128*j,64+128*k,'back1');
             }
+            
+            if (1<=k && k<=2 && 1<=j&& j<=4){
+                this.add.image(64+128*j,64+128*k,'back3');
+            }
+            
         }
     }
-    domino = this.add.image(384, 200, 'Domino').setScale(0.7,0.7);
-    mr = this.add.image(384, 200, 'Mr').setScale(0.7,0.7);;
-    hut = this.add.image(384, 200, 'Hut').setScale(0.7,0.7);
-    school = this.add.image(384, 200, 'School').setScale(0.7,0.7);
+    domino = this.add.image(384, 230, 'Domino').setScale(0.8,0.8);
+    mr = this.add.image(384, 230, 'Mr').setScale(0.8,0.8);
+    hut = this.add.image(384, 230, 'Hut').setScale(0.8,0.8);
+    school = this.add.image(384, 230, 'School').setScale(0.8,0.8);
 
     domino.visible = false;
     mr.visible = false;
@@ -81,26 +88,26 @@ function create() {
     dominoGroup = this.add.group({
         key: 'arrow',
         repeat: 9,
-        setXY: { x: 150, y: 350, stepX: 50 },
-        setScale: { x: 0.5, y: 0.5 }
+        setXY: { x: 84, y: 335, stepX: 60 },
+        setScale: { x: 0.7, y: 0.7 }
     });
     mrGroup = this.add.group({
         key: 'arrow',
         repeat: 9,
-        setXY: { x: 150, y: 350, stepX: 50 },
-        setScale: { x: 0.5, y: 0.5 }
+        setXY: { x: 84, y: 335, stepX: 60 },
+        setScale: { x: 0.7, y: 0.7 }
     });
     hutGroup = this.add.group({
         key: 'arrow',
         repeat: 9,
-        setXY: { x: 150, y: 350, stepX: 50 },
-        setScale: { x: 0.5, y: 0.5 }
+        setXY: { x: 84, y: 335, stepX: 60 },
+        setScale: { x: 0.7, y: 0.7 }
     });
     schoolGroup = this.add.group({
         key: 'arrow',
         repeat: 9,
-        setXY: { x: 150, y: 350, stepX: 50 },
-        setScale: { x: 0.5, y: 0.5 }
+        setXY: { x: 84, y: 335, stepX: 60 },
+        setScale: { x: 0.7, y: 0.7 }
     });
 
     childMaking(dominoGroup, dominoSequence);
@@ -354,7 +361,6 @@ function left_right(pizza, group, sequence) {
         }
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
     });
-
 }
 function right_right(pizza, group, sequence) {
     var now = 0;
@@ -393,7 +399,7 @@ function right_right(pizza, group, sequence) {
 
 function childMaking(group, sequence) {
     var i = 0;
-    var color = [0xe74c3c, 0xf1c40f, 0x3498db, 0x2ecc71];
+    var color = [0xff3366, 0x29b6f6,0xffeb3b, 0x33ff66];
 
     group.children.iterate(function (child) {
         //도미노피자 화살표 순서에 따라 자식들 염색
@@ -416,6 +422,14 @@ function childMaking(group, sequence) {
             child.tint = color[3];
             child.angle = 90;
         }
+        if (i<3){
+            child.setXY(264,335+(3-i)*60);
+        }
+        else if (i>7){
+            child.setXY(504,335+(i-5)*60);
+        }
+
+        
         //i 증가할때마다 위치 바꾸기
         child.visible = false;
         i++;
