@@ -423,11 +423,14 @@ function childMaking(group, sequence) {
             child.angle = 90;
         }
         if (i<3){
-            child.setXY(264,335+(3-i)*60);
+            child.setX(264);
+            child.setY(335-(3-i)*60);
         }
         else if (i>7){
-            child.setXY(504,335+(i-5)*60);
+            child.setX(504);
+            child.setY(335-(i-7)*60);
         }
+        
 
         
         //i 증가할때마다 위치 바꾸기
