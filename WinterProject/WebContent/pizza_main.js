@@ -22,10 +22,10 @@ var domino;
 var mr;
 var hut;
 var school;
-var dominoSequence = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2];
-var mrSequence = [1, 1, 1, 1, 2, 2, 2, 2, 3, 4];
-var hutSequence = [1, 3, 2, 4, 1, 3, 4, 2, 1, 3];
-var schoolSequence = [3, 2, 4, 1, 3, 4, 2, 3, 4, 2];
+var dominoSequence = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2,4];
+var mrSequence = [1, 1, 1, 1, 2, 2, 2, 2, 3, 4,3];
+var hutSequence = [1, 3, 2, 4, 1, 3, 4, 2, 1, 3,2];
+var schoolSequence = [3, 2, 4, 1, 3, 4, 2, 3, 4, 2,1];
 var dominoGroup;
 var mrGroup;
 var hetGroup;
@@ -33,19 +33,23 @@ var schoolGroup;
 var timerEvent;
 var graphics;
 var arrowdelay;
+var arrowflag_flag=1;
+var arrowright;
 var si=0; //화살표 패턴 점수 인덱스
 var ai=0; //화살표 생성시 활성화된 화살표 인덱스
 var bacc1;
 var back2;
+
 function preload() {
     this.load.image('Domino', 'assets/pizza/Domino.png');
     this.load.image('Mr', 'assets/pizza/Mr.Pizza.png');
     this.load.image('School', 'assets/pizza/School.png');
     this.load.image('Hut', 'assets/pizza/Hut.png');
-    this.load.image('arrow', 'assets/pizza/arrow2.png');
+    this.load.image('arrow', 'assets/pizza/arrow6.png');
     this.load.image('back1', 'assets/pizza/back1.png');
     this.load.image('back2', 'assets/pizza/back2.png');
     this.load.image('back3', 'assets/pizza/back3.png');
+    this.load.image('scoretext', 'assets/pizza/scoretext.png');
     //this.load.image('timeBar','assets/pizza/timeBar.png')
 }
 //키보드 버튼 하나 누르는 거에 반응하는 곳
@@ -75,10 +79,10 @@ function create() {
             
         }
     }
-    domino = this.add.image(384, 230, 'Domino').setScale(0.8,0.8);
-    mr = this.add.image(384, 230, 'Mr').setScale(0.8,0.8);
-    hut = this.add.image(384, 230, 'Hut').setScale(0.8,0.8);
-    school = this.add.image(384, 230, 'School').setScale(0.8,0.8);
+    domino = this.add.image(384, 240, 'Domino').setScale(0.8,0.8);
+    mr = this.add.image(384, 240, 'Mr').setScale(0.8,0.8);
+    hut = this.add.image(384, 240, 'Hut').setScale(0.8,0.8);
+    school = this.add.image(384, 240, 'School').setScale(0.8,0.8);
 
     domino.visible = false;
     mr.visible = false;
@@ -87,26 +91,26 @@ function create() {
 
     dominoGroup = this.add.group({
         key: 'arrow',
-        repeat: 9,
-        setXY: { x: 84, y: 335, stepX: 60 },
+        repeat: 10,
+        setXY: { x: 84, y: 345, stepX: 60 },
         setScale: { x: 0.7, y: 0.7 }
     });
     mrGroup = this.add.group({
         key: 'arrow',
-        repeat: 9,
-        setXY: { x: 84, y: 335, stepX: 60 },
+        repeat: 10,
+        setXY: { x: 84, y: 345, stepX: 60 },
         setScale: { x: 0.7, y: 0.7 }
     });
     hutGroup = this.add.group({
         key: 'arrow',
-        repeat: 9,
-        setXY: { x: 84, y: 335, stepX: 60 },
+        repeat: 10,
+        setXY: { x: 84, y: 345, stepX: 60 },
         setScale: { x: 0.7, y: 0.7 }
     });
     schoolGroup = this.add.group({
         key: 'arrow',
-        repeat: 9,
-        setXY: { x: 84, y: 335, stepX: 60 },
+        repeat: 10,
+        setXY: { x: 84, y: 345, stepX: 60 },
         setScale: { x: 0.7, y: 0.7 }
     });
 
@@ -114,6 +118,9 @@ function create() {
     childMaking(mrGroup, mrSequence);
     childMaking(hutGroup, hutSequence);
     childMaking(schoolGroup, schoolSequence);
+
+    this.add.image(580,50,'scoretext').setScale(0.25,0.25);
+    scoreText = this.add.text(635, 35, ' 0', { fontSize: '32px', fscoreTextill: '#000' });
 
     
     this.input.keyboard.on('keyup_UP', function (event) {
@@ -192,31 +199,48 @@ function create() {
     graphics.angle=-90;
 }
 
+var timeSourse;
 
 //키보드 꾹 누르고 있는게 계속 반영되는 곳
 function update() {
-    if (gameOver)
-    {
-        return;
+    
+    if (arrowflag_flag==0){
+        arrowflag_flag=1;
+        arrowright = this.time.addEvent({delay: 150, callback: onEvent1, callbackScope: this});
     }
 
     if (pizzaflag == 0 ) { //새로운 피자박스 및 방향키 패턴 불러오기
         pizzaflag = 1;
         arrowflag=1;
         pizza = Phaser.Math.Between(1, 4);
-        arrowdelay = this.time.addEvent({delay: 200, callback: onEvent, callbackScope: this, repeat: 10});
+        arrowdelay = this.time.addEvent({delay: 100, callback: onEvent, callbackScope: this, repeat: 10});
     }
     
+    
+
     //타이머
     graphics.clear();
-    graphics.fillStyle(90000);
-    graphics.fillRect(0, 0, 450-450 * timerEvent.getProgress(), 30);
-    
+    graphics.fillStyle(0xffcc00);
+    if (!gameOver){
+        graphics.fillRect(10, 0, 450-450 * timerEvent.getProgress(), 30);
+        timeSource=450-450 * timerEvent.getProgress();
+    }
+    else {
+        graphics.fillRect(10, 0, timeSource, 30);
+    }
     if ((1-timerEvent.getProgress())==0 || score<0 )
     {
         gameOver = true;
     }
+
+    if (gameOver)
+    {
+        return;
+    }
 }
+
+
+
 
 function onEvent(){
     if (pizza==1){
@@ -232,6 +256,9 @@ function onEvent(){
         setting(school,schoolGroup); 
     }
 }
+function onEvent1(){
+    arrowflag=0;
+}
 
 function setting(pizza, group) {
     pizza.visible = true;
@@ -245,7 +272,7 @@ function setting(pizza, group) {
         }
         if (ai==10) //화살표 모두 활성화 시켰으면 인덱스 원상복귀
         {            
-            arrowflag=0;
+            arrowflag_flag=0;
             ai=0;
         }
     });
@@ -274,13 +301,13 @@ function up_right(pizza, group, sequence) {
                 si++;
                 score += 10;
                 flag = 1;
-                if (now == 9) {
+                if (now == 10) {
                     score += 100;
                     si = 0;
                     pizzaflag = 0;
                     pizza.visible = false;
                 }
-                console.log(score);
+                scoreText.setText(' '+score);
             }
             else {
                 //child.tint = 0xff0000;
@@ -288,7 +315,7 @@ function up_right(pizza, group, sequence) {
                 si = 0;
                 score -= 50;
                 pizzaflag = 0;
-                console.log(score);
+                scoreText.setText(' '+score);
             }
         }
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -308,13 +335,13 @@ function down_right(pizza, group, sequence) {
                 si++;
                 score += 10;
                 flag = 1;
-                if (now == 9) {
+                if (now == 10) {
                     score += 100;
                     si = 0;
                     pizzaflag = 0;
                     pizza.visible = false;
                 }
-                console.log(score);
+                scoreText.setText(' '+score);
             }
             else {
                 //child.tint = 0xff0000;
@@ -322,7 +349,7 @@ function down_right(pizza, group, sequence) {
                 si = 0;
                 score -= 50;
                 pizzaflag = 0;
-                console.log(score);
+                scoreText.setText(' '+score);
             }
         }
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -342,13 +369,13 @@ function left_right(pizza, group, sequence) {
                 si++;
                 score += 10;
                 flag = 1;
-                if (now == 9) {
+                if (now == 10) {
                     score += 100;
                     si = 0;
                     pizzaflag = 0;
                     pizza.visible = false;
                 }
-                console.log(score);
+                scoreText.setText(' '+score);
             }
             else {
                 //child.tint = 0xff0000;
@@ -356,7 +383,7 @@ function left_right(pizza, group, sequence) {
                 si = 0;
                 score -= 50;
                 pizzaflag = 0;
-                console.log(score);
+                scoreText.setText(' '+score);
             }
         }
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -375,13 +402,13 @@ function right_right(pizza, group, sequence) {
                 si++;
                 score += 10;
                 flag = 1;
-                if (now == 9) {
+                if (now == 10) {
                     score += 100;
                     si = 0;
                     pizzaflag = 0;
                     pizza.visible = false;
                 }
-                console.log(score);
+                scoreText.setText(' '+score);
             }
             else {
                 //child.tint = 0xff0000;
@@ -389,7 +416,7 @@ function right_right(pizza, group, sequence) {
                 si = 0;
                 score -= 50;
                 pizzaflag = 0;
-                console.log(score);
+                scoreText.setText(' '+score);
             }
         }
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -399,7 +426,7 @@ function right_right(pizza, group, sequence) {
 
 function childMaking(group, sequence) {
     var i = 0;
-    var color = [0xff3366, 0x29b6f6,0xffeb3b, 0x33ff66];
+    var color = [0xff3366, 0x29b6f6,0xffcc00, 0x5deb2d];
 
     group.children.iterate(function (child) {
         //도미노피자 화살표 순서에 따라 자식들 염색
@@ -424,14 +451,12 @@ function childMaking(group, sequence) {
         }
         if (i<3){
             child.setX(264);
-            child.setY(335-(3-i)*60);
+            child.setY(345-(3-i)*60);
         }
         else if (i>7){
             child.setX(504);
-            child.setY(335-(i-7)*60);
+            child.setY(345-(i-7)*60);
         }
-        
-
         
         //i 증가할때마다 위치 바꾸기
         child.visible = false;
