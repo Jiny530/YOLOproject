@@ -31,28 +31,28 @@ function create ()
     blackjack.scale=0.2
     blackjack.setInteractive();
     blackjack.on('pointerdown',function(pointer){
-        if(!click_stop) click_stop=true;
+
     });
 
     pizza=this.add.image(200,250,'pizza')
     pizza.scale=0.5
     pizza.setInteractive();
     pizza.on('pointerdown',function(pointer){
-        if(!click_stop) click_stop=true;
+
     });
 
     running=this.add.image(300,250,'running')
     running.scale=2
     running.setInteractive();
     running.on('pointerdown',function(pointer){
-        if(!click_stop) click_stop=true;
+
     });
 
     store=this.add.image(400,250,'store24')
     store.scale=0.1
     store.setInteractive();
     store.on('pointerdown',function(pointer){
-        if(!click_stop) click_stop=true;
+
     });
 }
 function update (){
