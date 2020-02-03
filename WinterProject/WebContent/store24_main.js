@@ -34,6 +34,8 @@ var diehearts;
 var 점수항목; //score 이미지
 var score=0; //실제점수
 var scoreText; //점수쓸공간
+var combo=0;  //콤보변수
+var 상품간격= 900; //0.9초기준시작
 
 var products; //group
 var rand_product;//랜덤으로 뽑을 상품
@@ -149,17 +151,19 @@ function create ()
     bg_판3=this.add.image(384,430,'판1').setOrigin(0).setScale(1/3,1/3);
     bg_판4=this.add.image(512,430,'판1').setOrigin(0).setScale(1/3,1/3);
 
-    bg_매대오=this.add.image(512,64,'매대').setOrigin(0).setScale(1/3,1/3);
-    bg_음료매대=this.add.image(200,20,'음료매대').setOrigin(0).setScale(1/3,1/3);
     bg_매대왼=this.add.image(0,64,'매대반전').setOrigin(0).setScale(1/3,1/3);
+    bg_음료매대=this.add.image(300,20,'음료매대').setOrigin(0).setScale(1/3,1/3);
+    bg_매대오=this.add.image(512,64,'매대').setOrigin(0).setScale(1/3,1/3);    
 
     편순이=this.add.image(280,100,'편순이').setOrigin(0).setScale(1/5,1/5);
 
     점수항목=this.add.image(8*64,0,'점수항목').setOrigin(0).setScale(1/4,1/4);
     scoreText = this.add.text(10*64, 13, '0', { fontSize: '40px', fill: '#000' });
+    comboText = this.add.text(7*64, 13, '0', { fontSize: '40px', fill: '#000' });
+    speedText = this.add.text(5*64, 13, '0', { fontSize: '40px', fill: '#000' });
 
     //주기적으로 상품 생성하는 함수 호출
-    timedEvent=this.time.addEvent({ delay: 1000, callback: createProduct, callbackScope: this, loop: true }); 
+    timedEvent=this.time.addEvent({ delay: 상품간격, callback: createProduct, callbackScope: this, loop: true }); 
     speed = Phaser.Math.GetSpeed(600, 물건속도);
 
     //키보드
@@ -207,7 +211,7 @@ function failProduct(){
     reduceHeart(); // 하트감소함수호출
     if (life == 0){
         //몫숨 다 소모하면 gameover 
-        game.destroy();
+        game.destroy();   //->상품 중지 하지 않아도 됨. total 점수판만 팝업해도 괜찮을 듯..
         console.log("게임오버");
     }
 }
@@ -220,9 +224,15 @@ function checkInput(inkey){
         inputList.shift();
         console.log("성공");
         score+=10;
+        combo+=1; //콤보+1
         scoreText.setText(score);
+        comboText.setText(combo);
     }
     else{
+        if (combo != 0){ //이미콤보가쌓인경우
+            combo=0; //콤보리셋
+        }
+        comboText.setText(combo); //0보이기
         console.log("실패");
     }
     //아니면 실패->생명하나 감소 reduceLife()호출
@@ -245,14 +255,33 @@ function update(time,delta)
         childs[i].x += speed*delta;
         if(childs[i].x > 786){
             console.log(i); //사라지는 인덱스 출력
-            childs[i].destroy();
+            childs[i].destroy(); 
+            inputList.shift();  //입력받아야할 배열에서 값 삭제
+            //콤보처리
+            if (combo != 0){ //이미콤보가쌓인경우
+                combo=0; //콤보리셋
+            }
+            comboText.setText(combo);
             console.log("아웃");
             failProduct();
         }
-
     }
 
-    
+    //콤보 5의배수마다 속도 점차 증가
+    if(combo%5==0){
+        if(상품간격>0){
+            var temp=combo/5;
+            speed=speed+combo*0.00001 //물건속도는 작을 수록 빠름
+            상품간격= 상품간격-combo*1000;
+        }
+    }
+
+    //리셋
+    if(combo==0){
+        speed=Phaser.Math.GetSpeed(600, 물건속도);
+        상품간격=1000;
+    }
+    speedText.setText(speed); //작을수록 빠름
     
 }
 
