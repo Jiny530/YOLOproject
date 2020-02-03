@@ -150,7 +150,7 @@ function create ()
     bg_판4=this.add.image(512,430,'판1').setOrigin(0).setScale(1/3,1/3);
 
     bg_매대오=this.add.image(512,64,'매대').setOrigin(0).setScale(1/3,1/3);
-    bg_음료매대=this.add.image(200,20,'음료매대').setOrigin(0).setScale(1/3,1/3);
+    bg_음료매대=this.add.image(300,20,'음료매대').setOrigin(0).setScale(1/3,1/3);
     bg_매대왼=this.add.image(0,64,'매대반전').setOrigin(0).setScale(1/3,1/3);
 
     편순이=this.add.image(280,100,'편순이').setOrigin(0).setScale(1/5,1/5);
@@ -245,7 +245,8 @@ function update(time,delta)
         childs[i].x += speed*delta;
         if(childs[i].x > 786){
             console.log(i); //사라지는 인덱스 출력
-            childs[i].destroy();
+            childs[i].destroy(); 
+            inputList.shift();  //입력받아야할 배열에서 값 삭제
             console.log("아웃");
             failProduct();
         }

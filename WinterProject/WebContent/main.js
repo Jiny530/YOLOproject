@@ -1,12 +1,14 @@
 var config = {
     type: Phaser.WEBGL,
-    parent: 'phaser-example',
+    parent: 'body-container',
+    autoCenter: Phaser.Scale.CENTER_BOTH,
     width: 768,
     height: 512,
     disableContextMenu: true,
     scene: {
         preload: preload,
-        create: create
+        create: create,
+        update: update
     }
 };
 
@@ -14,47 +16,45 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.spritesheet('balls', 'assets/blackjack/stop.png', { frameWidth: 512, frameHeight: 512 });
+    this.load.image('blackjack', 'assets/blackjack/cardA.png');
+    this.load.image('pizza','assets/pizza/Mr.Pizza.png');
+    this.load.image('running','assets/running/cat.PNG');
+    this.load.image('store24','assets/store24/과자_포카칩.PNG')
 }
-
+var blackjack
+var pizza
+var running
+var store
 function create ()
 {
-    var graphics = this.add.graphics();
-
-    var color = 0xffff00;
-    var thickness = 2;
-    var alpha = 1;
-    button=this.add.image(300,250,'balls',0);
-    //  Events
-
-    var sx = 0;
-    var sy = 0;
-    var draw = false;
-
-    //  Stop the right-click from triggering the context menu
-    //  You can also set this in the game config
-    this.input.mouse.disableContextMenu();
-
-    this.input.on('pointerdown', function (pointer) {
-
-        
-        button.visible=false;
-    });
-
-    this.input.on('pointerup', function () {
-
-        button.visible=true;
+    blackjack=this.add.image(100,250,'blackjack');
+    blackjack.scale=0.2
+    blackjack.setInteractive();
+    blackjack.on('pointerdown',function(pointer){
 
     });
 
-    this.input.on('pointermove', function (pointer) {
-
-        if (draw && pointer.noButtonDown() === false)
-        {
-            graphics.clear();
-            graphics.lineStyle(thickness, color, alpha);
-            graphics.strokeRect(sx, sy, pointer.x - sx, pointer.y - sy);
-        }
+    pizza=this.add.image(200,250,'pizza')
+    pizza.scale=0.5
+    pizza.setInteractive();
+    pizza.on('pointerdown',function(pointer){
 
     });
+
+    running=this.add.image(300,250,'running')
+    running.scale=2
+    running.setInteractive();
+    running.on('pointerdown',function(pointer){
+
+    });
+
+    store=this.add.image(400,250,'store24')
+    store.scale=0.1
+    store.setInteractive();
+    store.on('pointerdown',function(pointer){
+
+    });
+}
+function update (){
+
 }
