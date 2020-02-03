@@ -18,6 +18,8 @@ var sum2=0
 var dealerSum1=0
 var dealerSum2=0
 var sum
+var moneyText
+var money=100
 function preload ()
 {
     
@@ -38,6 +40,7 @@ function preload ()
     this.load.image('cardk','assets/blackjack/card k.png')
     
 }
+var cards;
 var cardlocate=0;
 var click_stop=false;
 var click_go=false;
@@ -48,6 +51,9 @@ var GAME_OVER = 0
 var GAME_START = 1
 var TURN_STOP=2
 var gameState= GAME_OVER
+
+var PLAYER=1
+var DEALER=2
 function create ()
 {
    
@@ -55,6 +61,7 @@ function create ()
     button_stop.scale=0.2
     button_go = this.add.image(500,100,'go',0)
     button_go.scale=0.2
+    cards= this.add.group();
 
     button_stop.setInteractive();
     button_stop.on('pointerdown',function(pointer){
@@ -64,12 +71,13 @@ function create ()
     button_go.on('pointerdown',function(pointer){
         if(!click_go) click_go=true;
     })
-    sum=this.add.text(100,100,"합계1: "+sum1+" 합계2: "+sum2,{fill:'#fff'});
+    sum=this.add.text(100,50,"합계1: "+sum1+" 합계2: "+sum2,{fill:'#fff'});
+    moneyText=this.add.text(100,100,"판돈: "+money)
     gameState=GAME_START
 
 }
 
-function random_card(){
+function random_card(who){
     rand = Math.floor(Math.random() * (11))+1;
     var cardname;
     if(rand==10)
@@ -81,12 +89,23 @@ function random_card(){
     cardlocate+=100;
     
     // 카드의 합 계산
-    if(rand==11){
-        sum1+=1
-        sum2+=11
-    }else{
-        sum1+=rand
-        sum2+=rand
+    if(who==PLAYER){
+        if(rand==11){
+            sum1+=1
+            sum2+=11
+        }else{
+            sum1+=rand
+            sum2+=rand
+        }    
+    }
+    if(who==DEALER){
+        if(rand==11){
+            dealerSum1+=1
+            dealerSum2+=11
+        }else{
+            dealerSum1+=rand
+            dealerSum2+=rand
+        }    
     }
     return cardname;
 }
@@ -95,8 +114,9 @@ function update(){
    var rand;
    if(gameState==GAME_START){
         if(click_go){  // 클릭 시 카드 추가
-            var cardname=random_card();
+            var cardname=random_card(PLAYER);
             card=this.add.image(cardlocate,400,cardname,0);
+            cards.add(card)
             card.scale=0.2
             sum.setText("합계1: "+sum1+" 합계2: "+sum2,{fill:'#fff'})
 
@@ -108,42 +128,34 @@ function update(){
                 sum1=0
                 sum2=0
                 gameState=GAME_OVER
+                money*=-1
+                moneyText.setText("번돈 : "+money)
+                money*=-1
+                console.log(gameState)
             }
         }
         
         if(click_stop){
             gameState=TURN_STOP
+            console.log(gameState)
             // 딜러 카드 오픈
             cardlocate=0
             while(dealerSum1<=11){
-                var cardname=random_card();
-                card=this.add.image(cardlocate,400,cardname,0);
+                var cardname=random_card(DEALER);
+                card=this.add.image(cardlocate,200,cardname,0);
+                cards.add(card)
                 card.scale=0.2
     
                 // 카드의 합 계산
-                if(rand==11){
-                    dealerSum1+=1
-                    dealerSum2+=11
-                }else{
-                    dealerSum1+=rand
-                    dealerSum2+=rand
-                }
+                
             }
             while(dealerSum1<=21){
                 rand = Math.floor(Math.random())
                 if(rand==1){
-                    var cardname=random_card();
-                    card=this.add.image(cardlocate,400,cardname,0);
+                    var cardname=random_card(DEALER);
+                    card=this.add.image(cardlocate,200,cardname,0);
+                    cards.add(card)
                     card.scale=0.2
-        
-                    // 카드의 합 계산
-                    if(rand==11){
-                        dealerSum1+=1
-                        dealerSum2+=11
-                    }else{
-                        dealerSum1+=rand
-                        dealerSum2+=rand
-                    }
                 }
                 else{
                     break;
@@ -153,28 +165,40 @@ function update(){
                 sum1=sum2
             if(dealerSum2<=21)
                 dealerSum1=dealerSum2
-            if(sum1>dealerSum1)
+            if(sum1>dealerSum1){
                 sum.setText("플레이어 승리")
-            else
+            }
+            else{
                 sum.setText("딜러 승리")
+                money*=-1
+                moneyText.setText("번돈 : "+money)
+                gameState=GAME_OVER
+            }
             click_stop=false
         }
     }
     if(gameState==TURN_STOP){
         if(click_go){
+            cards.clear(true,true)
             sum1=sum2=dealerSum1=dealerSum2=cardlocate=0;
             click_go=false
             gameState=GAME_START
+            money*=2
+            moneyText.setText("판돈: "+money)
+            console.log(gameState)
             sum.setText("합계1: "+sum1+" 합계2: "+sum2,{fill:'#fff'})
         }
         if(click_stop){
             click_stop=false
+            moneyText.setText("번돈 : "+money)
             sum.setText("게임 종료!!")
+            console.log(gameState)
             gameState=GAME_OVER
         }
     }
     if(gameState==GAME_OVER){
         
+
     }
 
     

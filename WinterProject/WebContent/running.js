@@ -57,7 +57,7 @@ function preload ()
     //this.load.image('rock', 'assets/running/rock.png');
     //this.load.image('star', 'assets/running/star.png');
     this.load.spritesheet('dude', 'assets/running/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('character', 'assets/running/character.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('character', 'assets/running/character.png', { frameWidth: 128, frameHeight: 128 });
     this.load.image('cat', 'assets/running/cat.png');
     this.load.image('cloud', 'assets/running/cloud3.png');
     this.load.image('tree', 'assets/running/tree.png');
@@ -110,7 +110,7 @@ function create ()
     limit.create(35, 256, 'limitbg');
     limit.create(740, 256, 'limitbg');
 
-    character=this.physics.add.sprite(100, 300, 'character');
+    character=this.physics.add.sprite(300, 300, 'character');
         
     //  Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
@@ -118,8 +118,8 @@ function create ()
 
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
-        key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+        key: '',
+        frames: this.anims.generateFrameNumbers('character', { start: 0, end: 2 }),
         frameRate: 10,
         repeat: -1
     });
@@ -156,6 +156,8 @@ function update (time, delta)
         return;
     }
         
+    character.setVelocityX(-160);
+    character.anims.play('',true);
     if (cursors.left.isDown)
     {
         player.setVelocityX(-160);
