@@ -57,7 +57,7 @@ function preload ()
     //this.load.image('rock', 'assets/running/rock.png');
     //this.load.image('star', 'assets/running/star.png');
     this.load.spritesheet('dude', 'assets/running/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('character', 'assets/running/character.png', { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet('character', 'assets/running/character.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('cat', 'assets/running/cat.png');
     this.load.image('cloud', 'assets/running/cloud3.png');
     this.load.image('tree', 'assets/running/tree.png');
@@ -110,7 +110,21 @@ function create ()
     limit.create(35, 256, 'limitbg');
     limit.create(740, 256, 'limitbg');
 
-    character=this.physics.add.sprite(300, 300, 'character');
+   //character=this.physics.add.sprite(300, 300, 'character');
+    var characterAnimation = this.anims.create({
+        key: 'walk',
+        frames: this.anims.generateFrameNumbers('character'),
+        frameRate: 16,
+        repeat: -1
+    });
+    
+    
+    
+    var sprite=this.physics.add.sprite(120,300,'character');
+    sprite.play('walk');
+    
+    
+
         
     //  Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
@@ -141,7 +155,7 @@ function create ()
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(character, platforms);
+    this.physics.add.collider(sprite, platforms);
     //this.physics.add.collider(limit, cloud1);
     //this.physics.add.collider(player, limit2);
             
