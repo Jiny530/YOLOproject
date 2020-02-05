@@ -16,11 +16,11 @@ var config = {
     }
 };
         
-var player;
 var move;
 var movingspeed=3;
 var limit;
 
+//배경 변수
 var cloud1;
 var cloud2;
 var cloud3;
@@ -52,13 +52,6 @@ function preload ()
     this.load.image('background', 'assets/running/background4.png');
     this.load.image('bg', 'assets/running/bg5.png');
     this.load.image('ground2','assets/running/ground4.png');
-    this.load.image('heart', 'assets/running/heart.png');
-    //this.load.image('banana', 'assets/running/banana.png');
-    //this.load.image('rock', 'assets/running/rock.png');
-    //this.load.image('star', 'assets/running/star.png');
-    this.load.spritesheet('dude', 'assets/running/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('character', 'assets/running/character.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.image('cat', 'assets/running/cat.png');
     this.load.image('cloud', 'assets/running/cloud3.png');
     this.load.image('tree', 'assets/running/tree.png');
     this.load.image('tree2', 'assets/running/tree2.png');
@@ -69,6 +62,13 @@ function preload ()
     this.load.image('bench', 'assets/running/bench2.png');
     this.load.image('bench', 'assets/running/bench2.png');
     this.load.image('timebar', 'assets/running/timebar2.png');
+
+    this.load.spritesheet('character', 'assets/running/character.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.image('heart', 'assets/running/heart.png');
+    this.load.image('banana', 'assets/running/banana.png');
+    this.load.image('cat', 'assets/running/cat.png');
+    this.load.image('rock', 'assets/running/rock.png');
+    this.load.image('trash', 'assets/running/trash.png');
     
  }
         
@@ -103,7 +103,7 @@ function create ()
 
     //this.add.image(200,300,'cat');
 
-    player = this.physics.add.sprite(100, 300, 'dude');
+    //player = this.physics.add.sprite(100, 300, 'dude');
 
     /* 움직이는 애들 검정색 뒤로 사라지게 검정색 하나 더 놔둠*/
     limit=this.physics.add.staticGroup();
@@ -114,24 +114,26 @@ function create ()
     var characterAnimation = this.anims.create({
         key: 'walk',
         frames: this.anims.generateFrameNumbers('character'),
-        frameRate: 16,
+        frameRate: 30,
         repeat: -1
     });
     
-    
-    
     var sprite=this.physics.add.sprite(120,300,'character');
     sprite.play('walk');
+    //sprite.anims.setRepeat(-1);
     
+    /*타임바 */
+    timerEvent = this.time.addEvent({ delay: 30000 });
+    timebar2 = this.add.graphics({ x: 0, y: 0 });
     
 
         
     //  Player physics properties. Give the little guy a slight bounce.
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+    //player.setBounce(0.2);
+    //player.setCollideWorldBounds(true);
 
     //  Our player animations, turning, walking left and walking right.
-    this.anims.create({
+    /*this.anims.create({
         key: '',
         frames: this.anims.generateFrameNumbers('character', { start: 0, end: 2 }),
         frameRate: 10,
@@ -150,11 +152,10 @@ function create ()
         frameRate: 10,
         repeat: -1
     });
-
+    */
 
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
-    this.physics.add.collider(player, platforms);
     this.physics.add.collider(sprite, platforms);
     //this.physics.add.collider(limit, cloud1);
     //this.physics.add.collider(player, limit2);
@@ -167,42 +168,37 @@ function update (time, delta)
 {
     if (gameOver)
     {
+        sprite.anims.setRepeat(0); //캐릭터 뛰는 거 멈춤
         return;
     }
-        
-    character.setVelocityX(-160);
-    character.anims.play('',true);
-    if (cursors.left.isDown)
-    {
-        player.setVelocityX(-160);
-        
-        player.anims.play('left', true);
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setVelocityX(160);
-        
-        player.anims.play('right', true);
-    }
-    /*else if(corsors.down.isDown){
-        player.setVelocityX(0);
-        player.anims.play('down', true)
-
-    }*/
-    else
-    {
-        player.setVelocityX(0);
-        
-        player.anims.play('turn');
-    }
-        
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.setVelocityY(-300);
-    }
-
+     
     moveBackground(time,delta);
+
     
+    if (gameOver)
+    {
+        return;
+    }
+    
+    timeBar(timebar2);
+}
+
+function timeBar(timebar2){
+    timebar2.clear();
+    timebar2.fillStyle(0xD27FFF);
+
+    if (!gameOver){
+        timebar2.fillRect(400,20, 200-200 * timerEvent.getProgress(), 20);
+        timeSource=200-200 * timerEvent.getProgress();
+    }
+    else {
+        timebar2.fillRect(400, 20, timeSource, 20);
+    }
+    if ((1-timerEvent.getProgress())==0 )
+    {
+        gameOver = true;
+    }
+
 }
 
 function collectStar (player, star)
