@@ -14,6 +14,8 @@ var game = new Phaser.Game(config);
 
 var gameOver = false;
 var pizza;
+var nextPizza = Phaser.Math.Between(1, 4);
+var Next;
 var score = 0;
 var scoreText;
 var pizzaflag = 0; //피자 새로 불러올지 말지 결정
@@ -46,12 +48,16 @@ var BOX;
 var boxX=693;
 var boxY=432;
 var boxtext;
+var isWrong; //틀렸을때 딜레이
+var wrongDelay;
+var wrongflag=0; //틀렸을때 잠시 지연
 
 function preload() {
     this.load.image('Domino', 'assets/pizza/Domino.png');
     this.load.image('Mr', 'assets/pizza/Mr.Pizza.png');
-    this.load.image('School', 'assets/pizza/School.png');
     this.load.image('Hut', 'assets/pizza/Hut.png');
+    this.load.image('School', 'assets/pizza/School.png');
+    
     this.load.image('up', 'assets/pizza/up.png');
     this.load.image('down', 'assets/pizza/down.png');
     this.load.image('left', 'assets/pizza/left.png');
@@ -111,13 +117,13 @@ function create() {
     childMaking(3,hutGroup, hutSequence,this);
     childMaking(4,schoolGroup, schoolSequence,this);
 
-    this.add.image(580,50,'scoretext').setScale(0.25,0.25);
-    scoreText = this.add.text(630, 35, ' 0', { fontSize: '32px', fscoreTextill: '#000' });
+    //this.add.image(580,50,'scoretext').setScale(0.25,0.25);
+    //scoreText = this.add.text(630, 35, ' 0', { fontSize: '32px', fscoreTextill: '#000' });
 
     BOX = this.add.image(668,472,'box').setScale(0.6,0.6);
     boxtext = this.add.text(705,464, 'X 0', { fontSize: '20px', fscoreTextill: '#000' });
 
-    
+
     this.input.keyboard.on('keyup_UP', function (event) {
         if ((!gameOver) && (arrowflag==0))
         {
@@ -208,7 +214,7 @@ function create() {
 
     //타이머
     timerEvent = this.time.addEvent({ delay: 30000 });
-    graphics = this.add.graphics({ x: 30, y: 492 });
+    graphics = this.add.graphics({ x: 0, y: 512 });
     
     graphics.angle=-90;
 }
@@ -224,35 +230,48 @@ function update() {
     }
 
     if (pizzaflag == 0 ) { //새로운 피자박스 및 방향키 패턴 불러오기
+        
+        arrowflag=1;
+        if (isWrong == true){
+            isWrong=false;
+            wrongDelay = this.time.addEvent({delay: 500, callback: wrongEvent, callbackScope: this});
+        }
         if (boxflag ==0){
             boxflag=1;
             var BOX = this.add.image(boxX,boxY-10*boxNum,'box').setScale(0.7,0.7);
             BOX.visible=true;
             boxtext.setText('X '+boxNum);
         }
-        pizzaflag = 1;
-        arrowflag=1;
-        pizza = Phaser.Math.Between(1, 4);
-        arrowdelay = this.time.addEvent({delay: 100, callback: onEvent, callbackScope: this, repeat: 10});
+        if (wrongflag==0){
+            pizzaflag=1;
+            pizza = nextPizza;
+            nextPizza = Phaser.Math.Between(1, 4);
+            switch(nextPizza){
+                case 1: Next = this.add.image(708,60,'Domino').setScale(0.5,0.5); break;
+                case 2: Next = this.add.image(708,60,'Mr').setScale(0.5,0.5); break;
+                case 3: Next = this.add.image(708,60,'Hut').setScale(0.5,0.5); break;
+                case 4: Next = this.add.image(708,60,'School').setScale(0.5,0.5); break;
+            }
+            arrowdelay = this.time.addEvent({delay: 100, callback: onEvent, callbackScope: this, repeat: 10});
+            
+        }
     }
-    
-    
-    
-
+        
     //타이머
     graphics.clear();
     graphics.fillStyle(0xffcc00);
     if (!gameOver){
-        graphics.fillRect(10, 0, 450-450 * timerEvent.getProgress(), 30);
+        graphics.fillRect(0, 0, 512-512 * timerEvent.getProgress(), 30);
         timeSource=450-450 * timerEvent.getProgress();
     }
     else {
-        graphics.fillRect(10, 0, timeSource, 30);
+        graphics.fillRect(0, 0, timeSource, 30);
     }
     if ((1-timerEvent.getProgress())==0 || score<0 )
     {
         gameOver = true;
     }
+
 
     if (gameOver)
     {
@@ -264,21 +283,32 @@ function update() {
 
 
 function onEvent(){
-    if (pizza==1){
-        setting(domino,dominoGroup);
+
+    switch(pizza){
+        case 1: setting(domino,dominoGroup); break;
+        case 2: setting(mr,mrGroup);  break;
+        case 3: setting(hut,hutGroup);  break;
+        case 4: setting(school,schoolGroup); break;
     }
-    else if (pizza==2){
-        setting(mr,mrGroup);   
-    }
-    else if (pizza==3){
-        setting(hut,hutGroup);   
-    }
-    else if (pizza==4){
-        setting(school,schoolGroup); 
-    }
+
 }
 function onEvent1(){
     arrowflag=0;
+}
+function wrongEvent(){
+    if (pizza==1){
+        resetting(domino,dominoGroup);
+    }
+    else if (pizza==2){
+        resetting(mr,mrGroup);   
+    }
+    else if (pizza==3){
+        resetting(hut,hutGroup);   
+    }
+    else if (pizza==4){
+        resetting(school,schoolGroup); 
+    }
+    wrongflag=0;
 }
 
 function setting(pizza, group) {
@@ -287,6 +317,7 @@ function setting(pizza, group) {
     group.children.iterate(function (child) {
         if (child.visible == false && flag==0 )
         {
+            child.clearTint();
             child.visible = true;
             flag=1;
             ai+=1;
@@ -329,17 +360,18 @@ function up_right(pizza, group, sequence, a) {
                     boxflag=0;
                     pizzaflag = 0;
                     pizza.visible = false;
-                    //boxStacking(a,boxNum);
                 }
-                scoreText.setText(' '+score);
+                //scoreText.setText(' '+score);
             }
             else {
-                //child.tint = 0xff0000;
-                resetting(pizza, group);
+                child.tint = 0xa6a6a6;
+                wrongflag=1;
+                isWrong=true;
+                //resetting(pizza, group);
                 si = 0;
                 score -= 50;
                 pizzaflag = 0;
-                scoreText.setText(' '+score);
+                //scoreText.setText(' '+score);
             }
         }
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -366,17 +398,18 @@ function down_right(pizza, group, sequence, a) {
                     boxflag=0;
                     pizzaflag = 0;
                     pizza.visible = false;
-                    //boxStacking(a,boxNum);
                 }
-                scoreText.setText(' '+score);
+                //scoreText.setText(' '+score);
             }
             else {
-                //child.tint = 0xff0000;
-                resetting(pizza, group);
+                child.tint = 0xa6a6a6;
+                wrongflag=1;
+                isWrong=true;
+                //resetting(pizza, group);
                 si = 0;
                 score -= 50;
                 pizzaflag = 0;
-                scoreText.setText(' '+score);
+                //scoreText.setText(' '+score);
             }
         }
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -403,17 +436,18 @@ function left_right(pizza, group, sequence, a) {
                     boxflag=0;
                     pizzaflag = 0;
                     pizza.visible = false;
-                    //boxStacking(a,boxNum);
                 }
-                scoreText.setText(' '+score);
+                //scoreText.setText(' '+score);
             }
             else {
-                //child.tint = 0xff0000;
-                resetting(pizza, group);
+                child.tint = 0xa6a6a6;
+                wrongflag=1;
+                isWrong=true;
+                //resetting(pizza, group);
                 si = 0;
                 score -= 50;
                 pizzaflag = 0;
-                scoreText.setText(' '+score);
+                //scoreText.setText(' '+score);
             }
         }
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -439,17 +473,18 @@ function right_right(pizza, group, sequence, a) {
                     pizzaflag = 0;
                     boxflag=0;
                     pizza.visible = false;
-                    //boxStacking(a,boxNum);
                 }
-                scoreText.setText(' '+score);
+                //scoreText.setText(' '+score);
             }
             else {
-                //child.tint = 0xff0000;
-                resetting(pizza, group);
+                child.tint = 0xa6a6a6;
+                wrongflag=1;
+                isWrong=true;
+                //resetting(pizza, group);
                 si = 0;
                 score -= 50;
                 pizzaflag = 0;
-                scoreText.setText(' '+score);
+                //scoreText.setText(' '+score);
             }
         }
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -477,18 +512,18 @@ function space_right(pizza, group, sequence, a) {
                     pizzaflag = 0;
                     boxflag=0;
                     pizza.visible = false;
-                    
-                    //boxStacking(a,boxNum);
                 }
-                scoreText.setText(' '+score);
+                //scoreText.setText(' '+score);
             }
             else {
-                //child.tint = 0xff0000;
-                resetting(pizza, group);
+                child.tint = 0xa6a6a6;
+                wrongflag=1;
+                isWrong=true;
+                //resetting(pizza, group);
                 si = 0;
                 score -= 50;
                 pizzaflag = 0;
-                scoreText.setText(' '+score);
+                //scoreText.setText(' '+score);
             }
         }
         now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -496,10 +531,6 @@ function space_right(pizza, group, sequence, a) {
 
 }
 
-function boxStacking(a,i){
-
-    
-}
 
 
 var x;
