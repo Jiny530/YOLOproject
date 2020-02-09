@@ -5,7 +5,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 600 },
+            gravity: { y: 0 },
             debug: false
         }
     },
@@ -43,19 +43,13 @@ var scoreText;
 
 var randomList=['heart', 'banana', 'cat', 'rock', 'trash'];
 var sprite; //뛰는 캐릭터
-var nameObjects= new Array(); //오브젝트 이름들
 var objects; //생성된 object 그룹
 var random; //생성될 object
-
-
-var heart;
-var banana;
-var rock;
-var cat;
-var trash;
-var objectList;
-
+var nameObjects= new Array();
         
+
+var hearts;
+
 var game = new Phaser.Game(config);
         //game.world.bounds.setTo(384, 256, 640, 360);
 
@@ -133,7 +127,7 @@ function create ()
         frameRate: 30,
         repeat: -1
     });
-    sprite=this.physics.add.sprite(120,300,'character');
+    sprite=this.physics.add.sprite(120,345,'character');
     sprite.play('walk');
     
     /*타임바 */
@@ -175,23 +169,15 @@ function create ()
     //this.physics.add.collider(player, limit2);
      
     //만들어진 오브젝트 모두 group화
-    objects=this.add.group();
-
+    objects=this.physics.add.group();
+    //hearts=this.add.group();
     //오브젝트 만드는 함수
-    timedEvent=this.time.addEvent({ delay: speed2, callback: firstObject, callbackScope: this, loop: false });
+    //timedEvent=this.time.addEvent({ delay: speed2, callback: firstObject, callbackScope: this, loop: false });
     timedEvent2=this.time.addEvent({ delay:450, callback: spawnObject, callbackScope: this, loop: true }); 
+    //this.physics.add.overlap(sprite, checkHeart, collectHeart, null, this);
     
-
-    heart=this.physics.add.image(800,360,'heart');
-    this.physics.add.collider(sprite, heart);
-    banana=this.add.image(800,360,'banana');
-    cat=this.add.image(800,360,'cat');
-    rock=this.add.image(800,360,'rock');
-    trash=this.add.image(800,360,'trash');
-    objectList=[heart, banana, cat, rock, trash];
-
 }
-        
+
 function update (time, delta)
 {
     if (gameOver)
@@ -204,7 +190,38 @@ function update (time, delta)
     timeBar(timebar2);
     moveObject(time,delta);
     destroyFailObject();
-    scoreCount();
+    //scoreCount();
+    //checkHeart()
+    this.physics.add.overlap(sprite, checkHeart(), collectHeart, null, this);
+}
+
+function checkHeart(){
+    if(nameObjects.length>0){
+        var temp=nameObjects.shift();
+        var object=objects.getChildren();
+        if(temp=='heart'){
+            console.log(object[0]);
+            return object[0];
+            //this.physics.add.overlap(sprite, object[0], collectHeart, null, this);
+        } 
+        else if(temp=='banana'){
+        }
+        else if(temp=='cat'){
+        }
+        else if(temp=='rock'){
+        }
+        else if(temp=='trash'){
+        }
+    }
+    
+}
+
+function collectHeart()
+{
+    var object=objects.getChildren();
+    object[0].destroy();
+    score += 1;
+    scoreText.setText(':'+ score);
 }
 
 //타임바
@@ -228,84 +245,67 @@ function timeBar(timebar2){
 }
 
 //처음 시작할 때 생긴 오브젝트들 (x 범위 안에 있는 애들)
-function firstObject(){
+/*function firstObject(){
     var spritePosition=sprite.x;
     for (var i=0;i<13 ;i++){
         var objectPosition=spritePosition+i*60;
         var temp=randomObject();
-        var object=this.add.image(objectPosition,360, temp);
+
+        var object=this.add.image(objectPosition,360, randomList[temp]);
         objects.add(object);
     }
     return objectPosition;
 }
+*/
 
-function checkObject(){
+/*function checkObject(){
     var temp=nameObjects.shift();
     if(temp=='heart'){
         objects.getChildren();
-        nameObjects.shift();
     }
     else if(temp=='banana'){
-        nameObjects.shift();
     }
     else if(temp=='cat'){
-        nameObjects.shift();
     }
     else if(temp=='rock'){
-        nameObjects.shift();
     }
     else if(temp=='trash'){
-        nameObjects.shift();
     }
 }
+*/
+
 //마지막 위치에 새로운 오브젝트 생성->loop를 통해 반복
 function spawnObject(){
     if(!gameOver){
         var temp=randomObject();
-        console.log(temp);
-        if(temp===heart){
-            var object=heart;
-            console.log('heart');
+        if(temp==0){
             nameObjects.push("heart");
+            var object=this.physics.add.image(840, 360, randomList[temp]);
+            this.physics.add.collider(sprite, object);
+            //hearts.add(object);
+            objects.add(object);
         }
-        else if(temp===banana){
+        else if(temp==1){
             nameObjects.push("banana");
+            var object=this.add.image(840, 360, randomList[temp]);
+            objects.add(object);
         }
-        else if(temp===cat){
+        else if(temp==2){
             nameObjects.push("cat");
+            var object=this.add.image(840, 360, randomList[temp]);
+            objects.add(object);
         }
-        else if(temp===rock){
+        else if(temp==3){
             nameObjects.push("rock");
+            var object=this.add.image(840, 360, randomList[temp]);
+            objects.add(object);
         }
-        else if(temp===trash){
-            nameObjects.push("tash");
+        else if(temp==4){
+            nameObjects.push("trash");
+            var object=this.add.image(840, 360, randomList[temp]);
+            objects.add(object);
         }
-        //var object=this.add.image(840, 360, temp);
-        //objects.add(object);
     }
-    /*
-    if(!gameOver){
-        var temp=randomObject();
-        if(temp=='heart'){
-            nameObjects.push("heart");
-        }
-        else if(temp=='banana'){
-            nameObjects.push("banana");
-        }
-        else if(temp=='cat'){
-            nameObjects.push("cat");
-        }
-        else if(temp=='rock'){
-            nameObjects.push("rock");
-        }
-        else if(temp=='trash'){
-            nameObjects.push("tash");
-        }
-        var object=this.add.image(840, 360, temp);
-        objects.add(object);
-        console.log("랄라");
-    }
-    */
 }
 
 function moveObject(time, delta){
@@ -317,36 +317,34 @@ function moveObject(time, delta){
 
 //오브젝트 적당한 처리 실패했을 때 오브젝트 없애기
 function destroyFailObject(){
-    var temp=objects.getChildren();
-    for(var i=0;i<temp.length;i++){
-        if(temp[i].x<110){
-            temp[i].destroy();
+    if(objects.length>0){
+        var temp=objects.getChildren();
+        console.log(temp[0]);
+        if(temp[0].x<120){
+            temp[0].destroy();
         }
     }
+    
+    /*for(var i=0;i<temp.length;i++){
+        if(temp[i].x<120){
+            temp[0].destroy();
+        }
+    }
+    */
 }
 
 function randomObject(){
     //randomList=["heart", "banana", "cat", "rock", "trash"]
-    //objectList=[heart, banana, cat, rock, trash];
     if(Math.random()<0.7){
-        random=objectList[0];
+        //random=randomList[0];
+        random=0;
     }
     else{
         var num=randomNumber(1,4);
-        random=objectList[num];
+        //random=randomList[num];
+        random=num;
     }
     return random;
-    
-    /*if(Math.random()<0.7){
-        random=randomList[0];
-
-    }
-    else{
-        var num=randomNumber(1,4);
-        random=randomList[num];
-    }
-    return random;
-    */
 }
 
 //min=1, max=4
@@ -355,19 +353,14 @@ function randomNumber(min, max){
     return randVal;
 }
 
-function scoreCount(){
+/*function scoreCount(){
     var temp=objects.getChildren();
     if(temp[0]==='heart'){ //하트이면
     }
 }
+*/
 
-function collectHeart (sprite, heart)
-{
-    heart.disableBody(true, true);
 
-    score += 10;
-    scoreText.setText('Score: ' + score);
-}
 
 //배경 움직이는 것
 function moveBackground(time, delta){
