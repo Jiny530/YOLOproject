@@ -28,7 +28,7 @@ var 편순이;
 
 var 물건속도=3; //작을수록 빠름
 var speed;
-var life=3;  //생명갯수변수
+var life=5;  //생명갯수변수
 var hearts; //이미지그룹
 var diehearts;
 var 점수항목; //score 이미지
@@ -43,6 +43,10 @@ var childs; //상품getchildren()
 
 var timedEvent; //timer event
 
+//var currentPoint=[0,0]; //현재 인풋 받는 상품child의 위치 [x,y]
+var inputGood; //맞음, 틀림 팝업 오브젝트
+var inputBad;
+var inputMiss;
 
  //상품 리스트
  
@@ -51,6 +55,10 @@ var noodleList=["라면_까불닭","라면_미역국","라면_신라면","라면
 var drinkList=["음료_데미사과","음료_데미오렌지","음료_데자와","음료_사이다","음료_콜라","음료_포카리","음료_핫6"];
 var noList=["기타_갈고양이","기타_강아지","기타_검고양이","기타_쓰레기봉지"];
 var productList=[snackList,noodleList,drinkList,noList]; //배열변수자체를 배열의 요소로!
+
+var productList_leverl=[snackList,noodleList];
+var productList_lever2=[snackList,noodleList,noList];
+var productList_lever3=[snackList,noodleList,noList,drinkList];  //왼 오 스페이스 위 인풋짝
 
 var inputList=[]; //랜덤상품고를때마다 눌러야할 키 넣기
 
@@ -102,6 +110,9 @@ function preload ()
     this.load.image('초록타일', 'assets/store24/초록타일.png');
 
     this.load.image('점수항목', 'assets/store24/scoretext.png');
+    this.load.image('틀림', 'assets/store24/틀림팝업.png');
+    this.load.image('맞음', 'assets/store24/맞음팝업.png');
+    this.load.image('미스', 'assets/store24/미스팝업.png');
 }
 
 
@@ -129,17 +140,17 @@ function create ()
         }
     }
 
-    //생명그룹
+    //생명그룹 하트 다섯개
     hearts=this.add.group();
-    for(var i=0;i<3;i++){
+    for(var i=0;i<5;i++){
         var temp=this.add.image(i*64,0,'생명컬러').setOrigin(0).setScale(1/10,1/10);
-        hearts.add(temp,{addToScene:true});  //왼쪽부터 0,1,2 heart
+        hearts.add(temp,{addToScene:true});  //왼쪽부터 0,1,2,3,4 heart
     }
 
     diehearts=this.add.group();
-    for(var i=0;i<3;i++){
+    for(var i=0;i<5;i++){
         var temp=this.add.image(i*64,-100,'생명흑백').setOrigin(0).setScale(1/10,1/10);
-        diehearts.add(temp,{addToScene:true});  //왼쪽부터 0,1,2 heart
+        diehearts.add(temp,{addToScene:true});  //왼쪽부터 0,1,2,3,4 heart
     }
     
     //랜덤으로 선택된 상품그룹화
@@ -161,6 +172,14 @@ function create ()
     scoreText = this.add.text(10*64, 13, '0', { fontSize: '40px', fill: '#000' });
     comboText = this.add.text(7*64, 13, '0', { fontSize: '40px', fill: '#000' });
     speedText = this.add.text(5*64, 13, '0', { fontSize: '40px', fill: '#000' });
+
+
+    inputGood=this.add.sprite(300,200,'맞음').setOrigin(0).setScale(0.8,0.8); 
+    inputBad=this.add.sprite(300,200,'틀림').setOrigin(0).setScale(0.8,0.8); 
+    inputMiss=this.add.sprite(550,250,'미스').setOrigin(0).setScale(0.5,0.5);
+    inputGood.alpha=0;
+    inputBad.alpha=0;
+    inputMiss.alpha=0;
 
     //주기적으로 상품 생성하는 함수 호출
     timedEvent=this.time.addEvent({ delay: 상품간격, callback: createProduct, callbackScope: this, loop: true }); 
@@ -197,6 +216,18 @@ function create ()
 
 //상품child생성
 function createProduct(){
+
+    //점수에 따라 상품 목록 리스트 바뀜
+    if (score <= 100){
+        productList=productList_leverl;
+    }
+    else if(score>=100){
+        productList=productList_lever2;
+    }
+    else if(score >=200){
+        productList=productList_lever3;
+    }
+
     var rand_productList=pickProductList(); //상품종류고르기
     rand_product=randomProduct(rand_productList); //제품종류고르기->제품이름반환
 
@@ -205,21 +236,28 @@ function createProduct(){
     products.add(temp,{addToScene:true}); //group에 넣고 displaylist에 넣기 true 처리
     }
 
-//시간내에 못해서 아웃된 상품 처리코드
+//놓치거나 잘못 입력된 상품 처리 (생명-1)
 function failProduct(){
     life -=1;
     reduceHeart(); // 하트감소함수호출
-    if (life == 0){
-        //몫숨 다 소모하면 gameover 
-        game.destroy();   //->상품 중지 하지 않아도 됨. total 점수판만 팝업해도 괜찮을 듯..
-        console.log("게임오버");
-    }
+
 }
+
+//천천히 없애기
+/*
+function fadePicture(picture) {
+    this.add.tween(picture).to( { alpha: 0 },0, Phaser.Easing.Linear.None, true);
+}*/
+
 
 function checkInput(inkey){
     
     //키보드 입력과 해당 상품 기대 입력값이 같으면 성공
     if (inkey == inputList[0]){
+        inputBad.alpha=0;
+        inputGood.alpha=0;
+        inputGood.alpha=1;
+
         childs[0].destroy();
         inputList.shift();
         console.log("성공");
@@ -228,12 +266,17 @@ function checkInput(inkey){
         scoreText.setText(score);
         comboText.setText(combo);
     }
-    else{
+    else{ //잘못 입력했을 경우
+        inputBad.alpha=0;
+        inputGood.alpha=0;
+        inputBad.alpha=1;
+
         if (combo != 0){ //이미콤보가쌓인경우
             combo=0; //콤보리셋
         }
         comboText.setText(combo); //0보이기
         console.log("실패");
+        failProduct() //생명감소만한다.
     }
     //아니면 실패->생명하나 감소 reduceLife()호출
 }
@@ -250,20 +293,25 @@ function reduceHeart(){
 function update(time,delta)
 {
     childs=products.getChildren();
-    
+   
+
     for (var i=0; i<childs.length; i++){
         childs[i].x += speed*delta;
-        if(childs[i].x > 786){
-            console.log(i); //사라지는 인덱스 출력
-            childs[i].destroy(); 
-            inputList.shift();  //입력받아야할 배열에서 값 삭제
-            //콤보처리
-            if (combo != 0){ //이미콤보가쌓인경우
-                combo=0; //콤보리셋
+        if(childs[i].x > 720){
+            inputMiss.alpha=1;
+            if(childs[i].x > 768){
+                inputMiss.alpha=0;
+                console.log(i); //사라지는 인덱스 출력
+                childs[i].destroy(); 
+                inputList.shift();  //입력받아야할 배열에서 값 삭제
+                //콤보처리
+                if (combo != 0){ //이미콤보가쌓인경우
+                    combo=0; //콤보리셋
+                }
+                comboText.setText(combo);
+                console.log("아웃");
+                failProduct();
             }
-            comboText.setText(combo);
-            console.log("아웃");
-            failProduct();
         }
     }
 
@@ -282,6 +330,14 @@ function update(time,delta)
         상품간격=1000;
     }
     speedText.setText(speed); //작을수록 빠름
+
+
+    //게임오버
+    if (life == 0){
+        //몫숨 다 소모하면, gameover 
+        game.destroy();   //->상품 중지 하지 않아도 됨. total 점수판만 팝업해도 괜찮을 듯..
+        console.log("게임오버");
+    }
     
 }
 
@@ -299,11 +355,11 @@ function pickProductList(){
     } 
     else if (tempindex ==2){
         //2:drink
-        inputList.push('UP');
+        inputList.push('SPACE');
     } 
     else if (tempindex ==3){
         //3:no
-        inputList.push('SPACE');
+        inputList.push('UP');
     } 
     console.log(inputList);
     return productList[tempindex]; //고른 list이름 반환
