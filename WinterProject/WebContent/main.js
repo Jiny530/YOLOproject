@@ -1,6 +1,6 @@
   // mainscene
 class SceneA extends Phaser.Scene{
-
+    
     constructor ()
     {
        super({key:'sceneA'});
@@ -18,21 +18,19 @@ class SceneA extends Phaser.Scene{
 
     create ()
     {
-        this.add.image(100,250,'blackjack');
-        console.log('image added')
+        var blackjack = this.add.image(100,250,'blackjack').setScale(0.5,0.5);
+        var pizza = this.add.image(300,250,'pizza');
+        //console.log('image added')
         // blackjack.scale = 0.2
         // blackjack.setInteractive();
-        // blackjack.on('pointerdown', function (pointer) {
-        //     console.log('From Scene A to SceneB')
-        //     this.scene.start('sceneB')
-        // });
         this.input.once('pointerdown',function(event){
             console.log('clicked')
-            this.scene.start('sceneB');
+            this.scene.start('Pizza');
         },this);
     }
+    
 
-};
+}
 
 // blackjackScene
 class SceneB extends Phaser.Scene{
@@ -233,13 +231,15 @@ class SceneB extends Phaser.Scene{
     }*/
 }
 
+
+
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 768,
+    height: 512,
     backgroundColor: '#000000',
     parent: 'phaser-example',
-    scene: [ SceneA,SceneB]
+    scene: [ SceneA,SceneB, Pizza]
 };
 
 var game = new Phaser.Game(config);
