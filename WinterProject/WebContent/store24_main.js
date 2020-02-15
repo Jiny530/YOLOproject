@@ -32,9 +32,12 @@ var life=5;  //생명갯수변수
 var hearts; //이미지그룹
 var diehearts;
 var 점수항목; //score 이미지
+var 콤보항목;
 var score=0; //실제점수
 var scoreText; //점수쓸공간
 var combo=0;  //콤보변수
+
+var 총상품=0;
 var 상품간격= 900; //0.9초기준시작
 
 var products; //group
@@ -98,9 +101,9 @@ function preload ()
 
     this.load.image('판1', 'assets/store24/판1.png');
     this.load.image('판2', 'assets/store24/판2.png');
-    this.load.image('매대', 'assets/store24/매대.png');
-    this.load.image('매대반전', 'assets/store24/매대반전.png');
-    this.load.image('음료매대', 'assets/store24/음료판매대.png');
+    this.load.image('오른매대', 'assets/store24/오른매대상품.png');
+    this.load.image('왼매대', 'assets/store24/왼매대상품.png');
+    this.load.image('음료매대', 'assets/store24/음료매대.png');
 
     this.load.image('편순이', 'assets/store24/편순이.png');
     this.load.image('생명컬러', 'assets/store24/생명컬러.png');
@@ -110,6 +113,7 @@ function preload ()
     this.load.image('초록타일', 'assets/store24/초록타일.png');
 
     this.load.image('점수항목', 'assets/store24/scoretext.png');
+    this.load.image('콤보항목', 'assets/store24/콤보ui.png');
     this.load.image('틀림', 'assets/store24/틀림팝업.png');
     this.load.image('맞음', 'assets/store24/맞음팝업.png');
     this.load.image('미스', 'assets/store24/미스팝업.png');
@@ -162,17 +166,18 @@ function create ()
     bg_판3=this.add.image(384,430,'판1').setOrigin(0).setScale(1/3,1/3);
     bg_판4=this.add.image(512,430,'판1').setOrigin(0).setScale(1/3,1/3);
 
-    bg_매대왼=this.add.image(0,64,'매대반전').setOrigin(0).setScale(1/3,1/3);
-    bg_음료매대=this.add.image(300,20,'음료매대').setOrigin(0).setScale(1/3,1/3);
-    bg_매대오=this.add.image(512,64,'매대').setOrigin(0).setScale(1/3,1/3);    
+    bg_매대왼=this.add.image(0,64,'왼매대').setOrigin(0).setScale(1/3,1/3);
+    bg_음료매대=this.add.image(280,20,'음료매대').setOrigin(0).setScale(1/3,1/3);
+    bg_매대오=this.add.image(512,64,'오른매대').setOrigin(0).setScale(1/3,1/3);    
 
     편순이=this.add.image(280,100,'편순이').setOrigin(0).setScale(1/5,1/5);
 
-    점수항목=this.add.image(8*64,0,'점수항목').setOrigin(0).setScale(1/4,1/4);
-    scoreText = this.add.text(10*64, 13, '0', { fontSize: '40px', fill: '#000' });
-    comboText = this.add.text(7*64, 13, '0', { fontSize: '40px', fill: '#000' });
-    speedText = this.add.text(5*64, 13, '0', { fontSize: '40px', fill: '#000' });
+    점수항목=this.add.image(8*64+20,0,'점수항목').setOrigin(0).setScale(1/4,1/4);
+    scoreText = this.add.text(10*64+20, 13, '0', { fontSize: '40px', fill: '#000' });
+    comboText = this.add.text(7*64+20, 13, '0', { fontSize: '40px', fill: '#000' });
+    speedText = this.add.text(700, 480, '0', { fontSize: '20px', fill: '#000' });
 
+    콤보항목=this.add.image(5*64-20,-17,'콤보항목').setOrigin(0).setScale(1/2.7,1/2.7);
 
     inputGood=this.add.sprite(300,200,'맞음').setOrigin(0).setScale(0.8,0.8); 
     inputBad=this.add.sprite(300,200,'틀림').setOrigin(0).setScale(0.8,0.8); 
@@ -220,12 +225,15 @@ function createProduct(){
     //점수에 따라 상품 목록 리스트 바뀜
     if (score <= 100){
         productList=productList_leverl;
+        //console.log("level1");
     }
-    else if(score>=100){
+    else if(score>=200 && score<300){   //구간은 위아래 제한 다 있어야해!
         productList=productList_lever2;
+        //console.log("level2");
     }
-    else if(score >=200){
+    else if(score >=300){
         productList=productList_lever3;
+        //console.log("level3");
     }
 
     var rand_productList=pickProductList(); //상품종류고르기
@@ -316,26 +324,40 @@ function update(time,delta)
     }
 
     //콤보 5의배수마다 속도 점차 증가
-    if(combo%5==0){
+   /* if(combo%5==0){
         if(상품간격>0){
             var temp=combo/5;
-            speed=speed+combo*0.00001 //물건속도는 작을 수록 빠름
+            speed=speed+combo*0.001 //speed 클수록 빠름
             상품간격= 상품간격-combo*1000;
+        }
+    }*/
+
+    //점수의 100배수마다 속도 점차 증가
+    if(score%100==0){
+        if(speed<0.5){
+            var temp=score/100;
+            speed=speed+temp*0.0001 //speed 클수록 빠름
+            상품간격= 상품간격/temp*10000;  //상품나오는 delay
         }
     }
 
-    //리셋
-    if(combo==0){
+    //리셋-combo 기준 수정
+    /*if(combo==0){
         speed=Phaser.Math.GetSpeed(600, 물건속도);
         상품간격=1000;
     }
+    */
     speedText.setText(speed); //작을수록 빠름
+    
 
 
     //게임오버
     if (life == 0){
         //몫숨 다 소모하면, gameover 
         game.destroy();   //->상품 중지 하지 않아도 됨. total 점수판만 팝업해도 괜찮을 듯..
+        if(총상품==combo){
+            //all combo
+        }
         console.log("게임오버");
     }
     
