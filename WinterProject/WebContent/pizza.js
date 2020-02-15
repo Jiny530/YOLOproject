@@ -1,14 +1,12 @@
 class Pizza extends Phaser.Scene {
 
     constructor() {
-        super({ key: 'Pizza',active:false,auto_start:false });
+        super();
         
         this.gameOver = false;
         this.pizza;
         this.nextPizza = Phaser.Math.Between(1, 4);
         this.Next;
-        this.score = 0;
-        this.scoreText;
         this.pizzaflag = 0; //피자 새로 불러올지 말지 결정
         this.arrowflag; //방향키 입력 받을지 안받을지 결정
         this.boxflag = 1; //피자박스 누적
@@ -16,10 +14,10 @@ class Pizza extends Phaser.Scene {
         this.mr;
         this.hut;
         this.school;
-        this.dominoSequence = [1, 5, 3, 2, 4, 5, 3, 2, 1, 5, 4, 3]; //11
-        this.mrSequence = [1, 4, 2, 4, 5, 1, 3, 4, 5, 2, 3]; //10
-        this.hutSequence = [1, 3, 2, 5, 1, 3, 4, 2, 4, 3, 2]; //11
-        this.schoolSequence = [3, 2, 4, 5, 3, 4, 1, 3, 4, 2, 1]; //10
+        this.dominoSequence = [1, 5, 3, 2, 4, 5, 3, 2, 1, 5,3]; //11
+        this.mrSequence = [1, 4, 2, 4, 5, 1, 3, 4, 5, 2,5,1,3]; //13
+        this.hutSequence = [1, 3, 2, 5, 1, 3, 4, 2, 4, 3,5]; //11
+        this.schoolSequence = [3, 2, 4, 5, 3, 4, 1, 3, 4, 2,1,5,3]; //10
         this.dominoGroup;
         this.mrGroup;
         this.hutGroup;
@@ -110,8 +108,6 @@ class Pizza extends Phaser.Scene {
         this.childMaking(3, this.hutGroup, this.hutSequence);
         this.childMaking(4, this.schoolGroup, this.schoolSequence);
 
-        //this.add.image(580,50,'scoretext').setScale(0.25,0.25);
-        //scoreText = this.add.text(630, 35, ' 0', { fontSize: '32px', fscoreTextill: '#000' });
 
         this.BOX = this.add.image(668, 472, 'box').setScale(0.6, 0.6);
         this.boxtext = this.add.text(705, 464, 'X 0', { fontSize: '20px', fscoreTextill: '#000' });
@@ -254,7 +250,7 @@ class Pizza extends Phaser.Scene {
         else {
             this.graphics.fillRect(0, 0, this.timeSource, 30);
         }
-        if ((1 - this.timerEvent.getProgress()) == 0 || this.score < 0) {
+        if ((1 - this.timerEvent.getProgress()) == 0) {
             this.gameOver = true;
         }
 
@@ -335,27 +331,21 @@ class Pizza extends Phaser.Scene {
                 {
                     child.visible = false;
                     this.si++;
-                    this.score += 10;
                     flag = 1;
-                    if (now == 10) {
-                        this.score += 100;
+                    if (now == sequence.length -1) {
                         this.si = 0;
                         this.boxNum += 1;
                         this.boxflag = 0;
                         this.pizzaflag = 0;
                         pizza.visible = false;
                     }
-                    //scoreText.setText(' '+score);
                 }
                 else {
                     child.tint = 0xa6a6a6;
                     this.wrongflag = 1;
                     this.isWrong = true;
-                    //resetting(pizza, group);
                     this.si = 0;
-                    this.score -= 50;
                     this.pizzaflag = 0;
-                    //scoreText.setText(' '+score);
                 }
             }
             now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -373,27 +363,21 @@ class Pizza extends Phaser.Scene {
                 {
                     child.visible = false;
                     this.si++;
-                    this.score += 10;
                     flag = 1;
-                    if (now == 10) {
-                        this.score += 100;
+                    if (now == sequence.length -1) {
                         this.si = 0;
                         this.boxNum += 1;
                         this.boxflag = 0;
                         this.pizzaflag = 0;
                         pizza.visible = false;
                     }
-                    //scoreText.setText(' '+score);
                 }
                 else {
                     child.tint = 0xa6a6a6;
                     this.wrongflag = 1;
                     this.isWrong = true;
-                    //resetting(pizza, group);
                     this.si = 0;
-                    this.score -= 50;
                     this.pizzaflag = 0;
-                    //scoreText.setText(' '+score);
                 }
             }
             now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -411,27 +395,21 @@ class Pizza extends Phaser.Scene {
                 {
                     child.visible = false;
                     this.si++;
-                    this.score += 10;
                     flag = 1;
-                    if (now == 10) {
-                        this.score += 100;
+                    if (now == sequence.length -1) {
                         this.si = 0;
                         this.boxNum += 1;
                         this.boxflag = 0;
                         this.pizzaflag = 0;
                         pizza.visible = false;
                     }
-                    //scoreText.setText(' '+score);
                 }
                 else {
                     child.tint = 0xa6a6a6;
                     this.wrongflag = 1;
                     this.isWrong = true;
-                    //resetting(pizza, group);
                     this.si = 0;
-                    this.score -= 50;
                     this.pizzaflag = 0;
-                    //scoreText.setText(' '+score);
                 }
             }
             now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -448,27 +426,21 @@ class Pizza extends Phaser.Scene {
                 {
                     child.visible = false;
                     this.si++;
-                    this.score += 10;
                     flag = 1;
-                    if (now == 10) {
-                        this.score += 100;
+                    if (now == sequence.length -1) {
                         this.si = 0;
                         this.boxNum += 1;
                         this.pizzaflag = 0;
                         this.boxflag = 0;
                         pizza.visible = false;
                     }
-                    //scoreText.setText(' '+score);
                 }
                 else {
                     child.tint = 0xa6a6a6;
                     this.wrongflag = 1;
                     this.isWrong = true;
-                    //resetting(pizza, group);
                     this.si = 0;
-                    this.score -= 50;
                     this.pizzaflag = 0;
-                    //scoreText.setText(' '+score);
                 }
             }
             now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -487,27 +459,21 @@ class Pizza extends Phaser.Scene {
                 {
                     child.visible = false;
                     this.si++;
-                    this.score += 10;
                     flag = 1;
-                    if (now == 10) {
-                        this.score += 100;
+                    if (now == sequence.length -1) {
                         this.si = 0;
                         this.boxNum += 1;
                         this.pizzaflag = 0;
                         this.boxflag = 0;
                         pizza.visible = false;
                     }
-                    //scoreText.setText(' '+score);
                 }
                 else {
                     child.tint = 0xa6a6a6;
                     this.wrongflag = 1;
                     this.isWrong = true;
-                    //resetting(pizza, group);
                     this.si = 0;
-                    this.score -= 50;
                     this.pizzaflag = 0;
-                    //scoreText.setText(' '+score);
                 }
             }
             now++; //현재 판단해야하는 자식이 아니면 다음자식으로
@@ -546,7 +512,7 @@ class Pizza extends Phaser.Scene {
 
             if (pizza == 1) {
                 x = 264;
-                y = 175;
+                y = 166;
                 if (i < 3) {
                     temp.setX(x);
                     temp.setY(y + i * 60);
@@ -561,24 +527,24 @@ class Pizza extends Phaser.Scene {
                 }
             }
             else if (pizza == 2) {
-                x = 324;
-                y = 355;
-                if (i < 3) {
+                x = 264;
+                y = 346;
+                if (i < 4) {
                     temp.setX(x + i * 60);
                     temp.setY(y);
                 }
-                else if (i > 7) {
-                    temp.setX(x + (10 - i) * 60);
+                else if (i > 8) {
+                    temp.setX(x + (12 - i) * 60);
                     temp.setY(y - 4 * 60);
                 }
                 else {
-                    temp.setX(x + 3 * 60);
-                    temp.setY(y - (i - 3) * 60);
+                    temp.setX(x + 4 * 60);
+                    temp.setY(y - (i - 4) * 60);
                 }
             }
             else if (pizza == 3) {
                 x = 504;
-                y = 295;
+                y = 306;
                 if (i < 3) {
                     temp.setX(x);
                     temp.setY(y - i * 60);
@@ -593,19 +559,19 @@ class Pizza extends Phaser.Scene {
                 }
             }
             else if (pizza == 4) {
-                x = 444;
-                y = 115;
-                if (i < 3) {
+                x = 514;
+                y = 125;
+                if (i < 4) {
                     temp.setX(x - i * 60);
                     temp.setY(y);
                 }
-                else if (i > 7) {
-                    temp.setX(x - (10 - i) * 60);
+                else if (i > 8) {
+                    temp.setX(x - (12 - i) * 60);
                     temp.setY(y + 4 * 60);
                 }
                 else {
-                    temp.setX(x - 3 * 60);
-                    temp.setY(y + (i - 3) * 60);
+                    temp.setX(x - 4 * 60);
+                    temp.setY(y + (i - 4) * 60);
                 }
 
             }
@@ -617,3 +583,12 @@ class Pizza extends Phaser.Scene {
 
     }
 }
+
+var config = {
+    type: Phaser.AUTO,
+    width: 768,
+    height: 512,
+    scene: Pizza
+};
+
+var game = new Phaser.Game(config);

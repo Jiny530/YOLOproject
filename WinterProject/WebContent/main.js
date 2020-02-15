@@ -3,8 +3,7 @@ class SceneA extends Phaser.Scene{
     
     constructor ()
     {
-       super({key:'sceneA'});
-        console.log('sceneA called')
+       super({key:'Main'});
 
     }
 
