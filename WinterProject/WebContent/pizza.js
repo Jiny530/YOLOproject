@@ -1,7 +1,8 @@
 class Pizza extends Phaser.Scene {
 
     constructor() {
-        super();
+        super({ key: 'Pizza',active:false,auto_start:false });
+        
         this.gameOver = false;
         this.pizza;
         this.nextPizza = Phaser.Math.Between(1, 4);
@@ -21,7 +22,7 @@ class Pizza extends Phaser.Scene {
         this.schoolSequence = [3, 2, 4, 5, 3, 4, 1, 3, 4, 2, 1]; //10
         this.dominoGroup;
         this.mrGroup;
-        this.hetGroup;
+        this.hutGroup;
         this.schoolGroup;
         this.boxGroup;
         this.boxNum = 0;
@@ -55,9 +56,9 @@ class Pizza extends Phaser.Scene {
         this.load.image('left', 'assets/pizza/left.png');
         this.load.image('right', 'assets/pizza/right.png');
         this.load.image('space', 'assets/pizza/space1.png');
-        this.load.image('back1', 'assets/pizza/back1.png');
-        this.load.image('back2', 'assets/pizza/back2.png');
-        this.load.image('back3', 'assets/pizza/back3.png');
+        //this.load.image('back1', 'assets/pizza/back1.png');
+        //this.load.image('back2', 'assets/pizza/back2.png');
+        //this.load.image('back3', 'assets/pizza/back3.png');
         this.load.image('scoretext', 'assets/pizza/scoretext.png');
         this.load.image('box', 'assets/pizza/box.png');
         //this.load.image('timeBar','assets/pizza/timeBar.png')
@@ -616,12 +617,3 @@ class Pizza extends Phaser.Scene {
 
     }
 }
-
-var config = {
-    type: Phaser.AUTO,
-    width: 768,
-    height: 512,
-    scene: Pizza
-};
-
-var game = new Phaser.Game(config);
