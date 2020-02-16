@@ -26,6 +26,8 @@ class Store24 extends Phaser.Scene {
         this.score=0; //실제점수
         this.scoreText; //점수쓸공간
         this.combo=0;  //콤보변수
+        this.topcombo=0; //제일 높은 콤보
+        this.bonustag=0; //all combo 해서 보너스 있나? 없으면0
 
         this.총상품=0;
         this.상품간격= 900; //0.9초기준시작
@@ -53,6 +55,14 @@ class Store24 extends Phaser.Scene {
         this.productList_lever3=[this.snackList,this.noodleList,this.noList,this.drinkList];  //왼 오 스페이스 위 인풋짝
 
         this.inputList=[]; //랜덤상품고를때마다 눌러야할 키 넣기
+
+        //결과팝업변수
+        this.endpopup;
+        this.endpopup_Ok;
+        this.endpopup_score;
+        this.endpopup_combo;
+        this.endpopup_joy;
+        this.endpopup_money;
     }
 
     preload ()
@@ -107,6 +117,10 @@ class Store24 extends Phaser.Scene {
         this.load.image('틀림', 'assets/store24/틀림팝업.png');
         this.load.image('맞음', 'assets/store24/맞음팝업.png');
         this.load.image('미스', 'assets/store24/미스팝업.png');
+
+        //결과 팝업창
+        this.load.image('결과팝업','assets/공통팝업창/편의점결과.PNG');
+        this.load.image('OK버튼','assets/공통팝업창/Ok버튼.PNG')
     }
 
     
@@ -163,9 +177,9 @@ class Store24 extends Phaser.Scene {
         this.편순이=this.add.image(280,110,'편순이').setOrigin(0).setScale(1/5,1/5);
 
         this.점수항목=this.add.image(8*64+20,0,'점수항목').setOrigin(0).setScale(1/4,1/4);
-        this.scoreText = this.add.text(10*64+20, 13, '0', { fontSize: '40px', fill: '#000' });
-        this.comboText = this.add.text(7*64+30, 13, '0', { fontSize: '40px', fill: '#000' });
-        this.speedText = this.add.text(700, 480, '0', { fontSize: '20px', fill: '#000' });
+        this.scoreText = this.add.text(10*64+20, 13, '0', { fontFamily: 'fantasy',fontSize: '30px', color: '#000'});
+        this.comboText = this.add.text(7*64+30, 13, '0', {fontFamily: 'fantasy',fontSize: '30px', color: '#000'});
+        this.speedText = this.add.text(700, 480, '0', { fontFamily: 'fantasy',fontSize: '30px', color: '#000'});
 
         this.콤보항목=this.add.image(5*64-10,-17,'콤보항목').setOrigin(0).setScale(1/2.7,1/2.7);
 
@@ -232,14 +246,27 @@ class Store24 extends Phaser.Scene {
         var temp=this.add.image(-120,340,this.rand_product).setOrigin(0);
         temp.setScale(1/7,1/7);
         this.products.add(temp,{addToScene:true}); //group에 넣고 displaylist에 넣기 true 처리
+
+        this.총상품 ==this.총상품+1; //총상품 갯수
     }
         
 
     //놓치거나 잘못 입력된 상품 처리 (생명-1)
     failProduct(){
+        
+        if(this.combo>this.topcombo){
+            //combo기록갱신
+            this.topcombo=this.combo;
+        }
+
+        
+        if (this.combo != 0){ //이미콤보가쌓인경우
+            this.combo=0; //콤보리셋
+        }
+        this.comboText.setText(this.combo); //0보이기
+
         this.life -=1;
         this.reduceHeart(); // 하트감소함수호출
-
     }
 
 
@@ -266,10 +293,6 @@ class Store24 extends Phaser.Scene {
             this.inputMiss.alpha=0;
             this.inputBad.alpha=1;
 
-            if (this.combo != 0){ //이미콤보가쌓인경우
-                this.combo=0; //콤보리셋
-            }
-            this.comboText.setText(this.combo); //0보이기
             console.log("실패");
             this.failProduct() //생명감소만한다.
         }
@@ -300,13 +323,8 @@ class Store24 extends Phaser.Scene {
                     console.log(i); //사라지는 인덱스 출력
                     this.childs[i].destroy(); 
                     this.inputList.shift();  //입력받아야할 배열에서 값 삭제
-                    //콤보처리
-                    if (this.combo != 0){ //이미콤보가쌓인경우
-                        this.combo=0; //콤보리셋
-                    }
-                    this.comboText.setText(this.combo);
                     console.log("아웃");
-                    this.failProduct();
+                    this.failProduct(); //여기서 콤보처리
                 }
             }
         }
@@ -333,11 +351,11 @@ class Store24 extends Phaser.Scene {
         //게임오버
         if (this.life == 0){
             //몫숨 다 소모하면, gameover 
-            game.destroy();   //->상품 중지 하지 않아도 됨. total 점수판만 팝업해도 괜찮을 듯..
-            if(this.총상품==this.combo){
-                //all combo tag
+            if(this.총상품==this.topcombo){
+                this.bonustag=1;
             }
-            console.log("게임오버");
+            this.endStore24(); //결과창부르기
+            //console.log("게임오버");
         }
         
     }
@@ -376,7 +394,36 @@ class Store24 extends Phaser.Scene {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
     }
+    //결과처리함수
+    endStore24(){
+        this.endpopup=this.add.image(0,0,'결과팝업').setOrigin(0);
+        this.endpopup_Ok=this.add.image(0,0,'Ok버튼').setOrigin(0);
+
+         //결과팝업text
+        this.endpopup_combo= this.add.text(320, 256, this.topcombo, { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
+        this.endpopup_score= this.add.text(320, 192, this.score, { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
+        this.endpopup_joy= this.add.text(384, 352, '', { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
+        this.endpopup_money= this.add.text(192, 352, '', { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
+        //all combo 하면 즐거움+2 ,돈 *2
+        //콤보만큼 100원씩 더줌
+        //100점 마다 1000원
+        var money=1000*(this.score/100)+(this.topcombo*100);
+
+        if(this.bonustag==1){
+            this.endpopup_joy.setText('+2'); 
+            this.endpopup_money.setText(money*2);
+        }
+        else{ //보통
+            this.endpopup_money.setText(money);
+            this.endpopup_joy.setText('-'); 
+        }
+
+        game.destroy(); 
+    }
 }
+
+
+
 
 var config = {
     type: Phaser.AUTO,

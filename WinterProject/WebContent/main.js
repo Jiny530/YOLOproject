@@ -1,8 +1,8 @@
   
 //공통변수
-date; //30일부터 1일 까지 0이면 게임 엔딩
-joy; //즐거움 1~10일 까지 0이면 게임 오버
-money; //돈 10000원에서 시작 0이면 게임 오버 -> 초당 100원씩 감소
+date=30; //30일부터 1일 까지 0이면 게임 엔딩
+joy=5; //즐거움 1~10일 까지 0이면 게임 오버
+money=10000; //돈 10000원에서 시작 0이면 게임 오버 -> 초당 100원씩 감소
 
 
 
@@ -36,11 +36,10 @@ class Main extends Phaser.Scene{
 
     create ()
     {   //메인게임화면 설정
-        mainLeftBar=this.add.image(0,0,'왼쪽바').setScale(0,0);
+        this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
 
 
-
-
+        /*
         var blackjack = this.add.image(100,250,'blackjack').setScale(0.5,0.5);
         var pizza = this.add.image(300,250,'pizza');
         //console.log('image added')
@@ -52,7 +51,7 @@ class Main extends Phaser.Scene{
         pizza.on('pointerdown',function(event){
             console.log('clicked')
             this.scene.switch('Pizza');
-        },this);
+        },this);*/
 
 
 
