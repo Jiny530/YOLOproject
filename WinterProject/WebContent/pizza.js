@@ -1,8 +1,10 @@
+money = 0;
+
 class Pizza extends Phaser.Scene {
 
     constructor() {
+        //super({ key: 'Pizza', active: false, auto_start: false });
         super();
-        
         this.gameOver = false;
         this.pizza;
         this.nextPizza = Phaser.Math.Between(1, 4);
@@ -14,10 +16,10 @@ class Pizza extends Phaser.Scene {
         this.mr;
         this.hut;
         this.school;
-        this.dominoSequence = [1, 5, 3, 2, 4, 5, 3, 2, 1, 5,3]; //11
-        this.mrSequence = [1, 4, 2, 4, 5, 1, 3, 4, 5, 2,5,1,3]; //13
-        this.hutSequence = [1, 3, 2, 5, 1, 3, 4, 2, 4, 3,5]; //11
-        this.schoolSequence = [3, 2, 4, 5, 3, 4, 1, 3, 4, 2,1,5,3]; //10
+        this.dominoSequence = [1, 5, 3, 2, 4, 5, 3, 2, 1, 5, 3]; //11
+        this.mrSequence = [1, 4, 2, 4, 5, 1, 3, 4, 5, 2, 5]; //13
+        this.hutSequence = [1, 3, 2, 5, 1, 3, 4, 2, 4, 3, 5]; //11
+        this.schoolSequence = [3, 2, 4, 5, 3, 4, 1, 3, 4, 2, 1]; //10
         this.dominoGroup;
         this.mrGroup;
         this.hutGroup;
@@ -41,11 +43,12 @@ class Pizza extends Phaser.Scene {
         this.wrongDelay;
         this.wrongflag = 0; //틀렸을때 잠시 지연
         this.timeSource;
+        this.player;
     }
 
     preload() {
         this.load.image('Domino', 'assets/pizza/Domino.png');
-        this.load.image('Mr', 'assets/pizza/Mr.Pizza.png');
+        this.load.image('Mr', 'assets/pizza/mPizza.png');
         this.load.image('Hut', 'assets/pizza/Hut.png');
         this.load.image('School', 'assets/pizza/School.png');
 
@@ -59,36 +62,16 @@ class Pizza extends Phaser.Scene {
         //this.load.image('back3', 'assets/pizza/back3.png');
         this.load.image('scoretext', 'assets/pizza/scoretext.png');
         this.load.image('box', 'assets/pizza/box.png');
+        this.load.image('player','assets/pizza/pizza_player.png')
         //this.load.image('timeBar','assets/pizza/timeBar.png')
     }
     //키보드 버튼 하나 누르는 거에 반응하는 곳
     create() {
-        /* 배경 - 수정할 것 
-        for (var k=0;k<4;k++){
-            for(var j=0;j<6;j++){
-                
-                if (k%2==1 && j%2==1){
-                    this.add.image(64+128*j,64+128*k,'back1');
-                }
-                else if (k%2==1 && j%2==0){
-                    this.add.image(64+128*j,64+128*k,'back2');
-                }
-                else if (k%2==0 && j%2==1){
-                    this.add.image(64+128*j,64+128*k,'back2');
-                }
-                else if (k%2==0 && j%2==0){
-                    this.add.image(64+128*j,64+128*k,'back1');
-                }
-                
-                if (1<=k && k<=2 && 1<=j&& j<=4){
-                    this.add.image(64+128*j,64+128*k,'back3');
-                }
-                
-            }
-        }
-        */
+
+        this.player = this.add.image(384,100,'player').setScale(0.15,0.15);
+
         this.domino = this.add.image(384, 240, 'Domino').setScale(0.8, 0.8);
-        this.mr = this.add.image(384, 240, 'Mr').setScale(0.8, 0.8);
+        this.mr = this.add.image(384, 240, 'Mr');
         this.hut = this.add.image(384, 240, 'Hut').setScale(0.8, 0.8);
         this.school = this.add.image(384, 240, 'School').setScale(0.8, 0.8);
 
@@ -113,7 +96,7 @@ class Pizza extends Phaser.Scene {
         this.boxtext = this.add.text(705, 464, 'X 0', { fontSize: '20px', fscoreTextill: '#000' });
 
 
-        this.input.keyboard.on('keyup_UP', (event)=>{
+        this.input.keyboard.on('keyup_UP', (event) => {
             if ((!this.gameOver) && (this.arrowflag == 0)) {
                 if (this.pizza == 1) {
                     this.up_right(this.domino, this.dominoGroup, this.dominoSequence);
@@ -129,7 +112,7 @@ class Pizza extends Phaser.Scene {
                 }
             }
         });
-        this.input.keyboard.on('keyup_DOWN',  (event)=>{
+        this.input.keyboard.on('keyup_DOWN', (event) => {
             if (!this.gameOver && this.arrowflag == 0) {
                 if (this.pizza == 1) {
                     this.down_right(this.domino, this.dominoGroup, this.dominoSequence);
@@ -145,7 +128,7 @@ class Pizza extends Phaser.Scene {
                 }
             }
         });
-        this.input.keyboard.on('keyup_LEFT',  (event) =>{
+        this.input.keyboard.on('keyup_LEFT', (event) => {
             if (!this.gameOver && this.arrowflag == 0) {
                 if (this.pizza == 1) {
                     this.left_right(this.domino, this.dominoGroup, this.dominoSequence);
@@ -161,7 +144,7 @@ class Pizza extends Phaser.Scene {
                 }
             }
         });
-        this.input.keyboard.on('keyup_RIGHT',  (event)=> {
+        this.input.keyboard.on('keyup_RIGHT', (event) => {
             if (!this.gameOver && this.arrowflag == 0) {
                 if (this.pizza == 1) {
                     this.right_right(this.domino, this.dominoGroup, this.dominoSequence);
@@ -177,7 +160,7 @@ class Pizza extends Phaser.Scene {
                 }
             }
         });
-        this.input.keyboard.on('keyup_SPACE',  (event)=> {
+        this.input.keyboard.on('keyup_SPACE', (event) => {
             if (!this.gameOver && this.arrowflag == 0) {
                 if (this.pizza == 1) {
                     this.space_right(this.domino, this.dominoGroup, this.dominoSequence);
@@ -256,7 +239,7 @@ class Pizza extends Phaser.Scene {
 
 
         if (this.gameOver) {
-            return;
+            this.scene.switch('Main');
         }
     }
 
@@ -295,7 +278,7 @@ class Pizza extends Phaser.Scene {
     setting(pizza, group) {
         pizza.visible = true;
         var flag = 0;
-        group.children.iterate( (child)=>{
+        group.children.iterate((child) => {
             if (child.visible == false && flag == 0) {
                 child.clearTint();
                 child.visible = true;
@@ -313,7 +296,7 @@ class Pizza extends Phaser.Scene {
     }
     resetting(pizza, group) {
         pizza.visible = false;
-        group.children.iterate( (child)=>{
+        group.children.iterate((child) => {
             child.visible = false;
         });
     }
@@ -323,7 +306,7 @@ class Pizza extends Phaser.Scene {
     up_right(pizza, group, sequence) {
         var now = 0;
         var flag = 0;
-        group.children.iterate( (child)=>{
+        group.children.iterate((child) => {
 
             //현재 자식과 같은지
             if (flag == 0 && now == this.si) {
@@ -332,7 +315,7 @@ class Pizza extends Phaser.Scene {
                     child.visible = false;
                     this.si++;
                     flag = 1;
-                    if (now == sequence.length -1) {
+                    if (now == sequence.length - 1) {
                         this.si = 0;
                         this.boxNum += 1;
                         this.boxflag = 0;
@@ -355,7 +338,7 @@ class Pizza extends Phaser.Scene {
     down_right(pizza, group, sequence) {
         var now = 0;
         var flag = 0;
-        group.children.iterate( (child)=>{
+        group.children.iterate((child) => {
 
             //현재 자식과 같은지
             if (flag == 0 && now == this.si) {
@@ -364,7 +347,7 @@ class Pizza extends Phaser.Scene {
                     child.visible = false;
                     this.si++;
                     flag = 1;
-                    if (now == sequence.length -1) {
+                    if (now == sequence.length - 1) {
                         this.si = 0;
                         this.boxNum += 1;
                         this.boxflag = 0;
@@ -387,7 +370,7 @@ class Pizza extends Phaser.Scene {
     left_right(pizza, group, sequence) {
         var now = 0;
         var flag = 0;
-        group.children.iterate((child)=>{
+        group.children.iterate((child) => {
 
             //현재 자식과 같은지
             if (flag == 0 && now == this.si) {
@@ -396,7 +379,7 @@ class Pizza extends Phaser.Scene {
                     child.visible = false;
                     this.si++;
                     flag = 1;
-                    if (now == sequence.length -1) {
+                    if (now == sequence.length - 1) {
                         this.si = 0;
                         this.boxNum += 1;
                         this.boxflag = 0;
@@ -418,7 +401,7 @@ class Pizza extends Phaser.Scene {
     right_right(pizza, group, sequence) {
         var now = 0;
         var flag = 0;
-        group.children.iterate( (child)=>{
+        group.children.iterate((child) => {
 
             //현재 자식과 같은지
             if (flag == 0 && now == this.si) {
@@ -427,7 +410,7 @@ class Pizza extends Phaser.Scene {
                     child.visible = false;
                     this.si++;
                     flag = 1;
-                    if (now == sequence.length -1) {
+                    if (now == sequence.length - 1) {
                         this.si = 0;
                         this.boxNum += 1;
                         this.pizzaflag = 0;
@@ -451,7 +434,7 @@ class Pizza extends Phaser.Scene {
     space_right(pizza, group, sequence) {
         var now = 0;
         var flag = 0;
-        group.children.iterate( (child)=>{
+        group.children.iterate((child) => {
 
             //현재 자식과 같은지
             if (flag == 0 && now == this.si) {
@@ -460,7 +443,7 @@ class Pizza extends Phaser.Scene {
                     child.visible = false;
                     this.si++;
                     flag = 1;
-                    if (now == sequence.length -1) {
+                    if (now == sequence.length - 1) {
                         this.si = 0;
                         this.boxNum += 1;
                         this.pizzaflag = 0;
@@ -510,70 +493,19 @@ class Pizza extends Phaser.Scene {
             }
 
 
-            if (pizza == 1) {
-                x = 264;
-                y = 166;
-                if (i < 3) {
-                    temp.setX(x);
-                    temp.setY(y + i * 60);
-                }
-                else if (i > 7) {
-                    temp.setX(x + 4 * 60);
-                    temp.setY(y + (10 - i) * 60);
-                }
-                else {
-                    temp.setX(x + (i - 3) * 60);
-                    temp.setY(y + 3 * 60);
-                }
+            x = 264;
+            y = 175;
+            if (i < 3) {
+                temp.setX(x);
+                temp.setY(y + i * 60);
             }
-            else if (pizza == 2) {
-                x = 264;
-                y = 346;
-                if (i < 4) {
-                    temp.setX(x + i * 60);
-                    temp.setY(y);
-                }
-                else if (i > 8) {
-                    temp.setX(x + (12 - i) * 60);
-                    temp.setY(y - 4 * 60);
-                }
-                else {
-                    temp.setX(x + 4 * 60);
-                    temp.setY(y - (i - 4) * 60);
-                }
+            else if (i > 7) {
+                temp.setX(x + 4 * 60);
+                temp.setY(y + (10 - i) * 60);
             }
-            else if (pizza == 3) {
-                x = 504;
-                y = 306;
-                if (i < 3) {
-                    temp.setX(x);
-                    temp.setY(y - i * 60);
-                }
-                else if (i > 7) {
-                    temp.setX(x - 4 * 60);
-                    temp.setY(y - (10 - i) * 60);
-                }
-                else {
-                    temp.setX(x - (i - 3) * 60);
-                    temp.setY(y - 3 * 60);
-                }
-            }
-            else if (pizza == 4) {
-                x = 514;
-                y = 125;
-                if (i < 4) {
-                    temp.setX(x - i * 60);
-                    temp.setY(y);
-                }
-                else if (i > 8) {
-                    temp.setX(x - (12 - i) * 60);
-                    temp.setY(y + 4 * 60);
-                }
-                else {
-                    temp.setX(x - 4 * 60);
-                    temp.setY(y + (i - 4) * 60);
-                }
-
+            else {
+                temp.setX(x + (i - 3) * 60);
+                temp.setY(y + 3 * 60);
             }
 
             temp.visible = false;

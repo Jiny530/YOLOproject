@@ -2,8 +2,20 @@ class SceneA extends Phaser.Scene{
 
     constructor ()
     {
-       super({key:'sceneA'});
-        console.log('sceneA called')
+        super({key:'sceneA'});
+        console.log('sceneA called');
+
+        this.mainCharacter;
+        this.cursors;
+
+        this.buildings;
+        this.공원;
+        this.블랙잭;
+        this.편의점;
+        this.피자나라;
+
+
+
 
     }
 
@@ -13,24 +25,124 @@ class SceneA extends Phaser.Scene{
         this.load.image('pizza', 'assets/pizza/Mr.Pizza.png');
         this.load.image('running', 'assets/running/cat.PNG');
         this.load.image('store24', 'assets/store24/과자_포카칩.PNG')
+
+        //this.load.image('mainCharacter','assets/main/mainCharacter.PNG');
+        this.load.image('공원','assets/main/공원.PNG');
+        this.load.image('블랙잭','assets/main/블랙잭.PNG');
+        this.load.image('편의점','assets/main/편의점.PNG');
+        this.load.image('피자나라','assets/main/피자나라.PNG');
     }
 
     create ()
     {
-        this.add.image(100,250,'blackjack');
-        console.log('image added')
-        // blackjack.scale = 0.2
-        // blackjack.setInteractive();
-        // blackjack.on('pointerdown', function (pointer) {
-        //     console.log('From Scene A to SceneB')
-        //     this.scene.start('sceneB')
-        // });
+        this.mainCharacter=this.physics.add.sprite(100,450,'mainCharacter');
+        this.mainCharacter.setCollideWorldBounds(true);
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.buildings = this.physics.add.staticGroup(); //빌딩 그룹화
+
+        //미니게임 건물 배치
+        this.공원=this.physics.add.image(544, 288, '공원');
+        this.공원.angle=270;
+        this.블랙잭=this.physics.add.image(608, 96, '블랙잭');
+        this.블랙잭.angle=90;
+        this.편의점=this.physics.add.image(352, 288, '편의점');
+        this.피자나라=this.physics.add.image(288, 160, '피자나라');
+        //this.add.image(288, 96, '피자나라');
+        //this.add.image(288, 32, '피자나라');
+        this.피자나라.angle=180;
+
+        this.buildings.add(this.공원);
+        this.buildings.add(this.블랙잭);
+        this.buildings.add(this.편의점);
+        this.buildings.add(this.피자나라);
+
+
+
+        //메인캐릭터 상하좌우 움직임
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('mainCharactr', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('mainCharactr', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'up',
+            frames: this.anims.generateFrameNumbers('mainCharactr', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'down',
+            frames: this.anims.generateFrameNumbers('mainCharactr', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+    
         this.input.once('pointerdown',function(event){
             console.log('clicked')
             this.scene.start('sceneRun');
         },this);
+
+        this.physics.add.collider(this.mainCharacter, this.buildings);
     }
 
+    /*update() {
+        if (this.cursors.left.isDown) {
+            this.mainCharacter.setVelocityX(-160);
+
+            this.mainCharacter.anims.play('left', true);
+        }
+        else if (this.cursors.right.isDown) {
+            this.mainCharacter.setVelocityX(160);
+
+            this.mainCharacter.anims.play('right', true);
+        }
+        else if (this.cursors.up.isDown) {
+            this.mainCharacter.setVelocityY(160);
+
+            this.mainCharacter.anims.play('right', true);
+        }
+        else if (this.cursors.down.isDown) {
+            this.mainCharacter.setVelocityY(-160);
+
+            this.mainCharacter.anims.play('right', true);
+        }
+        else if (this.cursors.down.isDown) {
+            this.mainCharacter.setVelocityY(-160);
+
+            this.mainCharacter.anims.play('right', true);
+        }
+        else if (this.cursors.down.isDown) {
+            this.mainCharacter.setVelocityY(-160);
+
+            this.mainCharacter.anims.play('right', true);
+        }
+
+        if(this.mainCharacter.x>256 && this.mainCharacter.x<320){
+            this.scene.switch('ScenePizza');
+        }
+        if(this.mainCharacter.x>320 && this.mainCharacter.x<384){
+            this.scene.switch('SceneStore');
+        }
+        if(this.mainCharacter.y>256 && this.mainCharacter.y<320){
+            this.scene.switch('SceneRun');
+        }
+        if(this.mainCharacter.y>64 && this.mainCharacter.y<128){
+            this.scene.switch('SceneBlack');
+        }
+
+    }
+    */
 };
 
 
@@ -60,6 +172,7 @@ class SceneRun extends Phaser.Scene{
         this.bench;
         this.platforms;
         this.limit; //검정색 뒤로 배경 움직이게
+        this.limitground;
 
         this.cursors;
         this.score = 0;
@@ -82,6 +195,15 @@ class SceneRun extends Phaser.Scene{
         this.nameObjects= new Array(); //고양이, 쓰레기 이름 담는 배열
         this.randomList=['heart', 'banana', 'cat', 'rock', 'trash'];
 
+        //result 팝업
+        this.happiness;
+        this.okButton;
+        this.okText;
+        this.result;
+        this.scoreResultText;
+        this.totalScoreText;
+        this.totalText;
+
     }
 
     preload ()
@@ -101,6 +223,11 @@ class SceneRun extends Phaser.Scene{
         this.load.image('bench', 'assets/running/bench2.png');
         this.load.image('bench', 'assets/running/bench2.png');
         this.load.image('timebar', 'assets/running/timebar2.png');
+        this.load.image('score', 'assets/running/score.png');
+        this.load.image('+1', 'assets/running/+1.png');
+        this.load.image('+5', 'assets/running/+5.png');
+        this.load.image('-5', 'assets/running/-5.png');
+        this.load.image('limitground', 'assets/running/limit.png');
 
         this.load.spritesheet('character', 'assets/running/character.png', { frameWidth: 64, frameHeight: 64 });
 
@@ -109,10 +236,21 @@ class SceneRun extends Phaser.Scene{
         this.load.image('cat', 'assets/running/cat.png');
         this.load.image('rock', 'assets/running/rock.png');
         this.load.image('trash', 'assets/running/trash.png');
+
+        //result 팝업
+        this.load.image('happiness', 'assets/running/result/happiness.png');
+        this.load.image('okButton', 'assets/running/result/okButton.png');
+        this.load.image('okText', 'assets/running/result/okText.png');
+        this.load.image('result', 'assets/running/result/result.png');
+        this.load.image('scoreResultText', 'assets/running/result/scoreResultText.png');
+        this.load.image('totalScoreText', 'assets/running/result/totalScoreText.png');
+        this.load.image('totalText', 'assets/running/result/totalText.png');
+         
     }
 
     create ()
     {
+        this.limitground=this.physics.add.image(384, 426, 'limitground');
         this.platforms = this.physics.add.staticGroup(); //캐릭터가 뛰는 바닥 static
         this.add.image(384, 256, 'background'); //검정 바탕
         this.add.image(384, 256, 'bg'); //하늘색 바탕
@@ -146,11 +284,23 @@ class SceneRun extends Phaser.Scene{
         this.grass4 = this.add.image(800, 363, 'grass');
         this.bench = this.add.image(370, 345, 'bench');
 
+        this.add.image(140, 280, 'score');
+
+        //result 팝업창
+        this.happiness = this.add.image(370, 345, 'bench');
+        this.okButton = this.add.image(370, 345, 'bench');
+        this.okText = this.add.image(370, 345, 'bench');
+        this.result = this.add.image(370, 345, 'bench');
+        this.scoreResultText = this.add.image(370, 345, 'bench');
+        this.totalScoreText = this.add.image(370, 345, 'bench');
+        this.totalText = this.add.image(370, 345, 'bench');
+
 
         /* 움직이는 애들 검정색 뒤로 사라지게 검정색 하나 더 놔둠*/
         this.limit = this.physics.add.staticGroup();
         this.limit.create(35, 256, 'limitbg');
         this.limit.create(740, 256, 'limitbg');
+        
 
         /*캐릭터가 계속 움직이게 하는 */
         var characterAnimation = this.anims.create({
@@ -182,7 +332,19 @@ class SceneRun extends Phaser.Scene{
         //timedEvent=this.time.addEvent({ delay: speed2, callback: firstObject, callbackScope: this, loop: false });
         var timedEvent2 = this.time.addEvent({ delay: 550, callback: this.spawnObject, callbackScope: this, loop: true });
 
-    //this.input.keyboard.on('keydown_W', checkObject, this);
+        //this.input.keyboard.on('keydown_W', checkObject, this);
+        //this.physics.add.collider(this.others, this.limitground);
+        //this.physics.add.collider(this.objects, this.limitground);
+
+        /*
+        this.happiness.visible=false;
+        this.okButton.visible=false;
+        this.okText.visible=false;
+        this.result.visible=false;
+        this.scoreResultText.visible=false;
+        this.totalScoreText.visible=false;
+        this.totalText.visible=false;
+        */
     }
 
 
@@ -211,6 +373,7 @@ class SceneRun extends Phaser.Scene{
         //this.physics.add.overlap(sprite, object[0], checkObject, null, this); //sprite랑 겹칠 때 left, down 키보드 누르기(고양이, 쓰레기)
         this.physics.add.overlap(this.sprite, temp[0], this.checkOther, null, this); //sprite랑 겹치면 실패(바나나, 돌) 점프해서 피해야 함
 
+        
     }
 
 
@@ -488,6 +651,7 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+
 
 
 
