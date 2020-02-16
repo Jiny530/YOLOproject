@@ -8,6 +8,7 @@ class Store24 extends Phaser.Scene {
         this.bg_음료매대;
 
         this.music;
+        this.OKbtn;
 
         this.bg_판1;
         this.bg_판2;
@@ -119,8 +120,9 @@ class Store24 extends Phaser.Scene {
         this.load.image('미스', 'assets/store24/미스팝업.png');
 
         //결과 팝업창
-        this.load.image('결과팝업','assets/공통팝업창/편의점결과.PNG');
-        this.load.image('OK버튼','assets/공통팝업창/Ok버튼.PNG')
+        this.load.image('버튼포함창','assets/공통팝업창/버튼포함창.PNG');
+        //this.load.image('결과팝업','assets/공통팝업창/편의점결과.PNG');
+        //this.load.image('오른아래버튼','assets/오른아래버튼.PNG');
     }
 
     
@@ -396,8 +398,10 @@ class Store24 extends Phaser.Scene {
     }
     //결과처리함수
     endStore24(){
-        this.endpopup=this.add.image(0,0,'결과팝업').setOrigin(0);
-        this.endpopup_Ok=this.add.image(0,0,'Ok버튼').setOrigin(0);
+        this.endpopup=this.add.image(0,0,'버튼포함창').setOrigin(0);
+        this.OKbtn=this.add.button(576,352,'button',this.actionOnClick,)
+        //this.endpopup=this.add.image(0,0,'결과팝업').setOrigin(0);
+        //this.endpopup_Ok=this.add.image(0,0,'오른아래버튼').setOrigin(0);
 
          //결과팝업text
         this.endpopup_combo= this.add.text(320, 256, this.topcombo, { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
@@ -419,6 +423,11 @@ class Store24 extends Phaser.Scene {
         }
 
         game.destroy(); 
+    }
+
+    actionOnClick(){
+        console.log("나감");
+        //미니게임나감
     }
 }
 
