@@ -244,6 +244,11 @@ class Running extends Phaser.Scene{
         this.totalScoreText;
         this.totalText;
         this.popup;
+
+        //+1, +5, -5
+        this.plus1;
+        this.plus5;
+        this.minus5;
     }
 
     preload ()
@@ -271,6 +276,7 @@ class Running extends Phaser.Scene{
 
         this.load.spritesheet('character', 'assets/running/character.png', { frameWidth: 64, frameHeight: 64 });
 
+        //오브젝트들
         this.load.image('heart', 'assets/running/heart.png');
         this.load.image('banana', 'assets/running/banana.png');
         this.load.image('cat', 'assets/running/cat.png');
@@ -300,13 +306,21 @@ class Running extends Phaser.Scene{
         //  The score
         this.scoreText = this.add.text(678, 20, ': 0', { fontSize: '25px', fill: '#fff' });
 
-        this.heartText = this.add.text(120, 250, '+1', { fontSize: '25px', fill: '#fff' });
+        this.plus1=this.add.image(120, 250,'+1');
+        this.plus5=this.add.image(120, 250,'+5');
+        this.minus5=this.add.image(120, 250,'-5');
+        this.plus1.visible=false;
+        this.plus5.visible=false;
+        this.minus5.visible=false;
+        /*this.heartText = this.add.text(120, 250, '+1', { fontSize: '25px', fill: '#fff' });
         this.heartText.visible = false;
         this.objectText = this.add.text(120, 250, '+5', { fontSize: '25px', fill: '#fff' });
         this.objectText.visible = false;
         this.otherText = this.add.text(120, 250, '-5', { fontSize: '25px', fill: '#fff' });
         this.otherText.visible = false;
+        */
         this.add.image(663, 30, 'heart'); //획득한 하트
+        
         var timebarBg = this.add.image(485, 30, 'timebar'); //타임바
 
         /* 뒤에서 움직이는 애들 */
@@ -324,7 +338,7 @@ class Running extends Phaser.Scene{
         this.grass4 = this.add.image(800, 363, 'grass');
         this.bench = this.add.image(370, 345, 'bench');
 
-        this.add.image(140, 280, 'score');
+        //this.add.image(140, 280, 'score');
 
         
 
@@ -413,6 +427,10 @@ class Running extends Phaser.Scene{
         //this.physics.add.overlap(sprite, object[0], checkObject, null, this); //sprite랑 겹칠 때 left, down 키보드 누르기(고양이, 쓰레기)
         this.physics.add.overlap(this.sprite, temp[0], this.checkOther, null, this); //sprite랑 겹치면 실패(바나나, 돌) 점프해서 피해야 함
 
+
+        this.plus1.visible=false;
+        this.plus5.visible=false;
+        this.minus5.visible=false;
         
     }
 
@@ -560,22 +578,20 @@ class Running extends Phaser.Scene{
     }
 
     //바나나, 돌일 때는 점프해서 피해야 하는데 실패했을 경우
-    checkOther() {
+    checkOther(time, delta) {
         var temp = this.others.getChildren();
         temp[0].destroy();
         this.score -= 5;
         this.scoreText.setText(':' + this.score);
-        /*this.otherText.visible = true;
+        //this.minus5.visible = true;
+        /*
         this.time.addEvent({
             delay: 700,
             callback: this.delayOtherText,
             loop: false
-        })*/
+        })
+        */
 
-    }
-
-    delayOtherText() {
-        this.otherText.visible = false;
     }
 
     //하트랑 sprite랑 겹치면 점수 얻게하는 함수
@@ -584,17 +600,19 @@ class Running extends Phaser.Scene{
         heartChildren[0].destroy();
         this.score += 1;
         this.scoreText.setText(':' + this.score);
-        //this.heartText.visible = true;
-        /*this.time.addEvent({
+        this.plus1.visible = true;
+        /* this.time.addEvent({
             delay: 700,
             callback: this.delayHeartText,
             loop: false
-        });*/
+        });
+        */
+        //this.plus1.visible = false;
 
     }
 
     delayHeartText() {
-        this.heartText.visible = false;
+        this.plus1.visible = false;
     }
 
     //타임바
@@ -730,7 +748,7 @@ var config = {
         default: 'arcade',
         arcade: {debug: false}
     },
-    scene: [ Main,Running]
+    scene: [Main,Running]
 };
 
 var game = new Phaser.Game(config);
