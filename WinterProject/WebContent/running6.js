@@ -1,9 +1,11 @@
-class SceneA extends Phaser.Scene{
+money=0;
+happiness=0;
+class Main extends Phaser.Scene{
 
     constructor ()
     {
-        super({key:'sceneA'});
-        console.log('sceneA called');
+        super({key:'Main'});
+        console.log('Main called');
 
         this.mainCharacter;
         this.cursors;
@@ -14,9 +16,6 @@ class SceneA extends Phaser.Scene{
         this.편의점;
         this.피자나라;
 
-
-
-
     }
 
     preload ()
@@ -26,7 +25,7 @@ class SceneA extends Phaser.Scene{
         this.load.image('running', 'assets/running/cat.PNG');
         this.load.image('store24', 'assets/store24/과자_포카칩.PNG')
 
-        //this.load.image('mainCharacter','assets/main/mainCharacter.PNG');
+        this.load.spritesheet('mainCharacter','assets/main/mainCharacter.PNG', { frameWidth: 64, frameHeight: 64 });
         this.load.image('공원','assets/main/공원.PNG');
         this.load.image('블랙잭','assets/main/블랙잭.PNG');
         this.load.image('편의점','assets/main/편의점.PNG');
@@ -34,13 +33,16 @@ class SceneA extends Phaser.Scene{
     }
 
     create ()
-    {
-        this.mainCharacter=this.physics.add.sprite(100,450,'mainCharacter');
-        this.mainCharacter.setCollideWorldBounds(true);
+    {   
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.buildings = this.physics.add.staticGroup(); //빌딩 그룹화
-
+        /*this.buildings.create(544, 288, '공원');
+        this.buildings.create(608, 96, '블랙잭');
+        this.buildings.create(352, 288, '편의점');
+        this.buildings.create(288, 160, '피자나라');
+        */
+        
         //미니게임 건물 배치
         this.공원=this.physics.add.image(544, 288, '공원');
         this.공원.angle=270;
@@ -52,105 +54,143 @@ class SceneA extends Phaser.Scene{
         //this.add.image(288, 32, '피자나라');
         this.피자나라.angle=180;
 
+        
         this.buildings.add(this.공원);
         this.buildings.add(this.블랙잭);
         this.buildings.add(this.편의점);
         this.buildings.add(this.피자나라);
+
+        this.mainCharacter=this.physics.add.sprite(480,416,'mainCharacter');
+        this.mainCharacter.setCollideWorldBounds(true);
+        
 
 
 
         //메인캐릭터 상하좌우 움직임
         this.anims.create({
             key: 'left',
-            frames: this.anims.generateFrameNumbers('mainCharactr', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers('mainCharacter', { start: 6, end: 8 }),
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'right',
-            frames: this.anims.generateFrameNumbers('mainCharactr', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers('mainCharacter', { start: 3, end: 5 }),
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'up',
-            frames: this.anims.generateFrameNumbers('mainCharactr', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers('mainCharacter', { start: 9, end: 11 }),
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'down',
-            frames: this.anims.generateFrameNumbers('mainCharactr', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers('mainCharacter', { start: 0, end: 2 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'still',
+            frames: [ { key: 'mainCharacter', frame: 2 } ],
             frameRate: 10,
             repeat: -1
         });
     
+        /*
         this.input.once('pointerdown',function(event){
             console.log('clicked')
-            this.scene.start('sceneRun');
+            this.scene.start('Running');
         },this);
 
+        */
         this.physics.add.collider(this.mainCharacter, this.buildings);
+        this.physics.add.overlap(this.mainCharacter, this.공원, this.goToRunning, null, this);
+        this.physics.add.overlap(this.mainCharacter, this.블랙잭, this.goToBlackjack, null, this);
+        this.physics.add.overlap(this.mainCharacter, this.피자나라, this.goToPizza, null, this);
+        this.physics.add.overlap(this.mainCharacter, this.편의점, this.goToStore24, null, this);
     }
 
-    /*update() {
+    update() {
         if (this.cursors.left.isDown) {
             this.mainCharacter.setVelocityX(-160);
+            this.mainCharacter.setVelocityY(0);
 
             this.mainCharacter.anims.play('left', true);
         }
         else if (this.cursors.right.isDown) {
             this.mainCharacter.setVelocityX(160);
+            this.mainCharacter.setVelocityY(0);
 
             this.mainCharacter.anims.play('right', true);
         }
         else if (this.cursors.up.isDown) {
+            this.mainCharacter.setVelocityX(0);
+            this.mainCharacter.setVelocityY(-160);
+
+            this.mainCharacter.anims.play('up', true);
+        }
+        else if (this.cursors.down.isDown) {
+            this.mainCharacter.setVelocityX(0);
             this.mainCharacter.setVelocityY(160);
 
-            this.mainCharacter.anims.play('right', true);
+            this.mainCharacter.anims.play('down', true);
         }
-        else if (this.cursors.down.isDown) {
-            this.mainCharacter.setVelocityY(-160);
+        else
+        {
+            this.mainCharacter.setVelocityX(0);
+            this.mainCharacter.setVelocityY(0);
 
-            this.mainCharacter.anims.play('right', true);
-        }
-        else if (this.cursors.down.isDown) {
-            this.mainCharacter.setVelocityY(-160);
-
-            this.mainCharacter.anims.play('right', true);
-        }
-        else if (this.cursors.down.isDown) {
-            this.mainCharacter.setVelocityY(-160);
-
-            this.mainCharacter.anims.play('right', true);
+            this.mainCharacter.anims.play('still');
         }
 
+
+        /*
         if(this.mainCharacter.x>256 && this.mainCharacter.x<320){
-            this.scene.switch('ScenePizza');
+            this.scene.switch('Pizza');
         }
         if(this.mainCharacter.x>320 && this.mainCharacter.x<384){
-            this.scene.switch('SceneStore');
+            this.scene.switch('Store');
         }
         if(this.mainCharacter.y>256 && this.mainCharacter.y<320){
-            this.scene.switch('SceneRun');
+            this.scene.switch('Running');
         }
         if(this.mainCharacter.y>64 && this.mainCharacter.y<128){
-            this.scene.switch('SceneBlack');
+            this.scene.switch('Blackjack');
         }
+        */
 
     }
-    */
+
+    goToRunning(){
+        this.scene.switch('Running');
+    }
+
+    goToBlackjack(){
+        this.scene.switch('Blackjack');
+    }
+
+    goToPizza(){
+        this.scene.switch('Pizza');
+    }
+
+    goToStore24(){
+        this.scene.switch('Store24');
+    }
+    
 };
 
 
-class SceneRun extends Phaser.Scene{
+class Running extends Phaser.Scene{
     constructor ()
     {
-        super({ key: 'sceneRun',active:false,auto_start:false });
-        console.log('sceneRun called')
+        super({ key: 'Running',active:false,auto_start:false });
+        console.log('Running called')
 
 
         this.move;
@@ -203,7 +243,7 @@ class SceneRun extends Phaser.Scene{
         this.scoreResultText;
         this.totalScoreText;
         this.totalText;
-
+        this.popup;
     }
 
     preload ()
@@ -221,7 +261,7 @@ class SceneRun extends Phaser.Scene{
         this.load.image('tree4', 'assets/running/tree4.png');
         this.load.image('grass', 'assets/running/grass.png');
         this.load.image('bench', 'assets/running/bench2.png');
-        this.load.image('bench', 'assets/running/bench2.png');
+        //this.load.image('bench', 'assets/running/bench2.png');
         this.load.image('timebar', 'assets/running/timebar2.png');
         this.load.image('score', 'assets/running/score.png');
         this.load.image('+1', 'assets/running/+1.png');
@@ -286,15 +326,7 @@ class SceneRun extends Phaser.Scene{
 
         this.add.image(140, 280, 'score');
 
-        //result 팝업창
-        this.happiness = this.add.image(370, 345, 'bench');
-        this.okButton = this.add.image(370, 345, 'bench');
-        this.okText = this.add.image(370, 345, 'bench');
-        this.result = this.add.image(370, 345, 'bench');
-        this.scoreResultText = this.add.image(370, 345, 'bench');
-        this.totalScoreText = this.add.image(370, 345, 'bench');
-        this.totalText = this.add.image(370, 345, 'bench');
-
+        
 
         /* 움직이는 애들 검정색 뒤로 사라지게 검정색 하나 더 놔둠*/
         this.limit = this.physics.add.staticGroup();
@@ -336,21 +368,29 @@ class SceneRun extends Phaser.Scene{
         //this.physics.add.collider(this.others, this.limitground);
         //this.physics.add.collider(this.objects, this.limitground);
 
-        /*
-        this.happiness.visible=false;
-        this.okButton.visible=false;
-        this.okText.visible=false;
-        this.result.visible=false;
-        this.scoreResultText.visible=false;
-        this.totalScoreText.visible=false;
-        this.totalText.visible=false;
-        */
+       
     }
 
 
     update(time, delta) {
         if (this.gameOver) {
             this.sprite.anims.setRepeat(0); //캐릭터 뛰는 거 멈춤
+
+            /*//팝업창 나오게
+            this.result.visible = true;
+            this.happiness.visible = true;
+            this.okButton.visible = true;
+            this.okText.visible = true;
+            this.scoreResultText.visible = true;
+            this.totalScoreText.visible = true;
+            this.totalText.visible = true;
+            */
+            this.popUp();
+            //오브젝트 안보이게
+            this.sprite.visible=false;
+            //this.objects.getChildren().visible=false;
+            //this.others.getChildren().visible=false;
+            //this.hearts.getChildren().visible=false;
             return;
         }
 
@@ -376,7 +416,49 @@ class SceneRun extends Phaser.Scene{
         
     }
 
+    popUp(){
+        //result 팝업창
+        //this.popup=this.add.group();
+        this.add.image(35, 256, 'limitbg');
+        this.add.image(740, 256, 'limitbg');
+        this.result = this.add.image(384, 256, 'result');
+        this.happiness = this.add.image(320, 300, 'happiness');
+        this.happiness.setScale(1/8,1/8);
+        this.okButton = this.add.image(384, 256, 'okButton');
+        this.okButton.setInteractive();
+        this.okButton.on('pointerdown', this.goToMain);
+        //this.okButton = game.add.button(384, 256, 'okButton', actionOnClick, this, 2, 1, 0);
+        this.okText = this.add.image(620, 395, 'okText');
+        this.scoreResultText = this.add.image(200, 230, 'scoreResultText');
+        this.totalScoreText = this.add.image(384, 110, 'totalScoreText');
+        this.totalText = this.add.image(200, 300, 'totalText');
+        
 
+
+        var scoreText2=this.add.text(300, 220, ': 0', { fontSize: '25px', fill: '#000' });
+        scoreText2.setText(this.score);
+        var totalText2=this.add.text(400, 290, ': 0', { fontSize: '25px', fill: '#000' });
+        if(this.score<0){
+            totalText2.setText(0);
+        }
+        else if(this.score<=30){
+            totalText2.setText(1);
+            happiness+=1;
+        }
+        else if(this.score<=80){
+            totalText2.setText(2);
+            happiness+=2;
+        }
+        else if(this.score>80){
+            totalText2.setText(3);
+            happiness+=3;
+        }
+    }
+
+    goToMain(){
+        console.log('pointerdown');
+        this.scene.switch('Main');
+    }
         //min=1, max=4
     randomNumber(min, max) {
         var randVal = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -452,7 +534,6 @@ class SceneRun extends Phaser.Scene{
         var object = this.objects.getChildren();
         if (object.length > 0) {
             if (object[0].x < 120 && object[0].x > 60) {
-                console.log(this.nameObjects[0]);
                 var temp = this.nameObjects[0];
                 if (temp == 'cat') {
                     if (this.cursors.left.isDown) {
@@ -639,6 +720,8 @@ class SceneRun extends Phaser.Scene{
 
 };
 
+
+
 var config = {
     type: Phaser.AUTO,
     width: 768,
@@ -647,11 +730,7 @@ var config = {
         default: 'arcade',
         arcade: {debug: false}
     },
-    scene: [ SceneA,SceneRun]
+    scene: [ Main,Running]
 };
 
 var game = new Phaser.Game(config);
-
-
-
-
