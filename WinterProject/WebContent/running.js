@@ -31,8 +31,8 @@ class Running extends Phaser.Scene{
         this.limitground;
 
         this.cursors;
-        this.score = 0;
-        this.gameOver = false;
+        this.score;
+        this.gameOver;
         this.scoreText;
 
         this.heartText;
@@ -111,6 +111,8 @@ class Running extends Phaser.Scene{
 
     create ()
     {
+        this.score = 0;
+        this.gameOver = false;
         this.limitground=this.physics.add.image(384, 426, 'limitground');
         this.platforms = this.physics.add.staticGroup(); //캐릭터가 뛰는 바닥 static
         this.add.image(384, 256, 'background'); //검정 바탕
@@ -177,7 +179,7 @@ class Running extends Phaser.Scene{
         this.sprite.play('walk');
 
         /*타임바 */
-        this.timerEvent = this.time.addEvent({ delay: 3000 });
+        this.timerEvent = this.time.addEvent({ delay: 30000 });
         this.timebar = this.add.graphics({ x: 0, y: 0 });
 
         //  Input Events
@@ -222,9 +224,7 @@ class Running extends Phaser.Scene{
             //this.others.getChildren().visible=false;
             //this.hearts.getChildren().visible=false;
 
-            
-
-            return;
+            //this.scene.restart();
         }
 
         //점프 체크
@@ -278,7 +278,11 @@ class Running extends Phaser.Scene{
         this.okButton.setInteractive();
         this.okButton.on('pointerdown', (event) => {
             
-            this.scene.restart();
+            console.log("clicked!!!!!!!!!!!!!!");
+            this.result.visible=false;
+            this.scene.restart('Running');
+            this.scene.switch('Main2');
+            
         });
         //this.okButton = game.add.button(384, 256, 'okButton', actionOnClick, this, 2, 1, 0);
         this.scoreResultText = this.add.image(200, 230, 'scoreResultText');
@@ -469,18 +473,21 @@ class Running extends Phaser.Scene{
     }
     //모든 오브젝트 움직이는 함수
     moveObject(time, delta) {
-        var heartChildren = this.hearts.getChildren();
-        var object = this.objects.getChildren();
-        var temp = this.others.getChildren();
-        for (var i = 0; i < heartChildren.length; i++) {
-            heartChildren[i].x += -this.speed2 * delta;
+        if (!this.gameOver) {
+            var heartChildren = this.hearts.getChildren();
+            var object = this.objects.getChildren();
+            var temp = this.others.getChildren();
+            for (var i = 0; i < heartChildren.length; i++) {
+                heartChildren[i].x += -this.speed2 * delta;
+            }
+            for (var j = 0; j < object.length; j++) {
+                object[j].x += -this.speed2 * delta;
+            }
+            for (var k = 0; k < temp.length; k++) {
+                temp[k].x += -this.speed2 * delta;
+            }
         }
-        for (var j = 0; j < object.length; j++) {
-            object[j].x += -this.speed2 * delta;
-        }
-        for (var k = 0; k < temp.length; k++) {
-            temp[k].x += -this.speed2 * delta;
-        }
+        
     }
 
     //오브젝트 적당한 처리 실패했을 때 오브젝트 없애기
@@ -515,7 +522,8 @@ class Running extends Phaser.Scene{
 
     //배경 움직이는 것
     moveBackground(time, delta) {
-        this.cloud1.x += -this.speed * delta;
+        if(!this.gameOver){
+            this.cloud1.x += -this.speed * delta;
         this.cloud2.x += -this.speed * delta;
         this.cloud3.x += -this.speed * delta;
         this.cloud4.x += -this.speed * delta;
@@ -567,6 +575,8 @@ class Running extends Phaser.Scene{
         if (this.bench.x < 0) {
             this.bench.x = 800;
         }
+        }
+        
 
     }
 
