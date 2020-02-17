@@ -7,6 +7,8 @@ class Main extends Phaser.Scene{
         super({key:'Main'});
         console.log('Main called');
 
+        this.music;
+
         this.mainCharacter;
         this.cursors;
 
@@ -20,6 +22,8 @@ class Main extends Phaser.Scene{
 
     preload ()
     {
+        this.load.audio('런닝런닝bgm','assets/music/런닝런닝bgm.mp3');
+
         this.load.spritesheet('mainCharacter','assets/main/mainCharacter.PNG', { frameWidth: 64, frameHeight: 64 });
         this.load.image('공원','assets/main/공원.PNG');
         this.load.image('블랙잭','assets/main/블랙잭.PNG');
@@ -29,6 +33,11 @@ class Main extends Phaser.Scene{
 
     create ()
     {   
+        this.music = this.sound.add('런닝런닝bgm');
+        this.music.loop=true;
+        this.sound.mute=false;
+        this.music.play();
+
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.buildings = this.physics.add.staticGroup(); //빌딩 그룹화
