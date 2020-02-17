@@ -74,14 +74,9 @@ class Main2 extends Phaser.Scene{
         this.okButtonRunning.on('pointerdown', (event) => {
             this.런닝런닝방법.visible=false;
             this.okButtonRunning.visible=false;
-            //this.events.on('shutdown', this.shutdown, this);
             this.mainCharacter.setX(480);
             this.mainCharacter.setY(416);
-             
-            //this.scene.add('Running', config, false);
             this.scene.switch('Running');
-            //this.scene.restart('Running');
-            //this.scene.switch('Running');
             console.log(money);
             console.log(happiness);
             

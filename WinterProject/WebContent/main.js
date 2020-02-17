@@ -14,8 +14,7 @@ class Main extends Phaser.Scene{
     {
         super({key:'Main'});
         this.gameOver=false; //true이면 게임종료
-        this.ending=0; //ending가 1이면 개미엔딩 - 편의점, 2면 개미엔딩 - 피자나라, 3이면 베짱이엔딩 - 런닝, 4면 베짱이엔딩 - 블랙잭
-
+        this.ending=0; //ending이 1이면 게임오버, ending이 2이면 엔딩씬
         //메인 화면 UI 설정
         this.mainLeftBar;
 
@@ -201,12 +200,18 @@ class Main extends Phaser.Scene{
 
     goToStore24(){
         this.scene.start('Store24');
-        }        
+    }        
 
         /*if (minigame_start==1){
             this.scene.remove('Pizza');
             minigame_start=0;
         }*/
+
+    shutdown()
+    {
+        //  We need to clear keyboard events, or they'll stack up when the Menu is re-run
+        this.input.keyboard.shutdown();
+    }
     
 }
 
