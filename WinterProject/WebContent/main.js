@@ -2,7 +2,7 @@
 //공통변수
 date=30; //30일부터 1일 까지 0이면 게임 엔딩
 joy=5; //즐거움 1~10일 까지 0이면 게임 오버
-money=10000; //돈 10000원에서 시작 0이면 게임 오버 -> 초당 100원씩 감소
+money=10000; //돈 10000원에서 시작 0이면 게임 오버 -> 1초당 1000원씩 감소
 
 minigame_start=0;
 
@@ -112,25 +112,7 @@ class Main extends Phaser.Scene{
         this.physics.add.overlap(this.mainCharacter, this.편의점, this.goToStore24, null, this);
 
 
-        /*
-
-        
-        var blackjack = this.add.image(100,250,'blackjack').setScale(0.5,0.5);
-        var pizza = this.add.image(300,250,'pizza');
-        //console.log('image added')
-        blackjack.setInteractive();
-        blackjack.on('pointerdown', function (event) {
-            this.scene.start('BlackJack');
-        /*blackjack.on('pointerdown', function (event) {
-            this.scene.start('BlackJack');
-        },this);*/
-        pizza.setInteractive()
-        pizza.on('pointerdown',function(event){
-            console.log('clicked')
-            this.scene.start('Pizza');
-        },this);
-
-
+    
 
         
         var dateText=this.add.bitmapText(45,45,'myfont',''+date,36)
@@ -146,7 +128,7 @@ class Main extends Phaser.Scene{
     {
         if(!this.gameOver && (this.joy<=0 || this.money<=0)){
             this.gameOver=true;
-            this.scene.start('GameOver')
+            this.scene.start('BlackJack')
         }
         
         if (this.gameOver)
@@ -207,7 +189,7 @@ class Main extends Phaser.Scene{
     }
 
     goToBlackjack(){
-        this.scene.start('Blackjack');
+        this.scene.start('BlackJack');
     }
 
     goToPizza(){
@@ -245,8 +227,9 @@ var config = {
     type: Phaser.AUTO,
     width: 768,
     height: 512,
-    backgroundColor: '#000000',
+    backgroundColor: '#ffffff',
     parent: 'phaser-example',
+    autoCenter: Phaser.Scale.CENTER_BOTH,
     physics: {
         default: 'arcade',
         arcade: {debug: false}
