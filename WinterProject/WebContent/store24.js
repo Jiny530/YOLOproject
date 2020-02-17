@@ -441,4 +441,4 @@ var config = {
     scene: Store24
 };
 
-var game = new Phaser.Game(config);
+//var game = new Phaser.Game(config);
