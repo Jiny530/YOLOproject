@@ -117,7 +117,7 @@ class Main extends Phaser.Scene{
 
     update()
     {
-        if(!this.gameOver && (this.joy<=0 || this.money<=0)){
+        if(!this.gameOver && (joy<=0 || money<=0)){
             this.gameOver=true;
             this.scene.start('GameOver')
         }
