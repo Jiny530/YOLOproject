@@ -96,6 +96,7 @@ class Main2 extends Phaser.Scene{
             
             console.log(this.whichGame);
             if (this.whichGame==1){
+                this.scene.switch('Running');
                 this.런닝방법.visible=false;
             }
             else if (this.whichGame==2){
@@ -122,9 +123,9 @@ class Main2 extends Phaser.Scene{
             //this.scene.switch('Running');
             
             if (this.whichGame==1){
-                this.런닝방법.visible=false;
                 this.scene.switch('Running');
-                console.log(this.whichGame);
+                this.런닝방법.visible=false;
+                console.log('button ok '+this.whichGame);
             }
             else if (this.whichGame==2){
                 this.블랙잭방법.visible=false;
