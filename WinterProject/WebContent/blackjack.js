@@ -48,6 +48,7 @@ class BlackJack extends Phaser.Scene{
         this.load.image('board','assets/blackjack/board.png')
         this.load.image('cactus','assets/blackjack/cactus.png')
         this.load.image('character','assets/blackjack/player (2).png')
+        this.load.image('dealerC','assets/blackjack/dealer.png')
         
     }
     create() {
@@ -71,8 +72,7 @@ class BlackJack extends Phaser.Scene{
 
         this.PLAYER = 1
         this.DEALER = 2
-
-      
+    
         
         //배경 꾸미기
         this.add.tileSprite(0,0,768,512,'bg').setOrigin(0)
@@ -81,7 +81,8 @@ class BlackJack extends Phaser.Scene{
         cactus.setScale(0.2)
         var character=this.add.image(768/2+512/2+50,400,'character')
         character.setScale(0.2)
-
+        var dealerCharacter = this.add.image(768/2-512/2-50,200,'dealerC')
+        dealerCharacter.setScale(0.2)
         var button_stop;
         var button_go;
         button_stop = this.add.image(600, 100, 'stop', 0);
