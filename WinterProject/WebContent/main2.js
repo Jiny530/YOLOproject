@@ -74,7 +74,12 @@ class Main2 extends Phaser.Scene{
         this.okButtonRunning.on('pointerdown', (event) => {
             this.런닝런닝방법.visible=false;
             this.okButtonRunning.visible=false;
-            this.scene.start('Running');
+            this.events.on('shutdown', this.shutdown, this);
+            this.mainCharacter.setX(480);
+            this.mainCharacter.setY(416);
+            
+            this.scene.restart('Running');
+            this.scene.switch('Running');
             
         });
         this.런닝런닝방법.visible=false;
@@ -207,11 +212,35 @@ class Main2 extends Phaser.Scene{
     }
 
     goToPizza(){
+        this.events.on('shutdown', this.shutdown, this);
         this.scene.start('Pizza');
     }
 
     goToStore24(){
         this.scene.start('Store24');
     }
+
+    shutdown()
+    {
+        //  We need to clear keyboard events, or they'll stack up when the Menu is re-run
+        this.input.keyboard.shutdown();
+    }
     
 };
+
+var config = {
+    type: Phaser.AUTO,
+    width: 768,
+    height: 512,
+    backgroundColor: '#ffffff',
+    parent: 'phaser-example',
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    physics: {
+        default: 'arcade',
+        arcade: {debug: false}
+    },
+    scene: [ Main2, Pizza, Running ]
+};
+
+
+var game = new Phaser.Game(config);

@@ -277,9 +277,8 @@ class Running extends Phaser.Scene{
         this.okButton = this.add.image(620, 395, 'okButton');
         this.okButton.setInteractive();
         this.okButton.on('pointerdown', (event) => {
-            this.scene.restart('Running');
-            this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
-            this.scene.switch('Main');
+            
+            this.scene.restart();
         });
         //this.okButton = game.add.button(384, 256, 'okButton', actionOnClick, this, 2, 1, 0);
         this.scoreResultText = this.add.image(200, 230, 'scoreResultText');
@@ -574,7 +573,7 @@ class Running extends Phaser.Scene{
 };
 
 
-
+/*
 var config = {
     type: Phaser.AUTO,
     width: 768,
@@ -584,6 +583,6 @@ var config = {
         arcade: {debug: false}
     },
     scene: [Main,Running]
-};
+};*/
 
 //var game = new Phaser.Game(config);
