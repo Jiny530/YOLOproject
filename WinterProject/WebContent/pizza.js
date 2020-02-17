@@ -6,6 +6,9 @@ class Pizza extends Phaser.Scene {
 
         super({ key: 'Pizza', active: false, auto_start: false });
         //super();
+        
+        this.music;
+
         this.gameOver = false;
         this.pizza;
         this.nextPizza = Phaser.Math.Between(1, 4);
@@ -48,6 +51,8 @@ class Pizza extends Phaser.Scene {
     }
 
     preload() {
+        this.load.audio('피자나라bgm','assets/music/피자나라bgm.mp3');
+
         this.load.image('Domino', 'assets/pizza/Domino.png');
         this.load.image('Mr', 'assets/pizza/mPizza.png');
         this.load.image('Hut', 'assets/pizza/Hut.png');
@@ -68,9 +73,12 @@ class Pizza extends Phaser.Scene {
     }
     //키보드 버튼 하나 누르는 거에 반응하는 곳
     create() {
-        //this.events.on('shutdown', this.shutdown, this);
-        this.gameOver = false;
-        this.nextPizza = Phaser.Math.Between(1, 4);
+
+        this.music = this.sound.add('피자나라bgm');
+        this.music.loop=true;
+        this.sound.mute=false;
+        this.music.play();
+
         this.player = this.add.image(384,100,'player').setScale(0.15,0.15);
 
         this.domino = this.add.image(384, 240, 'Domino').setScale(0.8, 0.8);

@@ -69,7 +69,7 @@ class Store24 extends Phaser.Scene {
     preload ()
     {
 
-        this.load.audio('store24_bgm','assets/music/store24_bgm(Chibi Ninja).mp3')
+        this.load.audio('편의점bgm','assets/music/편의점bgm.mp3');
         
         this.load.image('라면_까불닭', 'assets/store24/라면_까불닭.png');
         this.load.image('라면_육개장', 'assets/store24/라면_육개장.png');
@@ -129,7 +129,7 @@ class Store24 extends Phaser.Scene {
 
     create ()   //지역 변수는 var 로 정의하고 그냥 변수 이름으로 사용
     {   
-        this.music = this.sound.add('store24_bgm');
+        this.music = this.sound.add('편의점bgm');
         this.music.loop=true;
         this.sound.mute=false;
         this.music.play();
@@ -422,23 +422,16 @@ class Store24 extends Phaser.Scene {
             this.endpopup_joy.setText('-'); 
         }
 
+        
         game.destroy(); 
     }
 
     actionOnClick(){
         console.log("나감");
+        music.destroy();
         //미니게임나감
     }
 }
 
 
 
-
-var config = {
-    type: Phaser.AUTO,
-    width: 768,
-    height: 512,
-    scene: Store24
-};
-
-//var game = new Phaser.Game(config);
