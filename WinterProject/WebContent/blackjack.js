@@ -51,7 +51,8 @@ class BlackJack extends Phaser.Scene{
         this.load.image('bg','assets/blackjack/bg_pattern4.png')
         this.load.image('board','assets/blackjack/board.png')
         this.load.image('cactus','assets/blackjack/cactus.png')
-        this.load.image('character','assets/blackjack/player (2).png')
+        this.load.image('character','assets/blackjack/player (3).PNG')
+        this.load.image('dealerC','assets/blackjack/dealer (1).png')
         
     }
     create() {
@@ -65,7 +66,7 @@ class BlackJack extends Phaser.Scene{
         this.moneyText
         this.money = 5000
 
-        this.cardlocate = 769/2+512/2-125;
+        this.cardlocate = 769/2+512/2-15;
         this.click_stop = false;
         this.click_go = false;
 
@@ -81,6 +82,7 @@ class BlackJack extends Phaser.Scene{
         this.sound.mute=false;
         this.music.play();
 
+        date-=1
       
         
         //배경 꾸미기
@@ -90,6 +92,9 @@ class BlackJack extends Phaser.Scene{
         cactus.setScale(0.2)
         var character=this.add.image(768/2+512/2+50,400,'character')
         character.setScale(0.2)
+        var dealerCharacter = this.add.image(768/2-512/2-50,125,'dealerC')
+        dealerCharacter.setScale(0.2)
+
 
         var button_stop;
         var button_go;
@@ -108,8 +113,8 @@ class BlackJack extends Phaser.Scene{
         button_go.on('pointerdown', function (event) {
             if (!this.click_go) this.click_go = true;
         },this)
-        this.sum = this.add.text(100, 50, "합계1: " + this.sum1 + " 합계2: " + this.sum2, { fill: '#fff' });
-        this.moneyText = this.add.text(100, 100, "판돈: " + this.money)
+        this.sum = this.add.text(768/2, 512/2, "합계1: " + this.sum1 + " 합계2: " + this.sum2, { fill: '#fff' });
+        this.moneyText = this.add.text(768/2, 512/2+25, "판돈: " + this.money)
         this.gameState = this.GAME_START
         this.update()
     }
@@ -185,7 +190,8 @@ class BlackJack extends Phaser.Scene{
         if (this.gameState == this.TURN_STOP) {
             if (this.click_go) {
                 this.cards.clear(true, true)
-                this.sum1 = this.sum2 = this.dealerSum1 = this.dealerSum2 = this.cardlocate = 0;
+                this.sum1 = this.sum2 = this.dealerSum1 = this.dealerSum2 = 0;
+                this.cardlocate=769/2+512/2;
                 this.click_go = false
                 this.gameState = this.GAME_START
                 this.money *= 2
@@ -202,7 +208,11 @@ class BlackJack extends Phaser.Scene{
             }
         }
         if (this.gameState == this.GAME_OVER) {
-
+            if(this.click_stop){
+                this.scene.switch('Main')
+                money+=this.money
+                console.log(money+' '+this.money)
+            }
 
         }
     }
