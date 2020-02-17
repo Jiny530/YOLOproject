@@ -214,7 +214,7 @@ var config = {
         default: 'arcade',
         arcade: {debug: false}
     },
-    scene: [ Main2, Running, Pizza]
+    scene: [ Main2, Running, Pizza, Store24]
 };
 
 
