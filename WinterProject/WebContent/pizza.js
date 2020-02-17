@@ -6,6 +6,9 @@ class Pizza extends Phaser.Scene {
 
         super({ key: 'Pizza', active: false, auto_start: false });
         //super();
+        
+        this.music;
+
         this.gameOver = false;
         this.pizza;
         this.nextPizza = Phaser.Math.Between(1, 4);
@@ -48,6 +51,8 @@ class Pizza extends Phaser.Scene {
     }
 
     preload() {
+        this.load.audio('피자나라bgm','assets/music/피자나라bgm.mp3');
+
         this.load.image('Domino', 'assets/pizza/Domino.png');
         this.load.image('Mr', 'assets/pizza/mPizza.png');
         this.load.image('Hut', 'assets/pizza/Hut.png');
@@ -68,6 +73,11 @@ class Pizza extends Phaser.Scene {
     }
     //키보드 버튼 하나 누르는 거에 반응하는 곳
     create() {
+
+        this.music = this.sound.add('피자나라bgm');
+        this.music.loop=true;
+        this.sound.mute=false;
+        this.music.play();
 
         this.player = this.add.image(384,100,'player').setScale(0.15,0.15);
 
@@ -181,7 +191,7 @@ class Pizza extends Phaser.Scene {
 
 
         //타이머
-        this.timerEvent = this.time.addEvent({ delay: 30000 });
+        this.timerEvent = this.time.addEvent({ delay: 3000 });
         this.graphics = this.add.graphics({ x: 0, y: 512 });
 
         this.graphics.angle = -90;
@@ -229,7 +239,7 @@ class Pizza extends Phaser.Scene {
         this.graphics.fillStyle(0xffcc00);
         if (!this.gameOver) {
             this.graphics.fillRect(0, 0, 512 - 512 * this.timerEvent.getProgress(), 30);
-            this.timeSource = 450 - 450 * this.timerEvent.getProgress();
+            this.timeSource = 512-512 * this.timerEvent.getProgress();
         }
         else {
             this.graphics.fillRect(0, 0, this.timeSource, 30);
@@ -240,6 +250,8 @@ class Pizza extends Phaser.Scene {
 
 
         if (this.gameOver) {
+            //여기 팝업창 뜨게하기
+            //minigame_start=1;
             this.scene.switch('Main');
         }
     }
@@ -516,7 +528,7 @@ class Pizza extends Phaser.Scene {
 
     }
 }
-
+/*
 var config = {
     type: Phaser.AUTO,
     width: 768,
@@ -524,4 +536,4 @@ var config = {
     scene: Pizza
 };
 
-//var game = new Phaser.Game(config);
+var game = new Phaser.Game(config);*/
