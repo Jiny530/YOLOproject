@@ -5,7 +5,6 @@ class Main2 extends Phaser.Scene{
     constructor ()
     {
         super({key:'Main2'});
-        console.log('Main called');
 
         this.music;
 
@@ -18,14 +17,7 @@ class Main2 extends Phaser.Scene{
         this.편의점;
         this.피자나라;
 
-        this.button_ok;
-        this.button_no;
 
-        this.런닝방법;
-        this.블랙잭방법;
-        this.피자방법;
-        this.편의점방법;
-        this.whichGame=0;
     }
 
     preload ()
@@ -94,7 +86,6 @@ class Main2 extends Phaser.Scene{
             this.mainCharacter.setX(480);
             this.mainCharacter.setY(416);
             
-            console.log(this.whichGame);
             if (this.whichGame==1){
                 this.런닝방법.visible=false;
             }
@@ -192,7 +183,7 @@ class Main2 extends Phaser.Scene{
     }
 
     update() {
-        if (this.cursors.left.isDown) {
+        if (this.cursors.left.isDown ) {
             this.mainCharacter.setVelocityX(-160);
             this.mainCharacter.setVelocityY(0);
 
