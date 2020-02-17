@@ -5,7 +5,7 @@ class Pizza extends Phaser.Scene {
     constructor() {
 
         super({ key: 'Pizza', active: false, auto_start: false });
-        super();
+        //super();
         this.gameOver = false;
         this.pizza;
         this.nextPizza = Phaser.Math.Between(1, 4);
@@ -181,7 +181,7 @@ class Pizza extends Phaser.Scene {
 
 
         //타이머
-        this.timerEvent = this.time.addEvent({ delay: 30000 });
+        this.timerEvent = this.time.addEvent({ delay: 3000 });
         this.graphics = this.add.graphics({ x: 0, y: 512 });
 
         this.graphics.angle = -90;
@@ -229,7 +229,7 @@ class Pizza extends Phaser.Scene {
         this.graphics.fillStyle(0xffcc00);
         if (!this.gameOver) {
             this.graphics.fillRect(0, 0, 512 - 512 * this.timerEvent.getProgress(), 30);
-            this.timeSource = 450 - 450 * this.timerEvent.getProgress();
+            this.timeSource = 512-512 * this.timerEvent.getProgress();
         }
         else {
             this.graphics.fillRect(0, 0, this.timeSource, 30);
@@ -240,6 +240,8 @@ class Pizza extends Phaser.Scene {
 
 
         if (this.gameOver) {
+            //여기 팝업창 뜨게하기
+            //minigame_start=1;
             this.scene.switch('Main');
         }
     }
@@ -516,7 +518,7 @@ class Pizza extends Phaser.Scene {
 
     }
 }
-
+/*
 var config = {
     type: Phaser.AUTO,
     width: 768,
@@ -524,4 +526,4 @@ var config = {
     scene: Pizza
 };
 
-var game = new Phaser.Game(config);
+var game = new Phaser.Game(config);*/

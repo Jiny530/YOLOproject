@@ -748,7 +748,7 @@ var config = {
         default: 'arcade',
         arcade: {debug: false}
     },
-    scene: [Main,Running]
+    scene: [Main,Running,Pizza]
 };
 
 var game = new Phaser.Game(config);
