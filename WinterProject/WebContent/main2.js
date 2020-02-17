@@ -17,9 +17,15 @@ class Main2 extends Phaser.Scene{
         this.블랙잭;
         this.편의점;
         this.피자나라;
-        this.noButtonRunning;
 
+        this.button_ok;
+        this.button_no;
+
+        this.런닝방법;
         this.블랙잭방법;
+        this.피자방법;
+        this.편의점방법;
+        this.whichGame=0;
     }
 
     preload ()
