@@ -196,18 +196,7 @@ class Running extends Phaser.Scene{
             this.popUp();
             //오브젝트 안보이게
             this.sprite.visible=false;
-            if(this.score<0){
-                joy+=0;
-            }
-            else if(this.score<=50){
-                joy+=1;
-            }
-            else if(this.score<=90){
-                joy+=2;
-            }
-            else if(this.score>90){
-                joy+=3;
-            }
+            
             return;
         }
 
@@ -246,7 +235,18 @@ class Running extends Phaser.Scene{
         this.okButton = this.add.image(620, 395, 'okButton');
         this.okButton.setInteractive();
         this.okButton.on('pointerdown', (event) => {
-            
+            if(this.score<0){
+                joy+=0;
+            }
+            else if(this.score<=50){
+                joy+=1;
+            }
+            else if(this.score<=90){
+                joy+=2;
+            }
+            else if(this.score>90){
+                joy+=3;
+            }
             console.log("clicked!!!!!!!!!!!!!!");
             this.result.visible=false;
             this.scene.restart('Running');
