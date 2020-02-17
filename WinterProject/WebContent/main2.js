@@ -1,4 +1,4 @@
-class Main extends Phaser.Scene{
+class Main2 extends Phaser.Scene{
 
     constructor ()
     {
@@ -207,23 +207,11 @@ class Main extends Phaser.Scene{
     }
 
     goToPizza(){
-        this.mainCharacter.setX(480);
-        this.mainCharacter.setY(416);
-        restart=1;
-        this.scene.switch('Pizza');
-        
-        this.events.on('shutdown', this.shutdown, this);
-
+        this.scene.start('Pizza');
     }
 
     goToStore24(){
         this.scene.start('Store24');
     }
     
-    shutdown()
-    {
-        //  We need to clear keyboard events, or they'll stack up when the Menu is re-run
-        this.input.keyboard.shutdown();
-        
-    }
 };
