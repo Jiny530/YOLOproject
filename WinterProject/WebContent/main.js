@@ -64,7 +64,9 @@ class Main extends Phaser.Scene{
         this.load.image('피자나라','assets/main/피자나라.PNG');
         this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
         this.load.image('okButton','assets/공통팝업창/확인버튼.PNG');
-        this.load.image('noButton','assets/공통팝업창/X버튼.PNG');
+        this.load.image('noButton','assets/공통팝업창/X_버튼.PNG');
+
+        this.load.image('런닝방법','assets/running/런닝런닝방법.PNG');
     
     }
 
@@ -103,7 +105,7 @@ class Main extends Phaser.Scene{
         this.button_ok = this.add.image(620, 395, 'okButton').setInteractive();
         this.button_ok.visible=false;
 
-        this.button_no = this.add.image(384, 256,'noButton').setInteractive();
+        this.button_no = this.add.image(630, 110,'noButton').setInteractive();
         this.button_no.visible=false;
         
         
