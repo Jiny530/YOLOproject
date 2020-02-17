@@ -32,34 +32,29 @@ class Main extends Phaser.Scene{
         this.load.image('pizza', 'assets/pizza/Mr.Pizza.png');
         this.load.image('running', 'assets/running/cat.PNG');
         this.load.image('store24', 'assets/store24/과자_포카칩.PNG')
+        this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
     }
 
-    create ()
+    create ()   
     {   //메인게임화면 설정
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
 
-
-        /*
-        var blackjack = this.add.image(100,250,'blackjack').setScale(0.5,0.5);
-        var pizza = this.add.image(300,250,'pizza');
-        //console.log('image added')
-        blackjack.setInteractive();
-        blackjack.on('pointerdown', function (event) {
-            this.scene.start('BlackJack');
+        var dateText=this.add.bitmapText(45,45,'myfont',''+date,36)
+        var joyText = this.add.bitmapText(70,125,'myfont',''+joy,20)
+        this.mainLeftBar.setInteractive()
+        this.mainLeftBar.on('pointerdown', function (event) {
+            this.money=-5;
+            console.log(this.money)
         },this);
-        pizza.setInteractive()
-        pizza.on('pointerdown',function(event){
-            console.log('clicked')
-            this.scene.switch('Pizza');
-        },this);*/
-
-
-
-        
     }
 
     update()
     {
+        if(!this.gameOver && (this.joy<=0 || this.money<=0)){
+            this.gameOver=true;
+            this.scene.start('GameOver')
+        }
+        
         if (this.gameOver)
         {
             if (this.ending==1){
@@ -76,8 +71,21 @@ class Main extends Phaser.Scene{
             }
         }        
     }
-    
+}
 
+class GameOver extends Phaser.Scene {
+    constructor () {
+        super({key:'GameOver'})
+    }
+    preload() {
+        this.load.image('popup','assets/ending/endingPopUp.PNG')
+        this.load.image('title','assets/ending/gameOverTitle.PNG')
+
+    }
+    create() {
+        this.add.image(0,0,'popup').setOrigin(0)
+        this.add.image(768/2,115,'title')
+    }
 }
 
 
@@ -87,7 +95,7 @@ var config = {
     height: 512,
     backgroundColor: '#000000',
     parent: 'phaser-example',
-    scene: [ Main, Pizza, BlackJack, Store24]
+    scene: [ Main, Pizza, BlackJack, Store24,GameOver]
 };
 
 var game = new Phaser.Game(config);
