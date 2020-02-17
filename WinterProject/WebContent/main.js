@@ -112,25 +112,7 @@ class Main extends Phaser.Scene{
         this.physics.add.overlap(this.mainCharacter, this.편의점, this.goToStore24, null, this);
 
 
-        /*
-
-        
-        var blackjack = this.add.image(100,250,'blackjack').setScale(0.5,0.5);
-        var pizza = this.add.image(300,250,'pizza');
-        //console.log('image added')
-        blackjack.setInteractive();
-        blackjack.on('pointerdown', function (event) {
-            this.scene.start('BlackJack');
-        /*blackjack.on('pointerdown', function (event) {
-            this.scene.start('BlackJack');
-        },this);*/
-        pizza.setInteractive()
-        pizza.on('pointerdown',function(event){
-            console.log('clicked')
-            this.scene.start('Pizza');
-        },this);
-
-
+    
 
         
         var dateText=this.add.bitmapText(45,45,'myfont',''+date,36)
@@ -207,7 +189,7 @@ class Main extends Phaser.Scene{
     }
 
     goToBlackjack(){
-        this.scene.start('Blackjack');
+        this.scene.start('BlackJack');
     }
 
     goToPizza(){
