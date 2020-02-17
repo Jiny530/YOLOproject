@@ -19,6 +19,16 @@ class Main extends Phaser.Scene{
         this.mainLeftBar;
 
         //메인 게임 변수
+
+
+        this.mainCharacter;
+        this.cursors;
+
+        this.buildings;
+        this.공원;
+        this.블랙잭;
+        this.편의점;
+        this.피자나라;
     }
 
 
@@ -32,11 +42,72 @@ class Main extends Phaser.Scene{
         this.load.image('pizza', 'assets/pizza/Mr.Pizza.png');
         this.load.image('running', 'assets/running/cat.PNG');
         this.load.image('store24', 'assets/store24/과자_포카칩.PNG')
+
+
+        this.load.spritesheet('mainCharacter','assets/main/mainCharacter.PNG', { frameWidth: 64, frameHeight: 64 }); //mainCharacter
+        //건물들
+        this.load.image('공원','assets/main/공원.PNG');
+        this.load.image('블랙잭','assets/main/블랙잭.PNG');
+        this.load.image('편의점','assets/main/편의점.PNG');
+        this.load.image('피자나라','assets/main/피자나라.PNG');
     }
 
     create ()
     {   //메인게임화면 설정
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
+
+        this.cursors = this.input.keyboard.createCursorKeys(); //위,아래,왼쪽,오른쪽 방향키
+
+        //미니게임 건물 배치
+        this.공원=this.physics.add.image(544, 288, '공원');
+        this.블랙잭=this.physics.add.image(608, 96, '블랙잭');
+        this.편의점=this.physics.add.image(352, 288, '편의점');
+        this.피자나라=this.physics.add.image(288, 160, '피자나라');
+
+        this.mainCharacter=this.physics.add.sprite(480,416,'mainCharacter');
+        this.mainCharacter.setCollideWorldBounds(true);
+
+        //메인캐릭터 상하좌우 움직임
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('mainCharacter', { start: 6, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('mainCharacter', { start: 3, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'up',
+            frames: this.anims.generateFrameNumbers('mainCharacter', { start: 9, end: 11 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'down',
+            frames: this.anims.generateFrameNumbers('mainCharacter', { start: 0, end: 2 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'still',
+            frames: [ { key: 'mainCharacter', frame: 2 } ],
+            frameRate: 10,
+            repeat: -1
+        });
+
+        //빌딩에 메인 캐릭터가 닿으면 그 씬으로 넘어감
+        this.physics.add.overlap(this.mainCharacter, this.공원, this.goToRunning, null, this);
+        this.physics.add.overlap(this.mainCharacter, this.블랙잭, this.goToBlackjack, null, this);
+        this.physics.add.overlap(this.mainCharacter, this.피자나라, this.goToPizza, null, this);
+        this.physics.add.overlap(this.mainCharacter, this.편의점, this.goToStore24, null, this);
 
 
         /*
@@ -74,7 +145,59 @@ class Main extends Phaser.Scene{
             else if (this.ending==4){
                 this.scene.start('베짱이_블랙잭');
             }
-        }        
+        }  
+        
+        //메인 캐릭터 상하좌우 방향키 누를 때 움직임
+        if (this.cursors.left.isDown) {
+            this.mainCharacter.setVelocityX(-160);
+            this.mainCharacter.setVelocityY(0);
+
+            this.mainCharacter.anims.play('left', true);
+        }
+        else if (this.cursors.right.isDown) {
+            this.mainCharacter.setVelocityX(160);
+            this.mainCharacter.setVelocityY(0);
+
+            this.mainCharacter.anims.play('right', true);
+        }
+        else if (this.cursors.up.isDown) {
+            this.mainCharacter.setVelocityX(0);
+            this.mainCharacter.setVelocityY(-160);
+
+            this.mainCharacter.anims.play('up', true);
+        }
+        else if (this.cursors.down.isDown) {
+            this.mainCharacter.setVelocityX(0);
+            this.mainCharacter.setVelocityY(160);
+
+            this.mainCharacter.anims.play('down', true);
+        }
+        else
+        {
+            this.mainCharacter.setVelocityX(0);
+            this.mainCharacter.setVelocityY(0);
+
+            this.mainCharacter.anims.play('still');
+        }
+
+        
+    }
+
+    //각 미니게임으로 넘어가기
+    goToRunning(){
+        this.scene.start('Running');
+    }
+
+    goToBlackjack(){
+        this.scene.start('Blackjack');
+    }
+
+    goToPizza(){
+        this.scene.start('Pizza');
+    }
+
+    goToStore24(){
+        this.scene.start('Store24');
     }
     
 
@@ -87,7 +210,11 @@ var config = {
     height: 512,
     backgroundColor: '#000000',
     parent: 'phaser-example',
-    scene: [ Main, Pizza, BlackJack, Store24]
+    physics: {
+        default: 'arcade',
+        arcade: {debug: false}
+    },
+    scene: [ Main, Pizza, BlackJack, Store24, Running]
 };
 
 var game = new Phaser.Game(config);

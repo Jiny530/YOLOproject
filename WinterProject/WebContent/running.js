@@ -20,11 +20,6 @@ class Main extends Phaser.Scene{
 
     preload ()
     {
-        this.load.image('blackjack', 'assets/blackjack/cardA.png');
-        this.load.image('pizza', 'assets/pizza/Mr.Pizza.png');
-        this.load.image('running', 'assets/running/cat.PNG');
-        this.load.image('store24', 'assets/store24/과자_포카칩.PNG')
-
         this.load.spritesheet('mainCharacter','assets/main/mainCharacter.PNG', { frameWidth: 64, frameHeight: 64 });
         this.load.image('공원','assets/main/공원.PNG');
         this.load.image('블랙잭','assets/main/블랙잭.PNG');
@@ -45,14 +40,11 @@ class Main extends Phaser.Scene{
         
         //미니게임 건물 배치
         this.공원=this.physics.add.image(544, 288, '공원');
-        this.공원.angle=270;
         this.블랙잭=this.physics.add.image(608, 96, '블랙잭');
-        this.블랙잭.angle=90;
         this.편의점=this.physics.add.image(352, 288, '편의점');
         this.피자나라=this.physics.add.image(288, 160, '피자나라');
         //this.add.image(288, 96, '피자나라');
         //this.add.image(288, 32, '피자나라');
-        this.피자나라.angle=180;
 
         
         this.buildings.add(this.공원);
@@ -168,19 +160,19 @@ class Main extends Phaser.Scene{
     }
 
     goToRunning(){
-        this.scene.switch('Running');
+        this.scene.start('Running');
     }
 
     goToBlackjack(){
-        this.scene.switch('Blackjack');
+        this.scene.start('Blackjack');
     }
 
     goToPizza(){
-        this.scene.switch('Pizza');
+        this.scene.start('Pizza');
     }
 
     goToStore24(){
-        this.scene.switch('Store24');
+        this.scene.start('Store24');
     }
     
 };
@@ -362,7 +354,7 @@ class Running extends Phaser.Scene{
         this.sprite.play('walk');
 
         /*타임바 */
-        this.timerEvent = this.time.addEvent({ delay: 30000 });
+        this.timerEvent = this.time.addEvent({ delay: 3000 });
         this.timebar = this.add.graphics({ x: 0, y: 0 });
 
         //  Input Events
@@ -387,6 +379,7 @@ class Running extends Phaser.Scene{
 
 
     update(time, delta) {
+        //this.howToPopUp();
         if (this.gameOver) {
             this.sprite.anims.setRepeat(0); //캐릭터 뛰는 거 멈춤
 
@@ -434,6 +427,19 @@ class Running extends Phaser.Scene{
         
     }
 
+    howToPopUp(){
+        game.lockRender = true
+        var result2 = this.add.image(384, 256, 'result');
+        var okButton2 = this.add.image(384, 256, 'okButton');
+        okButton2.setInteractive();
+        okButton2.on('pointerdown', function(pointer){
+            console.log('clicked');
+            result2.visible=false;
+            okButton2.visible=false;
+            game.lockRender = false;
+        });
+    }
+
     popUp(){
         //result 팝업창
         //this.popup=this.add.group();
@@ -444,7 +450,9 @@ class Running extends Phaser.Scene{
         this.happiness.setScale(1/8,1/8);
         this.okButton = this.add.image(384, 256, 'okButton');
         this.okButton.setInteractive();
-        this.okButton.on('pointerdown', this.goToMain);
+        this.okButton.on('pointerdown', (event) => {
+            this.scene.switch('Main');
+        });
         //this.okButton = game.add.button(384, 256, 'okButton', actionOnClick, this, 2, 1, 0);
         this.okText = this.add.image(620, 395, 'okText');
         this.scoreResultText = this.add.image(200, 230, 'scoreResultText');
@@ -459,15 +467,15 @@ class Running extends Phaser.Scene{
         if(this.score<0){
             totalText2.setText(0);
         }
-        else if(this.score<=30){
+        else if(this.score<=50){
             totalText2.setText(1);
             happiness+=1;
         }
-        else if(this.score<=80){
+        else if(this.score<=90){
             totalText2.setText(2);
             happiness+=2;
         }
-        else if(this.score>80){
+        else if(this.score>90){
             totalText2.setText(3);
             happiness+=3;
         }
