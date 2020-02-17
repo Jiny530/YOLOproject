@@ -77,7 +77,7 @@ class Pizza extends Phaser.Scene {
         this.music = this.sound.add('피자나라bgm');
         this.music.loop=true;
         this.sound.mute=false;
-        this.music.play();
+        //this.music.play();
 
         this.player = this.add.image(384,100,'player').setScale(0.15,0.15);
 
@@ -97,10 +97,10 @@ class Pizza extends Phaser.Scene {
         this.schoolGroup = this.add.group();
         this.boxGroup = this.add.group();
 
-        this.childMaking(1, this.dominoGroup, this.dominoSequence);
-        this.childMaking(2, this.mrGroup, this.mrSequence);
-        this.childMaking(3, this.hutGroup, this.hutSequence);
-        this.childMaking(4, this.schoolGroup, this.schoolSequence);
+        this.childMaking(this.dominoGroup, this.dominoSequence);
+        this.childMaking(this.mrGroup, this.mrSequence);
+        this.childMaking(this.hutGroup, this.hutSequence);
+        this.childMaking(this.schoolGroup, this.schoolSequence);
 
 
         this.BOX = this.add.image(668, 472, 'box').setScale(0.6, 0.6);
@@ -254,6 +254,7 @@ class Pizza extends Phaser.Scene {
 
 
         if (this.gameOver) {
+            //this.music.stop();
             this.events.on('shutdown', this.shutdown, this);
             
             this.scene.restart('pizza');
@@ -503,7 +504,7 @@ class Pizza extends Phaser.Scene {
 
 
 
-    childMaking(pizza, group, sequence) {
+    childMaking(group, sequence) {
         var temp;
         var x;
         var y;
