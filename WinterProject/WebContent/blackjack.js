@@ -4,6 +4,8 @@ class BlackJack extends Phaser.Scene{
         super({ key: 'BlackJack'});
         console.log('sceneB called')
         
+        this.music;
+
         this.sum1=0
         this.sum2 = 0
         this.dealerSum1 = 0
@@ -29,6 +31,8 @@ class BlackJack extends Phaser.Scene{
 
     }
     preload() {
+        this.load.audio('블랙잭bgm','assets/music/블랙잭bgm.mp3');
+
         this.load.image('stop', 'assets/blackjack/stop.png');
         this.load.image('go', 'assets/blackjack/go.png');
 
@@ -67,6 +71,11 @@ class BlackJack extends Phaser.Scene{
         this.DEALER = 2
     }
     create() {
+        this.music = this.sound.add('블랙잭bgm');
+        this.music.loop=true;
+        this.sound.mute=false;
+        this.music.play();
+
         var button_stop;
         var button_go;
         button_stop = this.add.image(600, 100, 'stop', 0);

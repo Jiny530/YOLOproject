@@ -68,7 +68,7 @@ var inputList=[]; //랜덤상품고를때마다 눌러야할 키 넣기
 function preload ()
 {
 
-    this.load.audio('store24_bgm','assets/music/store24_bgm(Chibi Ninja).mp3')
+    this.load.audio('store24_bgm','assets/music/편의점bgm.mp3')
     
     this.load.image('라면_까불닭', 'assets/store24/라면_까불닭.png');
     this.load.image('라면_육개장', 'assets/store24/라면_육개장.png');
@@ -355,6 +355,7 @@ function update(time,delta)
     if (life == 0){
         //몫숨 다 소모하면, gameover 
         game.destroy();   //->상품 중지 하지 않아도 됨. total 점수판만 팝업해도 괜찮을 듯..
+        music.destroy();
         if(총상품==combo){
             //all combo
         }
