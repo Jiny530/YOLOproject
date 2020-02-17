@@ -116,25 +116,17 @@ class Main extends Phaser.Scene{
         this.physics.add.overlap(this.mainCharacter, this.블랙잭, this.goToBlackjack, null, this);
         this.physics.add.overlap(this.mainCharacter, this.피자나라, this.goToPizza, null, this);
         this.physics.add.overlap(this.mainCharacter, this.편의점, this.goToStore24, null, this);
-
-
-    
-
         
         var dateText=this.add.bitmapText(45,45,'myfont',''+date,36)
         var joyText = this.add.bitmapText(70,125,'myfont',''+joy,20)
-        this.mainLeftBar.setInteractive()
-        this.mainLeftBar.on('pointerdown', function (event) {
-            this.money=-5;
-            console.log(this.money)
-        },this);
+        
     }
 
     update()
     {
-        if(!this.gameOver && (this.joy<=0 || this.money<=0)){
+        if(!this.gameOver && (joy<=0 || money<=0)){
             this.gameOver=true;
-            this.scene.start('BlackJack')
+            this.scene.start('GameOver')
         }
         
         if (this.gameOver)

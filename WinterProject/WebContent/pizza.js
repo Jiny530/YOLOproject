@@ -260,7 +260,6 @@ class Pizza extends Phaser.Scene {
             this.scene.restart('pizza');
             this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
             this.scene.switch('Main');
-
         }
     }
 
