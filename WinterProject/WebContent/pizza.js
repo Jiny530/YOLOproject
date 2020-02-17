@@ -3,6 +3,7 @@ money = 0;
 class Pizza extends Phaser.Scene {
 
     constructor() {
+
         super({ key: 'Pizza', active: false, auto_start: false });
         //super();
         this.gameOver = false;
