@@ -13,9 +13,9 @@ class Pizza extends Phaser.Scene {
         this.pizza;
         this.nextPizza = Phaser.Math.Between(1, 4);
         this.Next;
-        this.pizzaflag = 0; //피자 새로 불러올지 말지 결정
+        this.pizzaflag; //피자 새로 불러올지 말지 결정
         this.arrowflag; //방향키 입력 받을지 안받을지 결정
-        this.boxflag = 1; //피자박스 누적
+        this.boxflag; //피자박스 누적
         this.domino;
         this.mr;
         this.hut;
@@ -29,14 +29,14 @@ class Pizza extends Phaser.Scene {
         this.hutGroup;
         this.schoolGroup;
         this.boxGroup;
-        this.boxNum = 0;
+        this.boxNum;
         this.timerEvent;
         this.graphics;
         this.arrowdelay;
-        this.arrowflag_flag = 1;
+        this.arrowflag_flag;
         this.arrowright;
-        this.si = 0; //화살표 패턴 점수 인덱스
-        this.ai = 0; //화살표 생성시 활성화된 화살표 인덱스
+        this.si; //화살표 패턴 점수 인덱스
+        this.ai; //화살표 생성시 활성화된 화살표 인덱스
         this.bacc1;
         this.back2;
         this.BOX;
@@ -45,7 +45,7 @@ class Pizza extends Phaser.Scene {
         this.boxtext;
         this.isWrong; //틀렸을때 딜레이
         this.wrongDelay;
-        this.wrongflag = 0; //틀렸을때 잠시 지연
+        this.wrongflag; //틀렸을때 잠시 지연
         this.timeSource;
         this.player;
     }
@@ -191,7 +191,7 @@ class Pizza extends Phaser.Scene {
 
 
         //타이머
-        this.timerEvent = this.time.addEvent({ delay: 3000 });
+        this.timerEvent = this.time.addEvent({ delay: 5000 });
         this.graphics = this.add.graphics({ x: 0, y: 512 });
 
         this.graphics.angle = -90;
@@ -201,6 +201,9 @@ class Pizza extends Phaser.Scene {
 
     //키보드 꾹 누르고 있는게 계속 반영되는 곳
     update() {
+
+        
+
         if (this.arrowflag_flag == 0) {
             this.arrowflag_flag = 1;
             this.arrowright = this.time.addEvent({ delay: 150, callback: this.onEvent1, callbackScope: this });
@@ -246,18 +249,39 @@ class Pizza extends Phaser.Scene {
         }
         if ((1 - this.timerEvent.getProgress()) == 0) {
             this.gameOver = true;
+            this.wrongEvent();
         }
 
 
         if (this.gameOver) {
-            //여기 팝업창 뜨게하기
-            //minigame_start=1;
+            this.events.on('shutdown', this.shutdown, this);
+            
+            this.scene.restart('pizza');
+            this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
             this.scene.switch('Main');
         }
     }
 
+    shutdown()
+    {
+        //  We need to clear keyboard events, or they'll stack up when the Menu is re-run
+        this.input.keyboard.shutdown();
+    }
 
-
+    init(){
+        
+        this.gameOver=false;
+        this.pizzaflag = 0; //피자 새로 불러올지 말지 결정
+        this.arrowflag = 0; 
+        this.boxNum = 0;
+        this.nextPizza = Phaser.Math.Between(1, 4);
+        this.boxflag = 1; //피자박스 누적
+        this.boxNum = 0;
+        this.arrowflag_flag = 1;
+        this.si = 0; //화살표 패턴 점수 인덱스
+        this.ai = 0; //화살표 생성시 활성화된 화살표 인덱스
+        this.wrongflag = 0; //틀렸을때 잠시 지연
+    }
 
     onEvent() {
 
