@@ -19,7 +19,7 @@ class Main extends Phaser.Scene{
         this.mainLeftBar;
 
         //메인 게임 변수
-
+        this.music;
 
         this.mainCharacter;
         this.cursors;
@@ -43,7 +43,9 @@ class Main extends Phaser.Scene{
 
 
     preload ()
-    {
+    {   
+        this.load.audio('미니게임보통bgm','assets/music/미니게임보통bgm.mp3');
+
         //메인게임 날짜, 즐거움, 돈 _ 왼쪽 바
         this.load.image('왼쪽바', 'assets/main/메인게임UI왼쪽바.png');
 
@@ -67,7 +69,12 @@ class Main extends Phaser.Scene{
     }
 
     create ()   
-    {   //메인게임화면 설정
+    { 
+        this.music = this.sound.add('미니게임보통bgm');
+        this.music.loop=true;
+        this.sound.mute=false;
+        this.music.play();
+        //메인게임화면 설정
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
 
         this.cursors = this.input.keyboard.createCursorKeys(); //위,아래,왼쪽,오른쪽 방향키

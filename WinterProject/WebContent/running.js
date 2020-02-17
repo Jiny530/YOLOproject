@@ -184,6 +184,7 @@ class Running extends Phaser.Scene{
         //오브젝트 만드는 함수
         var timedEvent2 = this.time.addEvent({ delay: 550, callback: this.spawnObject, callbackScope: this, loop: true });
 
+        console.log('런닝런닝 시작')
        
     }
 

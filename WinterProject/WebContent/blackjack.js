@@ -209,9 +209,9 @@ class BlackJack extends Phaser.Scene{
         }
         if (this.gameState == this.GAME_OVER) {
             if(this.click_stop){
-                this.scene.switch('Main')
                 money+=this.money
                 console.log(money+' '+this.money)
+                this.scene.switch('Main')
             }
 
         }
