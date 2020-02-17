@@ -64,6 +64,7 @@ class Store24 extends Phaser.Scene {
         this.endpopup_combo;
         this.endpopup_joy;
         this.endpopup_money;
+        this.okbtn;
     }
 
     preload ()
@@ -122,7 +123,7 @@ class Store24 extends Phaser.Scene {
         //결과 팝업창
         this.load.image('버튼포함창','assets/공통팝업창/버튼포함창.PNG');
         //this.load.image('결과팝업','assets/공통팝업창/편의점결과.PNG');
-        //this.load.image('오른아래버튼','assets/오른아래버튼.PNG');
+        this.load.image('okbtn','assets/오른아래버튼.PNG');
     }
 
     
@@ -399,7 +400,18 @@ class Store24 extends Phaser.Scene {
     //결과처리함수
     endStore24(){
         this.endpopup=this.add.image(0,0,'버튼포함창').setOrigin(0);
-        this.OKbtn=this.add.button(576,352,'button',this.actionOnClick,)
+        this.okbtn = this.add.image(620, 395, 'okbtn');
+        this.okbtn.setInteractive();
+        this.okbtn.on('pointerdown', (event) => {
+            
+            console.log("clicked!!!!!!!!!!!!!!");
+            this.result.visible=false;
+            this.scene.restart('Store24');
+            //초기화 안되면 수동으로 reset하기
+
+            this.scene.switch('Main2');
+            
+        });
         //this.endpopup=this.add.image(0,0,'결과팝업').setOrigin(0);
         //this.endpopup_Ok=this.add.image(0,0,'오른아래버튼').setOrigin(0);
 
