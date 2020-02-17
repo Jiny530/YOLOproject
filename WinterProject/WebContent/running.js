@@ -1,10 +1,10 @@
 money=0;
 happiness=0;
-class Main extends Phaser.Scene{
+class Main2 extends Phaser.Scene{
 
     constructor ()
     {
-        super({key:'Main'});
+        super({key:'Main2'});
         console.log('Main called');
 
         this.music;
@@ -757,15 +757,15 @@ class Running extends Phaser.Scene{
 
 
 
-var config = {
-    type: Phaser.AUTO,
-    width: 768,
-    height: 512,
-    physics: {
-        default: 'arcade',
-        arcade: {debug: false}
-    },
-    scene: [Main,Running,Pizza]
-};
+// var config = {
+//     type: Phaser.AUTO,
+//     width: 768,
+//     height: 512,
+//     physics: {
+//         default: 'arcade',
+//         arcade: {debug: false}
+//     },
+//     scene: [Main,Running,Pizza]
+// };
 
-var game = new Phaser.Game(config);
+//var game = new Phaser.Game(config);
