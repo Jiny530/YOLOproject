@@ -49,32 +49,47 @@ class BlackJack extends Phaser.Scene{
         this.load.image('cardk', 'assets/blackjack/card k.png')
 
         this.load.image('bg','assets/blackjack/bg_pattern4.png')
+        this.load.image('board','assets/blackjack/board.png')
+        this.load.image('cactus','assets/blackjack/cactus.png')
+        this.load.image('character','assets/blackjack/player (2).png')
+        
+    }
+    create() {
 
+        //변수 초기화
         this.sum1=0
         this.sum2 = 0
         this.dealerSum1 = 0
         this.dealerSum2 = 0
 
         this.moneyText
-        this.money = 100
+        this.money = 5000
 
-        this.cardlocate = 0;
+        this.cardlocate = 769/2+512/2-125;
         this.click_stop = false;
         this.click_go = false;
 
         this.GAME_OVER = 0
         this.GAME_START = 1
         this.TURN_STOP = 2
-        this.gameState = this.GAME_OVER
 
         this.PLAYER = 1
         this.DEALER = 2
-    }
-    create() {
+
         this.music = this.sound.add('블랙잭bgm');
         this.music.loop=true;
         this.sound.mute=false;
         this.music.play();
+
+      
+        
+        //배경 꾸미기
+        this.add.tileSprite(0,0,768,512,'bg').setOrigin(0)
+        this.add.image(768/2,512/2,'board')
+        var cactus=this.add.image(768/2+512/2,100,'cactus').setOrigin(0)
+        cactus.setScale(0.2)
+        var character=this.add.image(768/2+512/2+50,400,'character')
+        character.setScale(0.2)
 
         var button_stop;
         var button_go;
@@ -134,7 +149,7 @@ class BlackJack extends Phaser.Scene{
                     var cardname = this.random_card(this.DEALER);
                     card = this.add.image(this.cardlocate, 200, cardname, 0);
                     this.cards.add(card)
-                    card.scale = 0.2
+                    card.scale = 0.1
 
                     // 카드의 합 계산
 
@@ -200,7 +215,7 @@ class BlackJack extends Phaser.Scene{
             cardname = 'carda'
         else
             cardname = 'card' + rand
-        this.cardlocate += 100;
+        this.cardlocate -= 75;
 
         // 카드의 합 계산
         if (who == this.PLAYER) {

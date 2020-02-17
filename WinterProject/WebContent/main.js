@@ -146,7 +146,7 @@ class Main extends Phaser.Scene{
     {
         if(!this.gameOver && (this.joy<=0 || this.money<=0)){
             this.gameOver=true;
-            this.scene.start('GameOver')
+            this.scene.start('BlackJack')
         }
         
         if (this.gameOver)
@@ -245,8 +245,9 @@ var config = {
     type: Phaser.AUTO,
     width: 768,
     height: 512,
-    backgroundColor: '#000000',
+    backgroundColor: '#ffffff',
     parent: 'phaser-example',
+    autoCenter: Phaser.Scale.CENTER_BOTH,
     physics: {
         default: 'arcade',
         arcade: {debug: false}
