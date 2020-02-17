@@ -15,6 +15,8 @@ class Main extends Phaser.Scene{
         this.블랙잭;
         this.편의점;
         this.피자나라;
+        this.okButtonRunning;
+        this.런닝런닝방법;
 
     }
 
@@ -25,11 +27,14 @@ class Main extends Phaser.Scene{
         this.load.image('블랙잭','assets/main/블랙잭.PNG');
         this.load.image('편의점','assets/main/편의점.PNG');
         this.load.image('피자나라','assets/main/피자나라.PNG');
+        this.load.image('런닝런닝방법','assets/running/런닝런닝방법.PNG');
+        this.load.image('okButton','assets/공통팝업창/확인버튼.PNG');
     }
 
     create ()
     {   
         this.cursors = this.input.keyboard.createCursorKeys();
+    
 
         this.buildings = this.physics.add.staticGroup(); //빌딩 그룹화
         /*this.buildings.create(544, 288, '공원');
@@ -54,9 +59,20 @@ class Main extends Phaser.Scene{
 
         this.mainCharacter=this.physics.add.sprite(480,416,'mainCharacter');
         this.mainCharacter.setCollideWorldBounds(true);
+
+        this.런닝런닝방법=this.add.image(384, 256, '런닝런닝방법');
+        this.런닝런닝방법.setScale(0.65);
+        this.okButtonRunning = this.add.image(620, 395, 'okButton');
+        this.okButtonRunning.setInteractive();
+        this.okButtonRunning.on('pointerdown', (event) => {
+            this.런닝런닝방법.visible=false;
+            this.okButtonRunning.visible=false;
+            this.scene.start('Running');
+            
+        });
+        this.런닝런닝방법.visible=false;
+        this.okButtonRunning.visible=false;
         
-
-
 
         //메인캐릭터 상하좌우 움직임
         this.anims.create({
@@ -101,11 +117,11 @@ class Main extends Phaser.Scene{
         },this);
 
         */
-        this.physics.add.collider(this.mainCharacter, this.buildings);
-        this.physics.add.overlap(this.mainCharacter, this.공원, this.goToRunning, null, this);
-        this.physics.add.overlap(this.mainCharacter, this.블랙잭, this.goToBlackjack, null, this);
-        this.physics.add.overlap(this.mainCharacter, this.피자나라, this.goToPizza, null, this);
-        this.physics.add.overlap(this.mainCharacter, this.편의점, this.goToStore24, null, this);
+        //this.physics.add.collider(this.mainCharacter, this.buildings);
+        this.physics.add.overlap(this.mainCharacter, this.공원, this.runningOrNot, null, this);
+        this.physics.add.overlap(this.mainCharacter, this.블랙잭, this.blackJackorNot, null, this);
+        this.physics.add.overlap(this.mainCharacter, this.피자나라, this.pizzaOrNot, null, this);
+        this.physics.add.overlap(this.mainCharacter, this.편의점, this.store24OrNot, null, this);
     }
 
     update() {
@@ -158,12 +174,28 @@ class Main extends Phaser.Scene{
         */
 
     }
+    runningOrNot(){
+        this.런닝런닝방법.visible=true;
+        this.okButtonRunning.visible=true;
+    }
+
+    blackJackorNot(){
+
+    }
+
+    pizzaOrNot(){
+
+    }
+
+    store24OrNot(){
+
+    }
 
     goToRunning(){
         this.scene.start('Running');
     }
 
-    goToBlackjack(){
+    goToBlackJack(){
         this.scene.start('Blackjack');
     }
 
@@ -277,8 +309,7 @@ class Running extends Phaser.Scene{
 
         //result 팝업
         this.load.image('happiness', 'assets/running/result/happiness.png');
-        this.load.image('okButton', 'assets/running/result/okButton.png');
-        this.load.image('okText', 'assets/running/result/okText.png');
+        this.load.image('okButton', 'assets/공통팝업창/확인버튼.png');
         this.load.image('result', 'assets/running/result/result.png');
         this.load.image('scoreResultText', 'assets/running/result/scoreResultText.png');
         this.load.image('totalScoreText', 'assets/running/result/totalScoreText.png');
@@ -430,7 +461,7 @@ class Running extends Phaser.Scene{
     howToPopUp(){
         game.lockRender = true
         var result2 = this.add.image(384, 256, 'result');
-        var okButton2 = this.add.image(384, 256, 'okButton');
+        var okButton2 = this.add.image(620, 395, 'okButton');
         okButton2.setInteractive();
         okButton2.on('pointerdown', function(pointer){
             console.log('clicked');
@@ -448,13 +479,12 @@ class Running extends Phaser.Scene{
         this.result = this.add.image(384, 256, 'result');
         this.happiness = this.add.image(320, 300, 'happiness');
         this.happiness.setScale(1/8,1/8);
-        this.okButton = this.add.image(384, 256, 'okButton');
+        this.okButton = this.add.image(620, 395, 'okButton');
         this.okButton.setInteractive();
         this.okButton.on('pointerdown', (event) => {
             this.scene.switch('Main');
         });
         //this.okButton = game.add.button(384, 256, 'okButton', actionOnClick, this, 2, 1, 0);
-        this.okText = this.add.image(620, 395, 'okText');
         this.scoreResultText = this.add.image(200, 230, 'scoreResultText');
         this.totalScoreText = this.add.image(384, 110, 'totalScoreText');
         this.totalText = this.add.image(200, 300, 'totalText');
@@ -756,7 +786,7 @@ var config = {
         default: 'arcade',
         arcade: {debug: false}
     },
-    scene: [Main,Running,Pizza]
+    scene: [Main,Running]
 };
 
 var game = new Phaser.Game(config);
