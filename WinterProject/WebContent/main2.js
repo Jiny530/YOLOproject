@@ -1,3 +1,5 @@
+money=0;
+joy=0;
 class Main2 extends Phaser.Scene{
 
     constructor ()
@@ -16,6 +18,7 @@ class Main2 extends Phaser.Scene{
         this.편의점;
         this.피자나라;
         this.okButtonRunning;
+        this.noButtonRunning;
         this.런닝런닝방법;
 
     }
@@ -31,6 +34,7 @@ class Main2 extends Phaser.Scene{
         this.load.image('피자나라','assets/main/피자나라.PNG');
         this.load.image('런닝런닝방법','assets/running/런닝런닝방법.PNG');
         this.load.image('okButton','assets/공통팝업창/확인버튼.PNG');
+        this.load.image('noButton','assets/공통팝업창/X버튼.PNG');
     }
 
     create ()
@@ -44,20 +48,13 @@ class Main2 extends Phaser.Scene{
     
 
         this.buildings = this.physics.add.staticGroup(); //빌딩 그룹화
-        /*this.buildings.create(544, 288, '공원');
-        this.buildings.create(608, 96, '블랙잭');
-        this.buildings.create(352, 288, '편의점');
-        this.buildings.create(288, 160, '피자나라');
-        */
         
         //미니게임 건물 배치
         this.공원=this.physics.add.image(544, 288, '공원');
         this.블랙잭=this.physics.add.image(608, 96, '블랙잭');
         this.편의점=this.physics.add.image(352, 288, '편의점');
         this.피자나라=this.physics.add.image(288, 160, '피자나라');
-        //this.add.image(288, 96, '피자나라');
-        //this.add.image(288, 32, '피자나라');
-
+        
         
         this.buildings.add(this.공원);
         this.buildings.add(this.블랙잭);
@@ -69,25 +66,37 @@ class Main2 extends Phaser.Scene{
 
         this.런닝런닝방법=this.add.image(384, 256, '런닝런닝방법');
         this.런닝런닝방법.setScale(0.65);
+        this.noButtonRunning = this.add.image(384, 256,'noButton');
+        this.noButtonRunning.setInteractive();
+        this.noButtonRunning.on('pointerdown', (event) => {
+            this.런닝런닝방법.visible=false;
+            this.okButtonRunning.visible=false;
+            this.noButtonRunning.visible=false;
+            this.mainCharacter.setX(480);
+            this.mainCharacter.setY(416);
+
+            
+        });
         this.okButtonRunning = this.add.image(620, 395, 'okButton');
         this.okButtonRunning.setInteractive();
         this.okButtonRunning.on('pointerdown', (event) => {
             this.런닝런닝방법.visible=false;
             this.okButtonRunning.visible=false;
+            this.noButtonRunning.visible=false;
             //this.events.on('shutdown', this.shutdown, this);
             this.mainCharacter.setX(480);
             this.mainCharacter.setY(416);
-             
-            //this.scene.add('Running', config, false);
+
             this.scene.switch('Running');
-            //this.scene.restart('Running');
-            //this.scene.switch('Running');
             console.log(money);
-            console.log(happiness);
+            console.log(joy);
             
         });
         this.런닝런닝방법.visible=false;
-        this.okButtonRunning.visible=false;
+            this.okButtonRunning.visible=false;
+            this.noButtonRunning.visible=false;
+        //this.런닝런닝방법.visible=false;
+        //this.okButtonRunning.visible=false;
         
 
         //메인캐릭터 상하좌우 움직임
@@ -126,14 +135,6 @@ class Main2 extends Phaser.Scene{
             repeat: -1
         });
     
-        /*
-        this.input.once('pointerdown',function(event){
-            console.log('clicked')
-            this.scene.start('Running');
-        },this);
-
-        */
-        //this.physics.add.collider(this.mainCharacter, this.buildings);
         this.physics.add.overlap(this.mainCharacter, this.공원, this.runningOrNot, null, this);
         this.physics.add.overlap(this.mainCharacter, this.블랙잭, this.blackJackorNot, null, this);
         this.physics.add.overlap(this.mainCharacter, this.피자나라, this.pizzaOrNot, null, this);
@@ -173,26 +174,13 @@ class Main2 extends Phaser.Scene{
             this.mainCharacter.anims.play('still');
         }
 
-
-        /*
-        if(this.mainCharacter.x>256 && this.mainCharacter.x<320){
-            this.scene.switch('Pizza');
-        }
-        if(this.mainCharacter.x>320 && this.mainCharacter.x<384){
-            this.scene.switch('Store');
-        }
-        if(this.mainCharacter.y>256 && this.mainCharacter.y<320){
-            this.scene.switch('Running');
-        }
-        if(this.mainCharacter.y>64 && this.mainCharacter.y<128){
-            this.scene.switch('Blackjack');
-        }
-        */
-
     }
+
+    //게임방법 보여주고 할지말지 결정
     runningOrNot(){
         this.런닝런닝방법.visible=true;
         this.okButtonRunning.visible=true;
+        this.noButtonRunning.visible=true;
     }
 
     blackJackorNot(){
@@ -205,23 +193,6 @@ class Main2 extends Phaser.Scene{
 
     store24OrNot(){
 
-    }
-
-    goToRunning(){
-        this.scene.start('Running');
-    }
-
-    goToBlackJack(){
-        this.scene.start('Blackjack');
-    }
-
-    goToPizza(){
-        this.events.on('shutdown', this.shutdown, this);
-        this.scene.start('Pizza');
-    }
-
-    goToStore24(){
-        this.scene.start('Store24');
     }
 
     shutdown()
@@ -243,7 +214,7 @@ var config = {
         default: 'arcade',
         arcade: {debug: false}
     },
-    scene: [ Main2, Running ]
+    scene: [ Main2, Running, Pizza]
 };
 
 

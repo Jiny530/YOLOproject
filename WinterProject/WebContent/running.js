@@ -1,6 +1,3 @@
-money=0;
-happiness=0;
-
 
 class Running extends Phaser.Scene{
     constructor ()
@@ -82,7 +79,6 @@ class Running extends Phaser.Scene{
         this.load.image('tree4', 'assets/running/tree4.png');
         this.load.image('grass', 'assets/running/grass.png');
         this.load.image('bench', 'assets/running/bench2.png');
-        //this.load.image('bench', 'assets/running/bench2.png');
         this.load.image('timebar', 'assets/running/timebar2.png');
         this.load.image('score', 'assets/running/score.png');
         this.load.image('+1', 'assets/running/+1.png');
@@ -129,13 +125,7 @@ class Running extends Phaser.Scene{
         this.plus1.visible=false;
         this.plus5.visible=false;
         this.minus5.visible=false;
-        /*this.heartText = this.add.text(120, 250, '+1', { fontSize: '25px', fill: '#fff' });
-        this.heartText.visible = false;
-        this.objectText = this.add.text(120, 250, '+5', { fontSize: '25px', fill: '#fff' });
-        this.objectText.visible = false;
-        this.otherText = this.add.text(120, 250, '-5', { fontSize: '25px', fill: '#fff' });
-        this.otherText.visible = false;
-        */
+
         this.add.image(663, 30, 'heart'); //획득한 하트
         
         var timebarBg = this.add.image(485, 30, 'timebar'); //타임바
@@ -192,12 +182,7 @@ class Running extends Phaser.Scene{
         this.hearts = this.physics.add.group();
 
         //오브젝트 만드는 함수
-        //timedEvent=this.time.addEvent({ delay: speed2, callback: firstObject, callbackScope: this, loop: false });
         var timedEvent2 = this.time.addEvent({ delay: 550, callback: this.spawnObject, callbackScope: this, loop: true });
-
-        //this.input.keyboard.on('keydown_W', checkObject, this);
-        //this.physics.add.collider(this.others, this.limitground);
-        //this.physics.add.collider(this.objects, this.limitground);
 
        
     }
@@ -208,23 +193,22 @@ class Running extends Phaser.Scene{
         if (this.gameOver) {
             this.sprite.anims.setRepeat(0); //캐릭터 뛰는 거 멈춤
 
-            /*//팝업창 나오게
-            this.result.visible = true;
-            this.happiness.visible = true;
-            this.okButton.visible = true;
-            this.okText.visible = true;
-            this.scoreResultText.visible = true;
-            this.totalScoreText.visible = true;
-            this.totalText.visible = true;
-            */
             this.popUp();
             //오브젝트 안보이게
             this.sprite.visible=false;
-            //this.objects.getChildren().visible=false;
-            //this.others.getChildren().visible=false;
-            //this.hearts.getChildren().visible=false;
-
-            //this.scene.restart();
+            if(this.score<0){
+                joy+=0;
+            }
+            else if(this.score<=50){
+                joy+=1;
+            }
+            else if(this.score<=90){
+                joy+=2;
+            }
+            else if(this.score>90){
+                joy+=3;
+            }
+            return;
         }
 
         //점프 체크
@@ -253,22 +237,7 @@ class Running extends Phaser.Scene{
         
     }
 
-    howToPopUp(){
-        game.lockRender = true
-        var result2 = this.add.image(384, 256, 'result');
-        var okButton2 = this.add.image(620, 395, 'okButton');
-        okButton2.setInteractive();
-        okButton2.on('pointerdown', function(pointer){
-            console.log('clicked');
-            result2.visible=false;
-            okButton2.visible=false;
-            game.lockRender = false;
-        });
-    }
-
     popUp(){
-        //result 팝업창
-        //this.popup=this.add.group();
         this.add.image(35, 256, 'limitbg');
         this.add.image(740, 256, 'limitbg');
         this.result = this.add.image(384, 256, 'result');
@@ -284,7 +253,6 @@ class Running extends Phaser.Scene{
             this.scene.switch('Main2');
             
         });
-        //this.okButton = game.add.button(384, 256, 'okButton', actionOnClick, this, 2, 1, 0);
         this.scoreResultText = this.add.image(200, 230, 'scoreResultText');
         this.totalScoreText = this.add.image(384, 110, 'totalScoreText');
         this.totalText = this.add.image(200, 300, 'totalText');
@@ -299,15 +267,15 @@ class Running extends Phaser.Scene{
         }
         else if(this.score<=50){
             totalText2.setText(1);
-            happiness+=1;
+            joy+=1;
         }
         else if(this.score<=90){
             totalText2.setText(2);
-            happiness+=2;
+            joy+=2;
         }
         else if(this.score>90){
             totalText2.setText(3);
-            happiness+=3;
+            joy+=3;
         }
     }
 
@@ -346,14 +314,12 @@ class Running extends Phaser.Scene{
         if (!this.gameOver) {
             var temp = this.randomObject(); //0~4사이 숫자
             if (temp == 0) {
-                //nameObjects.push("heart");
                 var object = this.physics.add.image(790, 360, this.randomList[temp]);
                 this.physics.add.collider(this.sprite, object);
                 this.physics.add.collider(object, this.platforms);
                 this.hearts.add(object);
             }
             else if (temp == 1) {
-                //nameObjects.push("banana");
                 var object = this.add.image(790, 360, this.randomList[temp]);
                 this.physics.add.collider(this.sprite, object);
                 this.physics.add.collider(object, this.platforms);
@@ -368,7 +334,6 @@ class Running extends Phaser.Scene{
             }
 
             else if (temp == 3) {
-                //nameObjects.push("rock");
                 var object = this.add.image(790, 360, this.randomList[temp]);
                 this.physics.add.collider(this.sprite, object);
                 this.physics.add.collider(object, this.platforms);
@@ -581,18 +546,3 @@ class Running extends Phaser.Scene{
     }
 
 };
-
-
-/*
-var config = {
-    type: Phaser.AUTO,
-    width: 768,
-    height: 512,
-    physics: {
-        default: 'arcade',
-        arcade: {debug: false}
-    },
-    scene: [Main,Running]
-};*/
-
-//var game = new Phaser.Game(config);
