@@ -193,7 +193,10 @@ class Main extends Phaser.Scene{
     }
 
     goToPizza(){
-        this.scene.start('Pizza');
+        this.mainCharacter.setX(480);
+        this.mainCharacter.setY(416);
+        this.events.on('shutdown', this.shutdown, this);
+        this.scene.switch('Pizza');
     }
 
     goToStore24(){
