@@ -82,7 +82,6 @@ class BlackJack extends Phaser.Scene{
         this.sound.mute=false;
         this.music.play();
 
-        date-=1
       
         
         //배경 꾸미기
@@ -210,6 +209,7 @@ class BlackJack extends Phaser.Scene{
             if(this.click_stop){
                 money+=this.money
                 console.log(money+' '+this.money)
+                date-=1
                 this.scene.restart('BlackJack')
                 this.scene.wake('Main')
                 this.scene.switch('Main')
