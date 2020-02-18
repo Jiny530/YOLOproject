@@ -45,8 +45,9 @@ class Running extends Phaser.Scene{
         this.hearts; //하트 담는 그룹
         this.objects; //고양이, 쓰레기
         this.others; //바나나, 돌
-        this.nameObjects= new Array(); //고양이, 쓰레기 이름 담는 배열
-        this.randomList=['heart', 'banana', 'cat', 'rock', 'trash'];
+        this.nameObjects;
+        this.randomList;
+        this.black;
 
         //result 팝업
         this.happiness;
@@ -109,6 +110,8 @@ class Running extends Phaser.Scene{
     {
         this.score = 0;
         this.gameOver = false;
+        this.nameObjects= new Array(); //고양이, 쓰레기 이름 담는 배열
+        this.randomList=['heart', 'banana', 'cat', 'rock', 'trash'];
         this.limitground=this.physics.add.image(384, 426, 'limitground');
         this.platforms = this.physics.add.staticGroup(); //캐릭터가 뛰는 바닥 static
         this.add.image(384, 256, 'background'); //검정 바탕
@@ -180,11 +183,11 @@ class Running extends Phaser.Scene{
         this.objects = this.physics.add.group();
         this.others = this.physics.add.group();
         this.hearts = this.physics.add.group();
+        this.black = this.add.group();
 
         //오브젝트 만드는 함수
         var timedEvent2 = this.time.addEvent({ delay: 550, callback: this.spawnObject, callbackScope: this, loop: true });
 
-        console.log('런닝런닝 시작')
        
     }
 
@@ -193,10 +196,11 @@ class Running extends Phaser.Scene{
         //this.howToPopUp();
         if (this.gameOver) {
             this.sprite.anims.setRepeat(0); //캐릭터 뛰는 거 멈춤
-
             this.popUp();
             //오브젝트 안보이게
             this.sprite.visible=false;
+            this.init();
+            
             
             return;
         }
@@ -227,6 +231,36 @@ class Running extends Phaser.Scene{
         
     }
 
+    init(){
+        this.score=0;
+        this.gameOver=false;
+                
+        //그룹
+        var heartChildren=this.hearts.getChildren();
+        var temp=this.others.getChildren();
+        var object=this.objects.getChildren();
+        var blackChildren=this.black.getChildren();
+
+        heartChildren.destroy();
+        temp.destroy();
+        object.destroy();
+        blackChildren.destroy();
+        
+        /*for(var i=0;i<heartChildren.length;i++){
+            heartChildren[i].destroy();
+        }
+        for(var i=0;i<temp.length;i++){
+            temp[i].destroy();
+        }
+        for(var i=0;i<object.length;i++){
+            object[i].destroy();
+        }*/
+        for(var i=0;i<this.nameObjects.length;i++){
+            this.nameObjects.pop();
+        }
+
+    }
+
     popUp(){
         this.add.image(35, 256, 'limitbg');
         this.add.image(740, 256, 'limitbg');
@@ -250,8 +284,8 @@ class Running extends Phaser.Scene{
             }
             console.log("clicked!!!!!!!!!!!!!!");
             this.result.visible=false;
-            this.scene.restart('Running');
-            this.scene.switch('Main2');
+            this.scene.restart();
+            this.scene.switch('Main');
             
         });
         this.scoreResultText = this.add.image(200, 230, 'scoreResultText');
@@ -263,21 +297,6 @@ class Running extends Phaser.Scene{
         var scoreText2=this.add.text(300, 220, ': 0', { fontSize: '25px', fill: '#000' });
         scoreText2.setText(this.score);
         var totalText2=this.add.text(400, 290, ': 0', { fontSize: '25px', fill: '#000' });
-        if(this.score<0){
-            totalText2.setText(0);
-        }
-        else if(this.score<=50){
-            totalText2.setText(1);
-            joy+=1;
-        }
-        else if(this.score<=90){
-            totalText2.setText(2);
-            joy+=2;
-        }
-        else if(this.score>90){
-            totalText2.setText(3);
-            joy+=3;
-        }
     }
 
     goToMain(){
@@ -319,12 +338,14 @@ class Running extends Phaser.Scene{
                 this.physics.add.collider(this.sprite, object);
                 this.physics.add.collider(object, this.platforms);
                 this.hearts.add(object);
+                this.black.create(740, 256, 'limitbg');
             }
             else if (temp == 1) {
                 var object = this.add.image(790, 360, this.randomList[temp]);
                 this.physics.add.collider(this.sprite, object);
                 this.physics.add.collider(object, this.platforms);
                 this.others.add(object);
+                this.black.create(740, 256, 'limitbg');
             }
             else if (temp == 2) {
                 this.nameObjects.push("cat");
@@ -332,6 +353,7 @@ class Running extends Phaser.Scene{
                 this.physics.add.collider(this.sprite, object);
                 this.physics.add.collider(object, this.platforms);
                 this.objects.add(object);
+                this.black.create(740, 256, 'limitbg');
             }
 
             else if (temp == 3) {
@@ -339,6 +361,7 @@ class Running extends Phaser.Scene{
                 this.physics.add.collider(this.sprite, object);
                 this.physics.add.collider(object, this.platforms);
                 this.others.add(object);
+                this.black.create(740, 256, 'limitbg');
             }
 
             else if (temp == 4) {
@@ -347,6 +370,7 @@ class Running extends Phaser.Scene{
                 this.physics.add.collider(this.sprite, object);
                 this.physics.add.collider(object, this.platforms);
                 this.objects.add(object);
+                this.black.create(740, 256, 'limitbg');
             }
 
         }
@@ -488,61 +512,61 @@ class Running extends Phaser.Scene{
 
     //배경 움직이는 것
     moveBackground(time, delta) {
-        if(!this.gameOver){
+        if (!this.gameOver) {
             this.cloud1.x += -this.speed * delta;
-        this.cloud2.x += -this.speed * delta;
-        this.cloud3.x += -this.speed * delta;
-        this.cloud4.x += -this.speed * delta;
-        this.tree1.x += -this.speed * delta;
-        this.tree2.x += -this.speed * delta;
-        this.tree3.x += -this.speed * delta;
-        this.tree4.x += -this.speed * delta;
-        this.grass1.x += -this.speed * delta;
-        this.grass2.x += -this.speed * delta;
-        this.grass3.x += -this.speed * delta;
-        this.grass4.x += -this.speed * delta;
-        this.bench.x += -this.speed * delta;
-        if (this.cloud1.x < 0) {
-            this.cloud1.x = 800;
+            this.cloud2.x += -this.speed * delta;
+            this.cloud3.x += -this.speed * delta;
+            this.cloud4.x += -this.speed * delta;
+            this.tree1.x += -this.speed * delta;
+            this.tree2.x += -this.speed * delta;
+            this.tree3.x += -this.speed * delta;
+            this.tree4.x += -this.speed * delta;
+            this.grass1.x += -this.speed * delta;
+            this.grass2.x += -this.speed * delta;
+            this.grass3.x += -this.speed * delta;
+            this.grass4.x += -this.speed * delta;
+            this.bench.x += -this.speed * delta;
+            if (this.cloud1.x < 0) {
+                this.cloud1.x = 800;
+            }
+            if (this.cloud2.x < 0) {
+                this.cloud2.x = 800;
+            }
+            if (this.cloud3.x < 0) {
+                this.cloud3.x = 800;
+            }
+            if (this.cloud4.x < 0) {
+                this.cloud4.x = 800;
+            }
+            if (this.tree1.x < 0) {
+                this.tree1.x = 800;
+            }
+            if (this.tree2.x < 0) {
+                this.tree2.x = 800;
+            }
+            if (this.tree3.x < 0) {
+                this.tree3.x = 800;
+            }
+            if (this.tree4.x < 0) {
+                this.tree4.x = 800;
+            }
+            if (this.grass1.x < 0) {
+                this.grass1.x = 800;
+            }
+            if (this.grass2.x < 0) {
+                this.grass2.x = 800;
+            }
+            if (this.grass3.x < 0) {
+                this.grass3.x = 800;
+            }
+            if (this.grass4.x < 0) {
+                this.grass4.x = 800;
+            }
+            if (this.bench.x < 0) {
+                this.bench.x = 800;
+            }
         }
-        if (this.cloud2.x < 0) {
-            this.cloud2.x = 800;
-        }
-        if (this.cloud3.x < 0) {
-            this.cloud3.x = 800;
-        }
-        if (this.cloud4.x < 0) {
-            this.cloud4.x = 800;
-        }
-        if (this.tree1.x < 0) {
-            this.tree1.x = 800;
-        }
-        if (this.tree2.x < 0) {
-            this.tree2.x = 800;
-        }
-        if (this.tree3.x < 0) {
-            this.tree3.x = 800;
-        }
-        if (this.tree4.x < 0) {
-            this.tree4.x = 800;
-        }
-        if (this.grass1.x < 0) {
-            this.grass1.x = 800;
-        }
-        if (this.grass2.x < 0) {
-            this.grass2.x = 800;
-        }
-        if (this.grass3.x < 0) {
-            this.grass3.x = 800;
-        }
-        if (this.grass4.x < 0) {
-            this.grass4.x = 800;
-        }
-        if (this.bench.x < 0) {
-            this.bench.x = 800;
-        }
-        }
-        
+
 
     }
 
