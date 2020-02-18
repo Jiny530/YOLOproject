@@ -1,3 +1,4 @@
+
 money = 0;
 date=30;
 class Pizza extends Phaser.Scene {
@@ -7,7 +8,6 @@ class Pizza extends Phaser.Scene {
         //super({ key: 'Pizza', active: false, auto_start: false });
         super();
         
-        this.music;
 
         this.gameOver = false;
         this.pizza;
@@ -51,7 +51,7 @@ class Pizza extends Phaser.Scene {
     }
 
     preload() {
-        this.load.audio('피자나라bgm','assets/music/피자나라bgm.mp3');
+
 
         this.load.image('Domino', 'assets/pizza/Domino.png');
         this.load.image('Mr', 'assets/pizza/mPizza.png');
@@ -76,11 +76,6 @@ class Pizza extends Phaser.Scene {
     }
     //키보드 버튼 하나 누르는 거에 반응하는 곳
     create() {
-
-        this.music = this.sound.add('피자나라bgm');
-        this.music.loop=true;
-        this.sound.mute=false;
-        //this.music.play();
 
         this.init();
         this.player = this.add.image(668,400,'player').setScale(0.15,0.15);
@@ -258,13 +253,15 @@ class Pizza extends Phaser.Scene {
 
 
         if (this.gameOver) {
-            //this.music.stop();
+            
             this.events.on('shutdown', this.shutdown, this);
             date-=1;
             joy-=2;
             money+=this.boxNum*1000;
             this.scene.restart('pizza');
             this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
+            music.stop();
+            console.log("노래끔");
             this.scene.switch('Main');
         }
     }
