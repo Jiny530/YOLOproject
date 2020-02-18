@@ -42,6 +42,9 @@ class Main extends Phaser.Scene{
         this.피자방법;
         this.편순이방법;
         this.whichGame=0;
+
+        this.timeBar;
+        this.graphics;
     }
 
 
@@ -89,6 +92,14 @@ class Main extends Phaser.Scene{
         this.sound.mute=false;
         this.music.play();
         //메인게임화면 설정
+
+
+        /* 피자미니게임에서 가져온 시간초 설정
+        this.timeBar = this.time.addEvent({ delay: money });
+        this.graphics = this.add.graphics({ x: 0, y: 512 });
+        this.graphics.angle = -90;
+        */
+
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
         this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
         this.joyText = this.add.bitmapText(70,125,'myfont',''+joy,20)
@@ -100,8 +111,6 @@ class Main extends Phaser.Scene{
         this.블랙잭=this.physics.add.image(608, 96, '블랙잭');
         this.편의점=this.physics.add.image(352, 288, '편의점');
         this.피자나라=this.physics.add.image(288, 160, '피자나라');
-
-        this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
 
         this.mainCharacter=this.physics.add.sprite(480,416,'mainCharacter');
         this.mainCharacter.setCollideWorldBounds(true);
@@ -231,6 +240,12 @@ class Main extends Phaser.Scene{
             this.scene.start('GameOver')
         }
         
+        //money 시간초 (?)... 피자미니게임에 있던거 일단 옮겨온 상태에요
+        /*if (!this.gameOver) {
+            this.graphics.fillRect(0, 0, money/500*(1 - this.timeBar.getProgress()), 30);
+            this.timeSource = 512-512 * this.timerEvent.getProgress();
+        }*/
+
         if (this.gameOver)
         {
             if (this.ending==1){
