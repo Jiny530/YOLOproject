@@ -1,12 +1,11 @@
 
-money = 0;
-date=30;
+
 class Pizza extends Phaser.Scene {
 
     constructor() {
 
-        //super({ key: 'Pizza', active: false, auto_start: false });
-        super();
+        super({ key: 'Pizza', active: false, auto_start: false });
+        //super();
         
 
         this.gameOver = false;
@@ -53,19 +52,19 @@ class Pizza extends Phaser.Scene {
     preload() {
 
 
-        this.load.image('Domino', 'assets/pizza/Domino.png');
-        this.load.image('Mr', 'assets/pizza/mPizza.png');
-        this.load.image('Hut', 'assets/pizza/Hut.png');
-        this.load.image('School', 'assets/pizza/School.png');
+        this.load.image('Domino', 'assets/pizza/미피4.png');
+        this.load.image('Mr', 'assets/pizza/미피3.png');
+        this.load.image('Hut', 'assets/pizza/미피5.png');
+        this.load.image('School', 'assets/pizza/미피6.png');
 
         this.load.image('up', 'assets/pizza/up.png');
         this.load.image('down', 'assets/pizza/down.png');
         this.load.image('left', 'assets/pizza/left.png');
         this.load.image('right', 'assets/pizza/right.png');
         this.load.image('space', 'assets/pizza/space1.png');
-        //this.load.image('back1', 'assets/pizza/back1.png');
-        //this.load.image('back2', 'assets/pizza/back2.png');
-        //this.load.image('back3', 'assets/pizza/back3.png');
+        this.load.image('back1', 'assets/pizza/back1.png');
+        this.load.image('back2', 'assets/pizza/back2.png');
+        this.load.image('back3', 'assets/pizza/back3.png');
         this.load.image('scoretext', 'assets/pizza/scoretext.png');
         this.load.image('box', 'assets/pizza/box.png');
         this.load.image('player','assets/pizza/pizza_player.png')
@@ -77,13 +76,36 @@ class Pizza extends Phaser.Scene {
     //키보드 버튼 하나 누르는 거에 반응하는 곳
     create() {
 
+        for(var i =0;i<4;i++){
+            if(i%2==0){
+                for(var j=0;j<6;j++){
+                    if (j%2==0) {
+                        this.add.image(j*128,i*128,'back1').setOrigin(0);
+                    }
+                    else{
+                        this.add.image(j*128,i*128,'back2').setOrigin(0);
+                    }
+                }
+            }
+            else{
+                for(var j=0;j<6;j++){
+                    if (j%2==0) {
+                        this.add.image(j*128,i*128,'back2').setOrigin(0);
+                    }
+                    else{
+                        this.add.image(j*128,i*128,'back1').setOrigin(0);
+                    }
+                }
+            }
+        }
+
         this.init();
         this.player = this.add.image(668,400,'player').setScale(0.15,0.15);
 
-        this.domino = this.add.image(384, 240, 'Domino').setScale(0.8, 0.8);
-        this.mr = this.add.image(384, 240, 'Mr');
-        this.hut = this.add.image(384, 240, 'Hut').setScale(0.8, 0.8);
-        this.school = this.add.image(384, 240, 'School').setScale(0.8, 0.8);
+        this.domino = this.add.image(384, 240, 'Domino').setScale(0.6, 0.6);
+        this.mr = this.add.image(384, 240, 'Mr').setScale(0.6,0.6);
+        this.hut = this.add.image(384, 240, 'Hut').setScale(0.6, 0.6);
+        this.school = this.add.image(384, 240, 'School').setScale(0.6, 0.6);
 
         this.domino.visible = false;
         this.mr.visible = false;
@@ -560,13 +582,14 @@ class Pizza extends Phaser.Scene {
 
     }
 }
-
+/*
 var config = {
     type: Phaser.AUTO,
     width: 768,
     height: 512,
-    //backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff',
     scene: Pizza
 };
 
 var game = new Phaser.Game(config);
+*/
