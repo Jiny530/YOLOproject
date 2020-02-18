@@ -18,6 +18,8 @@ class Main extends Phaser.Scene{
         //메인 화면 UI 설정
         this.mainLeftBar;
 
+        this.dateText;
+        this.joyText;
         //메인 게임 변수
         this.music;
 
@@ -148,22 +150,18 @@ class Main extends Phaser.Scene{
             if (this.whichGame==1){
                 this.런닝방법.visible=false;
                 this.scene.switch('Running');
-                console.log(this.whichGame);
             }
             else if (this.whichGame==2){
                 this.블랙잭방법.visible=false;
                 this.scene.switch('BlackJack');
-                console.log(this.whichGame);
             }
             else if (this.whichGame==3){
                 this.피자방법.visible=false;
                 this.scene.switch('Pizza');
-                console.log(this.whichGame);
             }
             else if (this.whichGame==4){
                 this.편의점방법.visible=false;
                 this.scene.switch('Store24');
-                console.log(this.whichGame);
             }
 
             console.log(money);
@@ -213,13 +211,14 @@ class Main extends Phaser.Scene{
         this.physics.add.overlap(this.mainCharacter, this.피자나라, this.pizzaOrNot, null, this);
         this.physics.add.overlap(this.mainCharacter, this.편의점, this.store24OrNot, null, this);
         
-        var dateText=this.add.bitmapText(45,45,'myfont',''+date,36)
-        var joyText = this.add.bitmapText(70,125,'myfont',''+joy,20)
+        this.dateText=this.add.bitmapText(45,45,'myfont',''+date,36)
+        this.joyText = this.add.bitmapText(70,125,'myfont',''+joy,20)
         
     }
 
     update()
     {
+        this.dateText.setText(date)
         if(!this.gameOver && (joy<=0 || money<=0)){
             this.gameOver=true;
             this.scene.start('GameOver')

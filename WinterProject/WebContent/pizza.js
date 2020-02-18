@@ -79,6 +79,7 @@ class Pizza extends Phaser.Scene {
         this.sound.mute=false;
         //this.music.play();
 
+        this.init();
         this.player = this.add.image(384,100,'player').setScale(0.15,0.15);
 
         this.domino = this.add.image(384, 240, 'Domino').setScale(0.8, 0.8);
@@ -256,7 +257,8 @@ class Pizza extends Phaser.Scene {
         if (this.gameOver) {
             //this.music.stop();
             this.events.on('shutdown', this.shutdown, this);
-            
+            date-=1;
+            joy-=2;
             this.scene.restart('pizza');
             this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
             this.scene.switch('Main');
