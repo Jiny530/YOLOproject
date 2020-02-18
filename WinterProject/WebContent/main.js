@@ -24,6 +24,7 @@ class Main extends Phaser.Scene{
         this.music;
 
         this.mainCharacter;
+        this.playerMove=true;
         this.cursors;
         
         this.button_ok;
@@ -39,7 +40,7 @@ class Main extends Phaser.Scene{
         this.런닝방법;
         this.블랙잭방법;
         this.피자방법;
-        this.편의점방법;
+        this.편순이방법;
         this.whichGame=0;
     }
 
@@ -73,6 +74,9 @@ class Main extends Phaser.Scene{
         this.load.image('런닝방법','assets/running/런닝런닝방법.PNG');
         this.load.image('편의점방법','assets/store24/편순이방법.png');
         this.load.image('블랙잭방법','assets/blackjack/blackjack_tutorial.png')
+        this.load.image('편순이방법','assets/store24/편순이방법.png');
+        this.load.image('피자방법','assets/pizza/피자방법.PNG');
+
         
 
     
@@ -97,6 +101,8 @@ class Main extends Phaser.Scene{
         this.편의점=this.physics.add.image(352, 288, '편의점');
         this.피자나라=this.physics.add.image(288, 160, '피자나라');
 
+        this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
+
         this.mainCharacter=this.physics.add.sprite(480,416,'mainCharacter');
         this.mainCharacter.setCollideWorldBounds(true);
 
@@ -109,13 +115,13 @@ class Main extends Phaser.Scene{
         this.피자방법=this.add.image(384, 256, '피자방법').setScale(0.65);
         this.피자방법.visible=false;
 
-        this.편의점방법=this.add.image(384, 256, '편의점방법').setScale(0.65);
-        this.편의점방법.visible=false;
+        this.편순이방법=this.add.image(384, 256, '편순이방법').setScale(0.65);
+        this.편순이방법.visible=false;
         
         this.button_ok = this.add.image(620, 395, 'okButton').setInteractive();
         this.button_ok.visible=false;
 
-        this.button_no = this.add.image(630, 110,'noButton').setInteractive();
+        this.button_no = this.add.image(635, 120,'noButton').setInteractive();
         this.button_no.visible=false;
         
         
@@ -124,6 +130,7 @@ class Main extends Phaser.Scene{
             this.button_no.visible=false;
             this.mainCharacter.setX(480);
             this.mainCharacter.setY(416);
+            this.playerMove=true;
             
             if (this.whichGame==1){
                 this.런닝방법.visible=false;
@@ -135,7 +142,7 @@ class Main extends Phaser.Scene{
                 this.피자방법.visible=false;
             }
             else if (this.whichGame==4){
-                this.편의점방법.visible=false;
+                this.편순이방법.visible=false;
             }
 
         });
@@ -145,11 +152,9 @@ class Main extends Phaser.Scene{
             this.button_ok.visible=false;
             this.button_no.visible=false;
             this.mainCharacter.setX(480);
-            this.mainCharacter.setY(416);
-            
-            
+            this.mainCharacter.setY(416);  
+            this.playerMove=true;
             //this.events.on('shutdown', this.shutdown, this);
-            //this.scene.switch('Running');
             this.music.stop();
             if (this.whichGame==1){
                 this.런닝방법.visible=false;
@@ -164,7 +169,7 @@ class Main extends Phaser.Scene{
                 this.scene.switch('Pizza');
             }
             else if (this.whichGame==4){
-                this.편의점방법.visible=false;
+                this.편순이방법.visible=false;
                 this.scene.switch('Store24');
             }
 
@@ -243,25 +248,25 @@ class Main extends Phaser.Scene{
         }  
         
         //메인 캐릭터 상하좌우 방향키 누를 때 움직임
-        if (this.cursors.left.isDown) {
+        if (this.cursors.left.isDown && this.playerMove) {
             this.mainCharacter.setVelocityX(-160);
             this.mainCharacter.setVelocityY(0);
 
             this.mainCharacter.anims.play('left', true);
         }
-        else if (this.cursors.right.isDown) {
+        else if (this.cursors.right.isDown && this.playerMove) {
             this.mainCharacter.setVelocityX(160);
             this.mainCharacter.setVelocityY(0);
 
             this.mainCharacter.anims.play('right', true);
         }
-        else if (this.cursors.up.isDown) {
+        else if (this.cursors.up.isDown && this.playerMove) {
             this.mainCharacter.setVelocityX(0);
             this.mainCharacter.setVelocityY(-160);
 
             this.mainCharacter.anims.play('up', true);
         }
-        else if (this.cursors.down.isDown) {
+        else if (this.cursors.down.isDown && this.playerMove) {
             this.mainCharacter.setVelocityX(0);
             this.mainCharacter.setVelocityY(160);
 
@@ -281,6 +286,7 @@ class Main extends Phaser.Scene{
     //각 미니게임으로 넘어가기
     runningOrNot(){
         this.whichGame=1;
+        this.playerMove=false;
         this.런닝방법.visible=true;
         this.button_ok.visible=true;
         this.button_no.visible=true;
@@ -289,6 +295,7 @@ class Main extends Phaser.Scene{
     blackJackorNot(){
         this.whichGame=2;
         this.블랙잭방법.visible=true;
+        this.playerMove=false;
         this.button_ok.visible=true;
         this.button_no.visible=true;
     }
@@ -296,13 +303,15 @@ class Main extends Phaser.Scene{
     pizzaOrNot(){
         this.whichGame=3;
         this.피자방법.visible=true;
+        this.playerMove=false;
         this.button_ok.visible=true;
         this.button_no.visible=true;
     }
 
     store24OrNot(){
         this.whichGame=4;
-        this.편의점방법.visible=true;
+        this.편순이방법.visible=true;
+        this.playerMove=false;
         this.button_ok.visible=true;
         this.button_no.visible=true;
     }
