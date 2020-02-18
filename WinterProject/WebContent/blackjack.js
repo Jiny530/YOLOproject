@@ -240,7 +240,8 @@ class BlackJack extends Phaser.Scene{
         joy+=this.playNum
         this.scene.restart('BlackJack')
         this.scene.wake('Main')
-        this.scene.switch('Main')
+                music.stop();
+                this.scene.switch('Main')
     }
 
     random_card(who){
