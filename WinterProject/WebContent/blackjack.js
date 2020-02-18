@@ -138,7 +138,6 @@ class BlackJack extends Phaser.Scene{
                     this.gameState = this.GAME_OVER
                     this.money *= -1
                     this.moneyText.setText("번돈 : " + this.money)
-                    this.money *= -1
                     console.log(this.gameState)
                 }
             }
