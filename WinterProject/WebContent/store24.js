@@ -48,7 +48,7 @@ class Store24 extends Phaser.Scene {
         this.noodleList=["라면_까불닭","라면_미역국","라면_신라면","라면_오짬","라면_육개장","라면_진라면","라면_참깨라면"];
         this.drinkList=["음료_데미사과","음료_데미오렌지","음료_데자와","음료_사이다","음료_콜라","음료_포카리","음료_핫6"];
         this.noList=["기타_갈고양이","기타_강아지","기타_검고양이","기타_쓰레기봉지"];
-        this.productList=[this.snackList,this.noodleList,this.drinkList,this.noList]; //배열변수자체를 배열의 요소로!
+        this.productList=[]; //배열변수자체를 배열의 요소로!
 
         this.productList_leverl=[this.snackList,this.noodleList];
         this.productList_lever2=[this.snackList,this.noodleList,this.noList];
@@ -149,6 +149,9 @@ class Store24 extends Phaser.Scene {
                 }
             }
         }
+
+        //리셋하기
+        this.init();
 
         //생명그룹 하트 다섯개
         this.hearts=this.add.group();
@@ -430,9 +433,27 @@ class Store24 extends Phaser.Scene {
             this.scene.restart('Store24');
             //초기화 안되면 수동으로 reset하기
             console.log("set_restart!!!!!!!!!!!");
+            this.music.stop();
             this.scene.switch('Main');
             console.log("back to main!!!!!!!!!");
         });
+    }
+
+    init(){ //reset 값들
+        this.물건속도=3; //작을수록 빠름
+        this.life=5;  //생명갯수변수
+
+        this.score=0; //실제점수
+        this.combo=0;  //콤보변수
+        this.topcombo=0; //제일 높은 콤보
+        this.bonustag=0; //all combo 해서 보너스 있나? 없으면0
+
+        this.총상품=0;
+        this.상품간격= 900; //0.9초기준시작
+
+        //상품, 인풋 리스트 리셋
+        this.rand_productList=[]; //뽑을 리스트 리셋
+        this.inputList=[]; //랜덤상품고를때마다 눌러야할 키 넣기
     }
 
 }
