@@ -5,9 +5,8 @@ joy=5; //즐거움 1~10일 까지 0이면 게임 오버
 money=10000; //돈 10000원에서 시작 0이면 게임 오버 -> 1초당 1000원씩 감소
 
 minigame_start=0;
+music=null;
 
-
-  // mainscene
 class Main extends Phaser.Scene{
     
     constructor ()   //this.변수명으로 선언 및 사용
@@ -21,7 +20,6 @@ class Main extends Phaser.Scene{
         this.dateText;
         this.joyText;
         //메인 게임 변수
-        this.music;
 
         this.mainCharacter;
         this.playerMove=true;
@@ -42,12 +40,18 @@ class Main extends Phaser.Scene{
         this.피자방법;
         this.편순이방법;
         this.whichGame=0;
+
     }
 
 
     preload ()
     {   
+        //BGM
         this.load.audio('미니게임보통bgm','assets/music/미니게임보통bgm.mp3');
+        this.load.audio('피자나라bgm','assets/music/피자나라bgm.mp3');
+        this.load.audio('런닝런닝bgm','assets/music/런닝런닝bgm.mp3');
+        this.load.audio('블랙잭bgm','assets/music/블랙잭bgm.mp3');
+        this.load.audio('편의점bgm','assets/music/편의점bgm.mp3');
 
         //메인게임 날짜, 즐거움, 돈 _ 왼쪽 바
         this.load.image('왼쪽바', 'assets/main/메인게임UI왼쪽바.png');
@@ -82,11 +86,12 @@ class Main extends Phaser.Scene{
     }
 
     create ()   
-    { 
-        this.music = this.sound.add('미니게임보통bgm');
-        this.music.loop=true;
+    {   if(music!=null){music.destroy();}
+        music=this.sound.add('미니게임보통bgm','assets/music/미니게임보통bgm.mp3');
+        this.sound.loop=true;
         this.sound.mute=false;
-        this.music.play();
+        music.play();
+        console.log(music);
         //메인게임화면 설정
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
         this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
@@ -150,24 +155,47 @@ class Main extends Phaser.Scene{
             this.button_ok.visible=false;
             this.button_no.visible=false;
             this.mainCharacter.setX(480);
+            this.mainCharacter.setY(416);
+        
+            
             this.mainCharacter.setY(416);  
             this.playerMove=true;
             //this.events.on('shutdown', this.shutdown, this);
-            this.music.stop();
+            music.stop();
             if (this.whichGame==1){
                 this.런닝방법.visible=false;
+                music=this.sound.add('런닝런닝bgm','assets/music/런닝런닝bgm.mp3');
+                this.sound.loop=true;
+                this.sound.mute=false;
+                music.play();
+                console.log("런닝런닝노래");
                 this.scene.switch('Running');
             }
             else if (this.whichGame==2){
                 this.블랙잭방법.visible=false;
+                music=this.sound.add('블랙잭bgm','assets/music/블랙잭bgm.mp3');
+                this.sound.loop=true;
+                this.sound.mute=false;
+                music.play();
+                console.log("블랙잭노래");
                 this.scene.switch('BlackJack');
             }
             else if (this.whichGame==3){
                 this.피자방법.visible=false;
+                music=this.sound.add('피자나라bgm','assets/music/피자나라bgm.mp3');
+                this.sound.loop=true;
+                this.sound.mute=false;
+                music.play();
+                console.log("피자나라노래");
                 this.scene.switch('Pizza');
             }
             else if (this.whichGame==4){
-                this.편순이방법.visible=false;
+                this.편의점방법.visible=false;
+                music=this.sound.add('편의점bgm','assets/music/편의점bgm.mp3');
+                this.sound.loop=true;
+                this.sound.mute=false;
+                music.play();
+                console.log("편의점노래");
                 this.scene.switch('Store24');
             }
 
