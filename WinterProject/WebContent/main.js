@@ -33,6 +33,11 @@ class Main extends Phaser.Scene{
         this.블랙잭;
         this.편의점;
         this.피자나라;
+        this.집;
+        this.덤불그룹;
+        this.덤불;
+        this.flag;
+        this.spacebar;
 
         
         this.런닝방법;
@@ -73,6 +78,12 @@ class Main extends Phaser.Scene{
         this.load.image('블랙잭','assets/main/블랙잭.PNG');
         this.load.image('편의점','assets/main/편의점.PNG');
         this.load.image('피자나라','assets/main/피자나라.PNG');
+        this.load.image('집','assets/main/집.PNG');
+        this.load.image('덤불0','assets/main/덤불0.PNG');
+        this.load.image('덤불1','assets/main/덤불1.PNG');
+        this.load.image('덤불2','assets/main/덤불2.PNG');
+        this.load.image('덤불3','assets/main/덤불3.PNG');
+        this.load.image('덤불4','assets/main/덤불4.PNG');
 
         this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
 
@@ -106,13 +117,14 @@ class Main extends Phaser.Scene{
         console.log(music);
         //메인게임화면 설정
 
-
         /* 피자미니게임에서 가져온 시간초 설정
         this.timeBar = this.time.addEvent({ delay: money });
         this.graphics = this.add.graphics({ x: 0, y: 512 });
         this.graphics.angle = -90;
         */
-
+        //this.spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        this.덤불 = ['덤불0', '덤불1', '덤불2', '덤불3', '덤불4'];
+        this.flag = true;
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
         this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
         this.joyText = this.add.bitmapText(70,125,'myfont',joy,20)
@@ -124,7 +136,8 @@ class Main extends Phaser.Scene{
         this.블랙잭=this.physics.add.image(608, 96, '블랙잭');
         this.편의점=this.physics.add.image(352, 288, '편의점');
         this.피자나라=this.physics.add.image(288, 160, '피자나라');
-
+        this.집=this.physics.add.image(416, 416, '집');
+        this.덤불그룹=this.physics.add.staticGroup();
 
         this.mainCharacter=this.physics.add.sprite(480,416,'mainCharacter');
         this.mainCharacter.setCollideWorldBounds(true);
@@ -155,7 +168,12 @@ class Main extends Phaser.Scene{
             this.mainCharacter.setY(416);
             this.playerMove=true;
             
-            if (this.whichGame==1){
+
+            this.런닝방법.visible = false;
+            this.블랙잭방법.visible = false;
+            this.피자방법.visible = false;
+            this.편순이방법.visible = false;
+           /* if (this.whichGame==1){
                 this.런닝방법.visible=false;
             }
             else if (this.whichGame==2){
@@ -166,7 +184,7 @@ class Main extends Phaser.Scene{
             }
             else if (this.whichGame==4){
                 this.편순이방법.visible=false;
-            }
+            }*/
 
         });
 
@@ -190,6 +208,7 @@ class Main extends Phaser.Scene{
                 music.play();
                 console.log("런닝런닝노래");
                 this.scene.switch('Running');
+                console.log('Running clicked');
             }
             else if (this.whichGame==2){
                 this.블랙잭방법.visible=false;
@@ -218,9 +237,6 @@ class Main extends Phaser.Scene{
                 console.log("편의점노래");
                 this.scene.switch('Store24');
             }
-
-            console.log(money);
-            console.log(joy);
             
         });
 
@@ -266,7 +282,10 @@ class Main extends Phaser.Scene{
         this.physics.add.overlap(this.mainCharacter, this.피자나라, this.pizzaOrNot, null, this);
         this.physics.add.overlap(this.mainCharacter, this.편의점, this.store24OrNot, null, this);
         
-        
+        //this.덤불그룹.create(416, 416, '집');
+        this.physics.add.collider(this.mainCharacter, this.덤불그룹);
+        //var timedEvent = this.time.addEvent({ delay: 1000, callback: this.putGrass, callbackScope: this, loop: false });
+        this.putGrass();
     }
 
     update()
@@ -298,7 +317,7 @@ class Main extends Phaser.Scene{
                 this.scene.start('베짱이_블랙잭');
             }
         }  
-        
+        this.putGrass();
         //메인 캐릭터 상하좌우 방향키 누를 때 움직임
         if (this.cursors.left.isDown && this.playerMove) {
             this.mainCharacter.setVelocityX(-160);
@@ -335,37 +354,116 @@ class Main extends Phaser.Scene{
         
     }
 
+    //min=0, max=4
+    randomNumber(min, max) {
+        var randVal = Math.floor(Math.random() * (max - min + 1)) + min;
+        return randVal;
+    }
+
+    randomGrass(){
+        var num=this.randomNumber(0, 4);
+        return num;
+    }
+
+    putGrass(){
+        if(this.flag){
+            for (var i = 0; i < 10; i++) {
+                this.덤불그룹.create(160 + i * 64, 32, this.덤불[this.randomGrass()]);
+                this.덤불그룹.create(160 + i * 64, 480, this.덤불[this.randomGrass()]);
+                console.log('상하');
+            }
+            for (var i = 0; i < 6; i++) {
+                this.덤불그룹.create(160, 96 + i * 64, this.덤불[this.randomGrass()]);
+                this.덤불그룹.create(736, 96 + i * 64, this.덤불[this.randomGrass()]);
+            }
+           /* for (var i = 0; i < 2; i++) {
+                this.덤불그룹.create(224+i*128, 160, this.덤불[this.randomGrass()]);
+            }
+            */
+            for (var i = 0; i < 2; i++) {
+                this.덤불그룹.create(416+i*64, 288, this.덤불[this.randomGrass()]);
+            }
+            for (var i = 0; i < 2; i++) {
+                this.덤불그룹.create(544+i*64, 352, this.덤불[this.randomGrass()]);
+            }
+            this.덤불그룹.create(608, 160, this.덤불[this.randomGrass()]);
+            this.덤불그룹.create(480, 224, this.덤불[this.randomGrass()]);
+            this.덤불그룹.create(224, 352, this.덤불[this.randomGrass()]);
+            this.덤불그룹.create(352,416, this.덤불[this.randomGrass()]);
+            this.덤불그룹.create(224, 160, this.덤불[this.randomGrass()]);
+            //this.덤불그룹.create(224+128, 160, this.덤불[this.randomGrass()]);
+
+        }
+        this.flag=false;
+        
+    }
+
     //각 미니게임으로 넘어가기
     runningOrNot(){
-        this.whichGame=1;
-        this.playerMove=false;
-        this.런닝방법.visible=true;
-        this.button_ok.visible=true;
-        this.button_no.visible=true;
+        this.input.keyboard.on('keydown', (event) => {
+            if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE) {
+                this.whichGame = 1;
+                this.playerMove = false;
+                this.런닝방법.visible = true;
+                this.블랙잭방법.visible = false;
+                this.피자방법.visible = false;
+                this.편순이방법.visible = false;
+                this.button_ok.visible = true;
+                this.button_no.visible = true;
+            }
+        });
+        /*if (this.spacebar.isDown) {
+            this.whichGame = 1;
+            this.playerMove = false;
+            this.런닝방법.visible = true;
+            this.button_ok.visible = true;
+            this.button_no.visible = true;
+        }*/
     }
 
     blackJackorNot(){
-        this.whichGame=2;
-        this.블랙잭방법.visible=true;
-        this.playerMove=false;
-        this.button_ok.visible=true;
-        this.button_no.visible=true;
+        this.input.keyboard.on('keydown', (event) => {
+            if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE) {
+                this.whichGame = 2;
+                this.블랙잭방법.visible = true;
+                this.런닝방법.visible = false;
+                this.피자방법.visible = false;
+                this.편순이방법.visible = false;
+                this.playerMove = false;
+                this.button_ok.visible = true;
+                this.button_no.visible = true;
+            }
+        });
     }
 
     pizzaOrNot(){
-        this.whichGame=3;
-        this.피자방법.visible=true;
-        this.playerMove=false;
-        this.button_ok.visible=true;
-        this.button_no.visible=true;
+        this.input.keyboard.on('keydown', (event) => {
+            if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE) {
+                this.whichGame = 3;
+                this.피자방법.visible = true;
+                this.런닝방법.visible = false;
+                this.블랙잭방법.visible = false;
+                this.편순이방법.visible = false;
+                this.playerMove = false;
+                this.button_ok.visible = true;
+                this.button_no.visible = true;
+            }
+        });
     }
 
     store24OrNot(){
-        this.whichGame=4;
-        this.편순이방법.visible=true;
-        this.playerMove=false;
-        this.button_ok.visible=true;
-        this.button_no.visible=true;
+        this.input.keyboard.on('keydown', (event) => {
+            if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE) {
+                this.whichGame = 4;
+                this.편순이방법.visible = true;
+                this.런닝방법.visible = false;
+                this.블랙잭방법.visible = false;
+                this.피자방법.visible = false;
+                this.playerMove = false;
+                this.button_ok.visible = true;
+                this.button_no.visible = true;
+            }
+        });
     }
 
     shutdown()
