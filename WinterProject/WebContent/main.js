@@ -72,7 +72,6 @@ class Main extends Phaser.Scene{
         this.load.image('noButton','assets/공통팝업창/X_버튼.PNG');
 
         this.load.image('런닝방법','assets/running/런닝런닝방법.PNG');
-        this.load.image('편의점방법','assets/store24/편순이방법.png');
         this.load.image('블랙잭방법','assets/blackjack/blackjack_tutorial.png')
         this.load.image('편순이방법','assets/store24/편순이방법.png');
         this.load.image('피자방법','assets/pizza/피자방법.PNG');
@@ -91,7 +90,7 @@ class Main extends Phaser.Scene{
         //메인게임화면 설정
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
         this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
-        this.joyText = this.add.bitmapText(70,125,'myfont',''+joy,20)
+        this.joyText = this.add.bitmapText(70,125,'myfont',joy,20)
 
         this.cursors = this.input.keyboard.createCursorKeys(); //위,아래,왼쪽,오른쪽 방향키
 
@@ -101,7 +100,6 @@ class Main extends Phaser.Scene{
         this.편의점=this.physics.add.image(352, 288, '편의점');
         this.피자나라=this.physics.add.image(288, 160, '피자나라');
 
-        this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
 
         this.mainCharacter=this.physics.add.sprite(480,416,'mainCharacter');
         this.mainCharacter.setCollideWorldBounds(true);
