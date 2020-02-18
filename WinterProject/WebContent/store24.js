@@ -8,7 +8,6 @@ class Store24 extends Phaser.Scene {
         this.bg_음료매대;
 
         this.music;
-        this.OKbtn;
 
         this.bg_판1;
         this.bg_판2;
@@ -123,7 +122,7 @@ class Store24 extends Phaser.Scene {
         //결과 팝업창
         this.load.image('버튼포함창','assets/공통팝업창/버튼포함창.PNG');
         //this.load.image('결과팝업','assets/공통팝업창/편의점결과.PNG');
-        this.load.image('okbtn','assets/오른아래버튼.PNG');
+        this.load.image('okbtn','/assets/공통팝업창/확인버튼.PNG');
     }
 
     
@@ -267,9 +266,10 @@ class Store24 extends Phaser.Scene {
             this.combo=0; //콤보리셋
         }
         this.comboText.setText(this.combo); //0보이기
-
-        this.life -=1;
-        this.reduceHeart(); // 하트감소함수호출
+        if(this.life >=1){
+            this.life -=1;
+            this.reduceHeart(); // 하트감소함수호출
+        }
     }
 
 
@@ -400,22 +400,8 @@ class Store24 extends Phaser.Scene {
     //결과처리함수
     endStore24(){
         this.endpopup=this.add.image(0,0,'버튼포함창').setOrigin(0);
-        this.okbtn = this.add.image(620, 395, 'okbtn');
-        this.okbtn.setInteractive();
-        this.okbtn.on('pointerdown', (event) => {
-            
-            console.log("clicked!!!!!!!!!!!!!!");
-            this.result.visible=false;
-            this.scene.restart('Store24');
-            //초기화 안되면 수동으로 reset하기
-
-            this.scene.switch('Main2');
-            
-        });
-        //this.endpopup=this.add.image(0,0,'결과팝업').setOrigin(0);
-        //this.endpopup_Ok=this.add.image(0,0,'오른아래버튼').setOrigin(0);
-
-         //결과팝업text
+        
+        //결과팝업text
         this.endpopup_combo= this.add.text(320, 256, this.topcombo, { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
         this.endpopup_score= this.add.text(320, 192, this.score, { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
         this.endpopup_joy= this.add.text(384, 352, '', { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
@@ -434,15 +420,21 @@ class Store24 extends Phaser.Scene {
             this.endpopup_joy.setText('-'); 
         }
 
-        
-        game.destroy(); 
+        this.okbtn = this.add.image(620, 395, 'okbtn');
+        this.okbtn.setInteractive();
+        this.okbtn.on('pointerdown', (event) => {
+            
+            console.log("clicked!!!!!!!!!!!!!!");
+            this.endpopup.visible=false;
+            //this.life=5;
+            this.scene.restart('Store24');
+            //초기화 안되면 수동으로 reset하기
+            console.log("set_restart!!!!!!!!!!!");
+            this.scene.switch('Main');
+            console.log("back to main!!!!!!!!!");
+        });
     }
 
-    actionOnClick(){
-        console.log("나감");
-        music.destroy();
-        //미니게임나감
-    }
 }
 
 
