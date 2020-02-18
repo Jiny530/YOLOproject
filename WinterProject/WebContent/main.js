@@ -148,7 +148,7 @@ class Main extends Phaser.Scene{
             this.mainCharacter.setY(416);  
             this.playerMove=true;
             //this.events.on('shutdown', this.shutdown, this);
-            
+            this.music.stop();
             if (this.whichGame==1){
                 this.런닝방법.visible=false;
                 this.scene.switch('Running');
@@ -323,7 +323,7 @@ class Main extends Phaser.Scene{
 class GameOver extends Phaser.Scene {
     constructor () {
         super({key:'GameOver'})
-        
+
     }
     preload() {
         //this.load.image('popup','assets/ending/endingPopUp.PNG')
