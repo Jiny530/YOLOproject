@@ -52,7 +52,6 @@ class BlackJack extends Phaser.Scene{
         this.load.image('character','assets/blackjack/player (3).PNG')
         this.load.image('dealerC','assets/blackjack/dealer (1).png')
         
-        this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
     }
     create() {
 
@@ -203,8 +202,9 @@ class BlackJack extends Phaser.Scene{
                 money+=this.money
                 console.log(money+' '+this.money)
                 date-=1
-                this.scene.restart('BlackJack')
+                this.scene.restart('blackJack')
                 this.scene.wake('Main')
+                music.stop();
                 this.scene.switch('Main')
             }
 

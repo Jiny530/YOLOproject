@@ -26,20 +26,24 @@ class Store24 extends Phaser.Scene {
         this.combo=0;  //콤보변수
         this.topcombo=0; //제일 높은 콤보
         this.bonustag=0; //all combo 해서 보너스 있나? 없으면0
+        this.그만=0;
 
         this.총상품=0;
         this.상품간격= 900; //0.9초기준시작
+        this.할당량=10; //할당량 실수없이 끝내면 보너스 
 
         this.products; //group
         this.rand_product;//랜덤으로 뽑을 상품
         this.childs; //상품getchildren()
 
         this.timedEvent; //timer event
+    
 
         this.inputGood; //맞음, 틀림 팝업 오브젝트
         this.inputBad;
         this.inputMiss;
 
+       
         //상품 리스트
         
         this.snackList=["과자_꼬깔콘","과자_다이제","과자_도리","과자_오징어","과자_초코송이","과자_포카칩","과자_홈런볼"];
@@ -126,7 +130,6 @@ class Store24 extends Phaser.Scene {
 
     create ()   //지역 변수는 var 로 정의하고 그냥 변수 이름으로 사용
     {   
-
         //배경타일설정
         for(var i =0;i<8;i++){
             if(i<4){
@@ -192,6 +195,7 @@ class Store24 extends Phaser.Scene {
         this.timedEvent=this.time.addEvent({ delay: this.상품간격, callback:this.createProduct, callbackScope: this, loop: true }); 
         this.speed = Phaser.Math.GetSpeed(600, this.물건속도);
 
+
         //키보드    ->function(event)와 (event) => 차이?무엇...
         this.input.keyboard.on('keydown', (event) => {
             var tempkey;
@@ -245,18 +249,19 @@ class Store24 extends Phaser.Scene {
         temp.setScale(1/7,1/7);
         this.products.add(temp,{addToScene:true}); //group에 넣고 displaylist에 넣기 true 처리
 
-        this.총상품 ==this.총상품+1; //총상품 갯수
+        this.총상품 =this.총상품+1; //총상품 갯수
+
+        if(this.총상품==this.할당량){
+            this.timedEvent.destroy(); //상품그만만들기
+            this.그만=1;
+            console.log("그만");
+        }
+
     }
         
 
     //놓치거나 잘못 입력된 상품 처리 (생명-1)
     failProduct(){
-        
-        if(this.combo>this.topcombo){
-            //combo기록갱신
-            this.topcombo=this.combo;
-        }
-
         
         if (this.combo != 0){ //이미콤보가쌓인경우
             this.combo=0; //콤보리셋
@@ -295,6 +300,12 @@ class Store24 extends Phaser.Scene {
             console.log("실패");
             this.failProduct() //생명감소만한다.
         }
+
+        //콤보올라갈때 마다 top업뎃
+        if(this.combo>this.topcombo){
+            //combo기록갱신
+            this.topcombo=this.combo;
+        }
     }
 
     //하트이미지변환(흑백으로)
@@ -309,7 +320,11 @@ class Store24 extends Phaser.Scene {
     update(time,delta)
     {
         this.childs=this.products.getChildren();
-    
+        console.log(this.childs);
+        if (this.그만==1 && this.childs.length==0){
+            console.log("끝!");
+            this.endStore24();
+        }
 
         for (var i=0; i<this.childs.length; i++){
             this.childs[i].x += this.speed*delta;
@@ -333,7 +348,7 @@ class Store24 extends Phaser.Scene {
             if(this.speed<0.5){
                 var temp=this.score/100;
                 this.speed=this.speed+temp*0.0001 //speed 클수록 빠름
-                this.상품간격= this.상품간격/temp*10000;  //상품나오는 delay
+                this.상품간격= this.상품간격/temp*100000;  //상품나오는 delay 작을수록 좋음
             }
         }
 
@@ -349,15 +364,13 @@ class Store24 extends Phaser.Scene {
 
         //게임오버
         if (this.life == 0){
-            //몫숨 다 소모하면, gameover 
-            if(this.총상품==this.topcombo){
-                this.bonustag=1;
-            }
             this.endStore24(); //결과창부르기
             //console.log("게임오버");
         }
-        
     }
+
+        
+    
 
 
     pickProductList(){
@@ -403,10 +416,13 @@ class Store24 extends Phaser.Scene {
         this.endpopup_joy= this.add.text(384, 352, '', { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
         this.endpopup_money= this.add.text(192, 352, '', { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
         //all combo 하면 즐거움+2 ,돈 *2
+        if(this.할당량==this.topcombo){
+            this.bonustag=1;
+        }
         //콤보만큼 100원씩 더줌
         //100점 마다 1000원
         var money=1000*(this.score/100)+(this.topcombo*100);
-
+        console.log(this.bonustag);
         if(this.bonustag==1){
             this.endpopup_joy.setText('+2'); 
             this.endpopup_money.setText(money*2);
@@ -422,13 +438,10 @@ class Store24 extends Phaser.Scene {
             
             console.log("clicked!!!!!!!!!!!!!!");
             this.endpopup.visible=false;
-            //this.life=5;
-            this.scene.restart('Store24');
-            //초기화 안되면 수동으로 reset하기
-            console.log("set_restart!!!!!!!!!!!");
-
+            this.scene.restart('store24');
+            this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
+            music.stop();
             this.scene.switch('Main');
-            console.log("back to main!!!!!!!!!");
         });
     }
 
@@ -447,6 +460,8 @@ class Store24 extends Phaser.Scene {
         //상품, 인풋 리스트 리셋
         this.rand_productList=[]; //뽑을 리스트 리셋
         this.inputList=[]; //랜덤상품고를때마다 눌러야할 키 넣기
+
+        this.그만=0;
     }
 
 }
