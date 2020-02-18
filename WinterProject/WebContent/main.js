@@ -41,13 +41,17 @@ class Main extends Phaser.Scene{
         this.편순이방법;
         this.whichGame=0;
 
+        this.timeBar;
+        this.graphics;
     }
 
 
     preload ()
     {   
         //BGM
-        this.load.audio('미니게임보통bgm','assets/music/미니게임보통bgm.mp3');
+        this.load.audio('메인게임보통bgm','assets/music/메인게임보통bgm.mp3');
+        this.load.audio('메인게임좋음bgm','assets/music/메인게임좋음bgm.mp3');
+        this.load.audio('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
         this.load.audio('피자나라bgm','assets/music/피자나라bgm.mp3');
         this.load.audio('런닝런닝bgm','assets/music/런닝런닝bgm.mp3');
         this.load.audio('블랙잭bgm','assets/music/블랙잭bgm.mp3');
@@ -86,13 +90,29 @@ class Main extends Phaser.Scene{
     }
 
     create ()   
-    {   if(music!=null){music.destroy();}
-        music=this.sound.add('미니게임보통bgm','assets/music/미니게임보통bgm.mp3');
+    {   
+        if(joy<=2){
+            music=this.sound.add('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
+        }
+        if(joy>=8){
+            music=this.sound.add('메인게임좋음bgm','assets/music/메인게임좋음bgm.mp3');
+        }
+        if(joy>=3 && joy<=7){
+            music=this.sound.add('메인게임보통bgm','assets/music/메인게임보통bgm.mp3');
+        }
         this.sound.loop=true;
         this.sound.mute=false;
         music.play();
         console.log(music);
         //메인게임화면 설정
+
+
+        /* 피자미니게임에서 가져온 시간초 설정
+        this.timeBar = this.time.addEvent({ delay: money });
+        this.graphics = this.add.graphics({ x: 0, y: 512 });
+        this.graphics.angle = -90;
+        */
+
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
         this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
         this.joyText = this.add.bitmapText(70,125,'myfont',joy,20)
@@ -190,7 +210,7 @@ class Main extends Phaser.Scene{
                 this.scene.switch('Pizza');
             }
             else if (this.whichGame==4){
-                this.편의점방법.visible=false;
+                this.편순이방법.visible=false;
                 music=this.sound.add('편의점bgm','assets/music/편의점bgm.mp3');
                 this.sound.loop=true;
                 this.sound.mute=false;
@@ -257,6 +277,12 @@ class Main extends Phaser.Scene{
             this.scene.start('GameOver')
         }
         
+        //money 시간초 (?)... 피자미니게임에 있던거 일단 옮겨온 상태에요
+        /*if (!this.gameOver) {
+            this.graphics.fillRect(0, 0, money/500*(1 - this.timeBar.getProgress()), 30);
+            this.timeSource = 512-512 * this.timerEvent.getProgress();
+        }*/
+
         if (this.gameOver)
         {
             if (this.ending==1){

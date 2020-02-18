@@ -284,7 +284,8 @@ class Running extends Phaser.Scene{
             }
             console.log("clicked!!!!!!!!!!!!!!");
             this.result.visible=false;
-            this.scene.restart();
+            this.scene.restart('Running');
+            this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
             this.scene.switch('Main');
             
         });
