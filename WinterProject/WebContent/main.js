@@ -190,6 +190,7 @@ class Main extends Phaser.Scene{
                 music.play();
                 console.log("런닝런닝노래");
                 this.scene.switch('Running');
+                console.log('Running clicked');
             }
             else if (this.whichGame==2){
                 this.블랙잭방법.visible=false;

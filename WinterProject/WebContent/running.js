@@ -3,7 +3,6 @@ class Running extends Phaser.Scene{
     constructor ()
     {
         super({ key: 'Running',active:false,auto_start:false });
-        console.log('Running called')
 
 
         this.move;
@@ -122,13 +121,6 @@ class Running extends Phaser.Scene{
         //  The score
         this.scoreText = this.add.text(678, 20, ': 0', { fontSize: '25px', fill: '#fff' });
 
-        this.plus1=this.add.image(120, 250,'+1');
-        this.plus5=this.add.image(120, 250,'+5');
-        this.minus5=this.add.image(120, 250,'-5');
-        this.plus1.visible=false;
-        this.plus5.visible=false;
-        this.minus5.visible=false;
-
         this.add.image(663, 30, 'heart'); //획득한 하트
         
         var timebarBg = this.add.image(485, 30, 'timebar'); //타임바
@@ -157,6 +149,13 @@ class Running extends Phaser.Scene{
         this.limit.create(35, 256, 'limitbg');
         this.limit.create(740, 256, 'limitbg');
         
+        //+1, +5, -5
+        this.plus1=this.add.sprite(120, 250,'+1');
+        this.plus5=this.add.sprite(120, 250,'+5');
+        this.minus5=this.add.sprite(120, 250,'-5');
+        this.plus1.alpha=0;
+        this.plus5.alpha=0;
+        this.minus5.alpha=0;
 
         /*캐릭터가 계속 움직이게 하는 */
         var characterAnimation = this.anims.create({
@@ -199,7 +198,7 @@ class Running extends Phaser.Scene{
             this.popUp();
             //오브젝트 안보이게
             this.sprite.visible=false;
-            this.init();
+            //this.init();
             
             
             return;
@@ -225,18 +224,15 @@ class Running extends Phaser.Scene{
         this.physics.add.overlap(this.sprite, temp[0], this.checkOther, null, this); //sprite랑 겹치면 실패(바나나, 돌) 점프해서 피해야 함
 
 
-        this.plus1.visible=false;
-        this.plus5.visible=false;
-        this.minus5.visible=false;
         
     }
 
-    init(){
+    initGame(){
         this.score=0;
         this.gameOver=false;
                 
         //그룹
-        var heartChildren=this.hearts.getChildren();
+        var heartChildren = this.hearts.getChildren();
         var temp=this.others.getChildren();
         var object=this.objects.getChildren();
         var blackChildren=this.black.getChildren();
@@ -282,8 +278,8 @@ class Running extends Phaser.Scene{
             else if(this.score>90){
                 joy+=3;
             }
-            console.log("clicked!!!!!!!!!!!!!!");
             this.result.visible=false;
+            date-=1;
             this.scene.restart('Running');
             this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
             this.scene.switch('Main');
@@ -295,15 +291,23 @@ class Running extends Phaser.Scene{
         
 
 
-        var scoreText2=this.add.text(300, 220, ': 0', { fontSize: '25px', fill: '#000' });
+        var scoreText2=this.add.text(300, 210, ': 0',  { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
         scoreText2.setText(this.score);
-        var totalText2=this.add.text(400, 290, ': 0', { fontSize: '25px', fill: '#000' });
+        var totalText2=this.add.text(400, 280, ': 0', { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
+        if(this.score<0){
+            totalText2.setText(0);
+        }
+        else if(this.score<=50){
+            totalText2.setText(1);
+        }
+        else if(this.score<=90){
+            totalText2.setText(2);
+        }
+        else if(this.score>90){
+            totalText2.setText(3);
+        }
     }
 
-    goToMain(){
-        console.log('pointerdown');
-        this.scene.switch('Main');
-    }
         //min=1, max=4
     randomNumber(min, max) {
         var randVal = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -384,14 +388,21 @@ class Running extends Phaser.Scene{
                 var temp = this.nameObjects[0];
                 if (temp == 'cat') {
                     if (this.cursors.left.isDown) {
+                        this.plus1.alpha = 0;
+                        this.plus5.alpha = 1;
+                        this.minus5.alpha = 0;
                         this.score += 5;
                         this.scoreText.setText(':' + this.score);
                         object[0].destroy();
                         this.nameObjects.shift();
+                        
                     }
                 }
                 else if (temp == 'trash') {
                     if (this.cursors.down.isDown) {
+                        this.plus1.alpha=0;
+                        this.plus5.alpha = 1;
+                        this.minus5.alpha = 0;
                         this.score += 5;
                         this.scoreText.setText(':' + this.score);
                         object[0].destroy();
@@ -412,6 +423,9 @@ class Running extends Phaser.Scene{
         temp[0].destroy();
         this.score -= 5;
         this.scoreText.setText(':' + this.score);
+        this.plus1.alpha=0;
+        this.plus5.alpha=0;
+        this.minus5.alpha=1;
         //this.minus5.visible = true;
         /*
         this.time.addEvent({
@@ -429,19 +443,10 @@ class Running extends Phaser.Scene{
         heartChildren[0].destroy();
         this.score += 1;
         this.scoreText.setText(':' + this.score);
-        this.plus1.visible = true;
-        /* this.time.addEvent({
-            delay: 700,
-            callback: this.delayHeartText,
-            loop: false
-        });
-        */
-        //this.plus1.visible = false;
+        this.plus1.alpha=1;
+        this.plus5.alpha=0;
+        this.minus5.alpha=0;
 
-    }
-
-    delayHeartText() {
-        this.plus1.visible = false;
     }
 
     //타임바
@@ -489,6 +494,9 @@ class Running extends Phaser.Scene{
         if (object.length > 0) {
             if (object[0].x < 60) {
                 object[0].destroy();
+                this.plus1.alpha=0;
+                this.plus5.alpha = 0;
+                this.minus5.alpha = 1;
                 this.nameObjects.shift();
                 this.score -= 5;
                 this.scoreText.setText(':' + this.score);
@@ -496,7 +504,7 @@ class Running extends Phaser.Scene{
         }
         if (heartChildren.length > 0) {
             for (var i = 0; i < heartChildren.length; i++) {
-                if (heartChildren[i].x < 20) {
+                if (heartChildren[i].x < 60) {
                     heartChildren[i].destroy();
                 }
             }
@@ -504,7 +512,7 @@ class Running extends Phaser.Scene{
 
         if (temp.length > 0) {
             for (var j = 0; j < temp.length; j++) {
-                if (temp[j].x < 20) {
+                if (temp[j].x < 60) {
                     temp[j].destroy();
                 }
             }

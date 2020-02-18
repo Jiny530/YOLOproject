@@ -561,6 +561,7 @@ class Pizza extends Phaser.Scene {
     }
 }
 
+/*
 var config = {
     type: Phaser.AUTO,
     width: 768,
@@ -570,3 +571,4 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+*/
