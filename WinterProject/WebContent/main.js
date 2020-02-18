@@ -67,6 +67,10 @@ class Main extends Phaser.Scene{
         this.load.image('noButton','assets/공통팝업창/X_버튼.PNG');
 
         this.load.image('런닝방법','assets/running/런닝런닝방법.PNG');
+        this.load.image('편의점방법','assets/store24/편순이방법.png');
+
+        
+
     
     }
 
@@ -310,18 +314,30 @@ class Main extends Phaser.Scene{
     
 }
 
+//게임 오버, 게임 엔딩 팝업 관리
 class GameOver extends Phaser.Scene {
     constructor () {
         super({key:'GameOver'})
+        
     }
     preload() {
-        this.load.image('popup','assets/ending/endingPopUp.PNG')
-        this.load.image('title','assets/ending/gameOverTitle.PNG')
+        //this.load.image('popup','assets/ending/endingPopUp.PNG')
+        //this.load.image('title','assets/ending/gameOverTitle.PNG')
 
+        //게임오버
+        this.load.image('즐거움게임오버','/assets/ending/즐거움게임오버.png');
+        this.load.image('돈게임오버','/assets/ending/돈게임오버.png');
+
+        //게임엔딩
+        this.load.image('공원게임엔딩','/assets/ending/공원게임엔딩.png');
+        this.load.image('피자박스게임엔딩','/assets/ending/피자박스게임엔딩.png');
+        this.load.image('편순이게임엔딩','/assets/ending/편순이게임엔딩.png');
+        this.load.image('블랙잭게임엔딩','/assets/ending/블랙잭게임엔딩.png');
     }
     create() {
-        this.add.image(0,0,'popup').setOrigin(0)
-        this.add.image(768/2,115,'title')
+        //this.add.image(0,0,'popup').setOrigin(0)
+        //this.add.image(768/2,115,'title')
+
     }
 }
 
