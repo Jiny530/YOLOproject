@@ -108,7 +108,6 @@ class BlackJack extends Phaser.Scene{
         this.sum = this.add.text(768/2, 512/2, "합계1: " + this.sum1 + " 합계2: " + this.sum2, { fill: '#fff' });
         this.moneyText = this.add.text(768/2, 512/2+25, "판돈: " + this.money)
         this.gameState = this.GAME_START
-        this.update()
     }
     
     update(){
@@ -132,7 +131,6 @@ class BlackJack extends Phaser.Scene{
                     this.gameState = this.GAME_OVER
                     this.money *= -1
                     this.moneyText.setText("번돈 : " + this.money)
-                    this.money *= -1
                     console.log(this.gameState)
                 }
             }
@@ -141,12 +139,12 @@ class BlackJack extends Phaser.Scene{
                 this.gameState = this.TURN_STOP
                 console.log(this.gameState)
                 // 딜러 카드 오픈
-                this.cardlocate = 0
+                this.cardlocate = 768/2-512/2+10
                 while (this.dealerSum1 <= 11) {
                     var cardname = this.random_card(this.DEALER);
-                    card = this.add.image(this.cardlocate, 200, cardname, 0);
+                    card = this.add.image(this.cardlocate, 150, cardname, 0);
                     this.cards.add(card)
-                    card.scale = 0.1
+                    card.scale = 0.2
 
                     // 카드의 합 계산
 
@@ -155,7 +153,7 @@ class BlackJack extends Phaser.Scene{
                     rand = Math.floor(Math.random())
                     if (rand == 1) {
                         var cardname = this.random_card(this.DEALER);
-                        card = this.add.image(this.cardlocate, 200, cardname, 0);
+                        card = this.add.image(this.cardlocate, 150, cardname, 0);
                         this.cards.add(card)
                         card.scale = 0.2
                     }
@@ -202,11 +200,11 @@ class BlackJack extends Phaser.Scene{
         if (this.gameState == this.GAME_OVER) {
             if(this.click_stop){
                 money+=this.money
-                date-=1;
                 console.log(money+' '+this.money)
-                this.scene.restart();
+                date-=1
+                this.scene.restart('BlackJack')
+                this.scene.wake('Main')
                 this.scene.switch('Main')
-                
             }
 
         }
@@ -220,11 +218,11 @@ class BlackJack extends Phaser.Scene{
             cardname = 'carda'
         else
             cardname = 'card' + rand
-        this.cardlocate -= 75;
 
         // 카드의 합 계산
         if (who == this.PLAYER) {
-            if (rand == 11) {
+        this.cardlocate -= 75;
+        if (rand == 11) {
                 this.sum1 += 1
                 this.sum2 += 11
             } else {
@@ -233,7 +231,8 @@ class BlackJack extends Phaser.Scene{
             }
         }
         if (who == this.DEALER) {
-            if (rand == 11) {
+        this.cardlocate += 75;
+        if (rand == 11) {
                 this.dealerSum1 += 1
                 this.dealerSum2 += 11
             } else {
