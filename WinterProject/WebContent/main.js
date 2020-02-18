@@ -138,6 +138,7 @@ class Main extends Phaser.Scene{
         this.피자나라=this.physics.add.image(288, 160, '피자나라');
         this.집=this.physics.add.image(416, 416, '집');
         this.덤불그룹=this.physics.add.staticGroup();
+        this.putGrass();
 
         this.mainCharacter=this.physics.add.sprite(480,416,'mainCharacter');
         this.mainCharacter.setCollideWorldBounds(true);
@@ -285,7 +286,7 @@ class Main extends Phaser.Scene{
         //this.덤불그룹.create(416, 416, '집');
         this.physics.add.collider(this.mainCharacter, this.덤불그룹);
         //var timedEvent = this.time.addEvent({ delay: 1000, callback: this.putGrass, callbackScope: this, loop: false });
-        this.putGrass();
+        
     }
 
     update()
