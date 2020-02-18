@@ -1,3 +1,4 @@
+
 money = 0;
 
 class Pizza extends Phaser.Scene {
@@ -256,7 +257,8 @@ class Pizza extends Phaser.Scene {
             money+=this.boxNum*1000;
             this.scene.restart('pizza');
             this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
-
+            music.stop();
+            console.log("노래끔");
             this.scene.switch('Main');
         }
     }

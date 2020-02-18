@@ -7,8 +7,6 @@ class Store24 extends Phaser.Scene {
         this.bg_매대왼;
         this.bg_음료매대;
 
-        this.music;
-
         this.bg_판1;
         this.bg_판2;
         this.bg_판3;
@@ -69,7 +67,6 @@ class Store24 extends Phaser.Scene {
     preload ()
     {
 
-        this.load.audio('편의점bgm','assets/music/편의점bgm.mp3');
         
         this.load.image('라면_까불닭', 'assets/store24/라면_까불닭.png');
         this.load.image('라면_육개장', 'assets/store24/라면_육개장.png');
@@ -129,26 +126,6 @@ class Store24 extends Phaser.Scene {
 
     create ()   //지역 변수는 var 로 정의하고 그냥 변수 이름으로 사용
     {   
-        this.물건속도=3; //작을수록 빠름
-        this.speed;
-        this.life=5;  //생명갯수변수
-        this.hearts; //이미지그룹
-        this.diehearts;
-        this.점수항목; //score 이미지
-        this.콤보항목;
-        this.score=0; //실제점수
-        this.scoreText; //점수쓸공간
-        this.combo=0;  //콤보변수
-        this.topcombo=0; //제일 높은 콤보
-        this.bonustag=0; //all combo 해서 보너스 있나? 없으면0
-
-        this.총상품=0;
-        this.상품간격= 900; //0.9초기준시작
-
-        this.music = this.sound.add('편의점bgm');
-        this.music.loop=true;
-        this.sound.mute=false;
-        this.music.play();
 
         //배경타일설정
         for(var i =0;i<8;i++){
@@ -449,7 +426,7 @@ class Store24 extends Phaser.Scene {
             this.scene.restart('Store24');
             //초기화 안되면 수동으로 reset하기
             console.log("set_restart!!!!!!!!!!!");
-            this.music.stop();
+
             this.scene.switch('Main');
             console.log("back to main!!!!!!!!!");
         });

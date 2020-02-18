@@ -47,7 +47,9 @@ class Main extends Phaser.Scene{
     preload ()
     {   
         //BGM
-        this.load.audio('미니게임보통bgm','assets/music/미니게임보통bgm.mp3');
+        this.load.audio('메인게임보통bgm','assets/music/메인게임보통bgm.mp3');
+        this.load.audio('메인게임좋음bgm','assets/music/메인게임좋음bgm.mp3');
+        this.load.audio('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
         this.load.audio('피자나라bgm','assets/music/피자나라bgm.mp3');
         this.load.audio('런닝런닝bgm','assets/music/런닝런닝bgm.mp3');
         this.load.audio('블랙잭bgm','assets/music/블랙잭bgm.mp3');
@@ -87,8 +89,16 @@ class Main extends Phaser.Scene{
     }
 
     create ()   
-    {   if(music!=null){music.destroy();}
-        music=this.sound.add('미니게임보통bgm','assets/music/미니게임보통bgm.mp3');
+    {   
+        if(joy<=2){
+            music=this.sound.add('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
+        }
+        if(joy>=8){
+            music=this.sound.add('메인게임좋음bgm','assets/music/메인게임좋음bgm.mp3');
+        }
+        if(joy>=3 && joy<=7){
+            music=this.sound.add('메인게임보통bgm','assets/music/메인게임보통bgm.mp3');
+        }
         this.sound.loop=true;
         this.sound.mute=false;
         music.play();
@@ -106,7 +116,6 @@ class Main extends Phaser.Scene{
         this.편의점=this.physics.add.image(352, 288, '편의점');
         this.피자나라=this.physics.add.image(288, 160, '피자나라');
 
-        this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
 
         this.mainCharacter=this.physics.add.sprite(480,416,'mainCharacter');
         this.mainCharacter.setCollideWorldBounds(true);
@@ -192,7 +201,7 @@ class Main extends Phaser.Scene{
                 this.scene.switch('Pizza');
             }
             else if (this.whichGame==4){
-                this.편의점방법.visible=false;
+                this.편순이방법.visible=false;
                 music=this.sound.add('편의점bgm','assets/music/편의점bgm.mp3');
                 this.sound.loop=true;
                 this.sound.mute=false;
