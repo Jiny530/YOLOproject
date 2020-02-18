@@ -64,13 +64,15 @@ class Main extends Phaser.Scene{
         this.load.image('블랙잭','assets/main/블랙잭.PNG');
         this.load.image('편의점','assets/main/편의점.PNG');
         this.load.image('피자나라','assets/main/피자나라.PNG');
+
         this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
+
         this.load.image('okButton','assets/공통팝업창/확인버튼.PNG');
         this.load.image('noButton','assets/공통팝업창/X_버튼.PNG');
 
         this.load.image('런닝방법','assets/running/런닝런닝방법.PNG');
         this.load.image('편의점방법','assets/store24/편순이방법.png');
-
+        this.load.image('블랙잭방법','assets/blackjack/blackjack_tutorial.png')
         
 
     
@@ -84,6 +86,8 @@ class Main extends Phaser.Scene{
         this.music.play();
         //메인게임화면 설정
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
+        this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
+        this.joyText = this.add.bitmapText(70,125,'myfont',''+joy,20)
 
         this.cursors = this.input.keyboard.createCursorKeys(); //위,아래,왼쪽,오른쪽 방향키
 
@@ -211,8 +215,6 @@ class Main extends Phaser.Scene{
         this.physics.add.overlap(this.mainCharacter, this.피자나라, this.pizzaOrNot, null, this);
         this.physics.add.overlap(this.mainCharacter, this.편의점, this.store24OrNot, null, this);
         
-        this.dateText=this.add.bitmapText(45,45,'myfont',''+date,36)
-        this.joyText = this.add.bitmapText(70,125,'myfont',''+joy,20)
         
     }
 
@@ -336,7 +338,10 @@ class GameOver extends Phaser.Scene {
     create() {
         //this.add.image(0,0,'popup').setOrigin(0)
         //this.add.image(768/2,115,'title')
-
+        if ( date >=0 && money<=0){
+            var title = this.add.image(0,0,'돈게임오버').setOrigin(0)
+            title.setScale(0.64)
+        }
     }
 }
 
