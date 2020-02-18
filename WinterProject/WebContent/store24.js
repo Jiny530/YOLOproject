@@ -30,7 +30,7 @@ class Store24 extends Phaser.Scene {
 
         this.총상품=0;
         this.상품간격= 900; //0.9초기준시작
-        this.할당량=10; //할당량 실수없이 끝내면 보너스 
+        this.할당량=100; //할당량 실수없이 끝내면 보너스 
 
         this.products; //group
         this.rand_product;//랜덤으로 뽑을 상품
