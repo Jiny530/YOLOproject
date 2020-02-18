@@ -29,6 +29,8 @@ class Main2 extends Phaser.Scene{
         this.load.image('블랙잭','assets/main/블랙잭.PNG');
         this.load.image('편의점','assets/main/편의점.PNG');
         this.load.image('피자나라','assets/main/피자나라.PNG');
+
+        this.load.image('편의점방법','assets/store24/편순이시작팝업.png');
         this.load.image('런닝방법','assets/running/런닝런닝방법.PNG');
         this.load.image('okButton','assets/공통팝업창/확인버튼.PNG');
         this.load.image('noButton','assets/공통팝업창/X버튼.PNG');
@@ -98,7 +100,7 @@ class Main2 extends Phaser.Scene{
             }
             else if (this.whichGame==4){
                 this.편의점방법.visible=false;
-            }
+            }                                                                                                                                                                
 
         });
 
