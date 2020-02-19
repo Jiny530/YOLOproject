@@ -62,6 +62,9 @@ class Running extends Phaser.Scene{
         this.plus1;
         this.plus5;
         this.minus5;
+        this.plus1Text;
+        this.plus5Text;
+        this.minus5Text;
     }
 
     preload ()

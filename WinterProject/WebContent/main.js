@@ -283,6 +283,7 @@ class Main extends Phaser.Scene{
         this.physics.add.overlap(this.mainCharacter, this.블랙잭, this.blackJackorNot, null, this);
         this.physics.add.overlap(this.mainCharacter, this.피자나라, this.pizzaOrNot, null, this);
         this.physics.add.overlap(this.mainCharacter, this.편의점, this.store24OrNot, null, this);
+        this.physics.add.overlap(this.mainCharacter, this.집, this.houseRandom, null, this);
         
         //this.덤불그룹.create(416, 416, '집');
         this.physics.add.collider(this.mainCharacter, this.덤불그룹);
@@ -404,6 +405,12 @@ class Main extends Phaser.Scene{
     }
 
     //각 미니게임으로 넘어가기
+    houseRandom(){
+        if (this.spacebar.isDown) {
+            
+        }
+    }
+
     runningOrNot(){
         if (this.spacebar.isDown) {
             this.whichGame = 1;
