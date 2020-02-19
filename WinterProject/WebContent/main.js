@@ -131,7 +131,7 @@ class Main extends Phaser.Scene{
         this.flag = true;
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
         this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
-        this.joyText = this.add.bitmapText(70,125,'myfont',joy,30)
+        this.joyText = this.add.bitmapText(68,120,'myfont',joy,26,'center')
 
         this.cursors = this.input.keyboard.createCursorKeys(); //위,아래,왼쪽,오른쪽 방향키
 
@@ -331,7 +331,7 @@ class Main extends Phaser.Scene{
         if(joy>9){
             joy=10;
         }
-        
+        this.joyText.setText(joy);
         //money 시간초 (?)... 피자미니게임에 있던거 일단 옮겨온 상태에요
         /*if (!this.gameOver) {
             this.graphics.fillRect(0, 0, money/500*(1 - this.timeBar.getProgress()), 30);
