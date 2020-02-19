@@ -54,6 +54,8 @@ class Pizza extends Phaser.Scene {
         this.pizzaText;
         this.moneyText;
         this.joyText;
+
+        this.ThisArrow;
     }
 
     preload() {
@@ -80,9 +82,10 @@ class Pizza extends Phaser.Scene {
         this.load.image('게임끝팝업','assets/pizza/피자_게임끝.png');
         this.load.image('ok','assets/공통팝업창/확인버튼.PNG');
 
+        this.load.image('aa','assets/pizza/bb.png')
         this.load.image('타임바','assets/pizza/타임바1.png');
         this.load.image('타임바_위','assets/pizza/타임바2.png');
-        this.load.image('타임바_아래','assets/pizza/타임바2.png');
+        this.load.image('타임바_아래','assets/pizza/타임바3.png');
         this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
 
     }
@@ -113,7 +116,7 @@ class Pizza extends Phaser.Scene {
         }
 
         this.timerEvent = this.time.addEvent({ delay: 30000 });
-        this.graphics = this.add.graphics({ x: 20, y: 440 });
+        this.graphics = this.add.graphics({ x: 20, y: 430 });
         this.graphics.angle = -90;
 
         for (var i=0; i<11;i++){
@@ -128,7 +131,7 @@ class Pizza extends Phaser.Scene {
 
 
         this.init();
-        this.player = this.add.image(668,400,'player').setScale(0.15,0.15);
+        this.player = this.add.image(668,400,'player').setScale(0.2,0.2);
 
         this.domino = this.add.image(384, 240, 'Domino').setScale(0.6, 0.6);
         this.mr = this.add.image(384, 240, 'Mr').setScale(0.6,0.6);
@@ -146,12 +149,14 @@ class Pizza extends Phaser.Scene {
         this.schoolGroup = this.add.group();
         this.boxGroup = this.add.group();
 
+        this.add.image(264,175,'aa').setScale(1.2,1.2);
+
         this.childMaking(this.dominoGroup, this.dominoSequence);
         this.childMaking(this.mrGroup, this.mrSequence);
         this.childMaking(this.hutGroup, this.hutSequence);
         this.childMaking(this.schoolGroup, this.schoolSequence);
 
-
+        
         this.BOX = this.add.image(640, 40,'box').setScale(0.7, 0.7);
         this.boxtext = this.add.bitmapText(705, 32, 'myfont','X 0', 20);
 
@@ -247,6 +252,9 @@ class Pizza extends Phaser.Scene {
             this.endPopup.visible=false;
             this.OKbutton.visible=false;
 
+            date-=1;
+            joy-=2;
+
             this.scene.restart('pizza');
             this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
             music.stop();
@@ -302,8 +310,8 @@ class Pizza extends Phaser.Scene {
         this.graphics.clear();
         this.graphics.fillStyle(0xFF5E00);
         if (!this.gameOver) {
-            this.graphics.fillRect(0, 0, 380 - 380 * this.timerEvent.getProgress(), 40);
-            this.timeSource = 512-512 * this.timerEvent.getProgress();
+            this.graphics.fillRect(0, 0, 370 - 370 * this.timerEvent.getProgress(), 40);
+            this.timeSource = 370-370 * this.timerEvent.getProgress();
         }
         else {
             this.graphics.fillRect(0, 0, this.timeSource, 30);
@@ -312,13 +320,9 @@ class Pizza extends Phaser.Scene {
             this.gameOver = true;
             this.wrongEvent();
         }
-
-
         if (this.gameOver) {
-            
+            this.gameOver=false;
             this.events.on('shutdown', this.shutdown, this);
-            date-=1;
-            joy-=2;
             money+=this.boxNum*1000;
             this.endPizza();
         }
@@ -329,7 +333,7 @@ class Pizza extends Phaser.Scene {
         this.endPopup.visible=true;
         this.OKbutton.visible=true;
         this.pizzaText=this.add.bitmapText(420, 220, 'myfont',this.boxNum+'판',35 );
-        this.moneyTExt=this.add.bitmapText(384, 280, 'myfont',this.boxNum*1000,35 );
+        this.moneyTExt=this.add.bitmapText(370, 280, 'myfont',this.boxNum*1000,35 );
         this.joyText=this.add.bitmapText(370, 340, 'myfont','-2',35 );
         
     }
