@@ -132,6 +132,7 @@ class Main extends Phaser.Scene{
 
     create ()   
     {   
+
         this.pause=false;
         if(joy<=2){
             music=this.sound.add('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
@@ -146,12 +147,7 @@ class Main extends Phaser.Scene{
         this.sound.mute=false;
         music.play();
         console.log(music);
-        //메인게임화면 설정
-        /* 피자미니게임에서 가져온 시간초 설정
-        this.timeBar = this.time.addEvent({ delay: money });
-        this.graphics = this.add.graphics({ x: 0, y: 512 });
-        this.graphics.angle = -90;
-        */
+
        //128,0~   10*8
         for(var i=0; i<7;i++){
             for(var j=0;j<9;j++){
@@ -695,6 +691,11 @@ class Main extends Phaser.Scene{
         //  We need to clear keyboard events, or they'll stack up when the Menu is re-run
         this.input.keyboard.shutdown();
     }
+
+    init(){
+        this.gameOver=false;
+        this.pause=false;
+    }
     
 }
 
@@ -746,7 +747,17 @@ class GameOver extends Phaser.Scene {
         this.button=this.add.image(400,400,'다시시작버튼').setInteractive();
         this.button.on('pointerdown', (event) => {
             this.scene.restart('Main');
-            this.scene.switch();
+            date = 3; //30일부터 1일 까지 0이면 게임 엔딩
+            joy = 5; //즐거움 1~10일 까지 0이면 게임 오버
+            money = 50000; //돈 10000원에서 시작 0이면 게임 오버 -> 1초당 1000원씩 감소
+            ending = 0; //ending이 1이면 게임오버, ending이 2이면 엔딩씬
+            playNum = new Array(0, 0, 0, 0);
+            // 0 공원 1 블랙잭 2 피자나라 3 편의점 
+            minigame_start = 0;
+            music.stop();
+            music = null;
+            
+            this.scene.switch('GameStart');
         });
 
     }
