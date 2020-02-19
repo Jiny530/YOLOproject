@@ -254,7 +254,7 @@ class Pizza extends Phaser.Scene {
 
             date-=1;
             joy-=2;
-
+            money+=this.boxNum*1000;
             this.scene.restart('pizza');
             this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
             music.stop();
@@ -319,11 +319,7 @@ class Pizza extends Phaser.Scene {
         if ((1 - this.timerEvent.getProgress()) == 0) {
             this.gameOver = true;
             this.wrongEvent();
-        }
-        if (this.gameOver) {
-            this.gameOver=false;
             this.events.on('shutdown', this.shutdown, this);
-            money+=this.boxNum*1000;
             this.endPizza();
         }
     }
