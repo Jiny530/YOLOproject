@@ -152,13 +152,13 @@ class Store24 extends Phaser.Scene {
 
         //생명그룹 하트 다섯개
         this.hearts=this.add.group();
-        for(var i=0;i<5;i++){
+        for(var i=0;i<this.life;i++){
             var temp=this.add.image(i*64,0,'생명컬러').setOrigin(0).setScale(1/10,1/10);
             this.hearts.add(temp,{addToScene:true});  //왼쪽부터 0,1,2,3,4 heart
         }
 
         this.diehearts=this.add.group();
-        for(var i=0;i<5;i++){
+        for(var i=0;i<this.life;i++){
             var temp=this.add.image(i*64,-100,'생명흑백').setOrigin(0).setScale(1/10,1/10);
             this.diehearts.add(temp,{addToScene:true});  //왼쪽부터 0,1,2,3,4 heart
         }
