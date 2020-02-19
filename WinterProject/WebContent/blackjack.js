@@ -13,8 +13,7 @@ class BlackJack extends Phaser.Scene{
         this.dealerSum1 = 0
         this.dealerSum2 = 0
 
-        this.sum
-        this.moneyText
+        
         this.money = 100
 
         this.cards;
@@ -132,8 +131,6 @@ class BlackJack extends Phaser.Scene{
         },this)
         this.button_result.setVisible(false)
 
-        this.sum = this.add.text(768/2, 512/2, "합계1: " + this.sum1 + " 합계2: " + this.sum2, { fill: '#fff' });
-        this.moneyText = this.add.text(768/2, 512/2+25, "판돈: " + this.money)
         this.gameState = this.GAME_START
         this.playText=this.add.bitmapText(300,225,'myfont','한판더?',48)
         this.playText.setVisible(false);
@@ -158,13 +155,11 @@ class BlackJack extends Phaser.Scene{
                 card = this.add.image(this.cardlocate, cardY, cardname, 0);
                 this.cards.add(card)
                 card.scale = 0.2
-                this.sum.setText("합계1: " + this.sum1 + " 합계2: " + this.sum2, { fill: '#fff' })
 
                 this.click_go = false;
 
                 // 합계가 21을 초과하면 게임 오버
                 if (this.sum1 > 21 || this.cardNum>= 9) {
-                    this.sum.setText("게임 오버!!")
                     this.sum1 = 0
                     this.sum2 = 0
                     this.gameState = this.GAME_OVER
@@ -172,7 +167,6 @@ class BlackJack extends Phaser.Scene{
                         this.money *= -1
                         this.playNum *= -1
                     }
-                    this.moneyText.setText("번돈 : " + this.money)
                     console.log(this.gameState)
                 }
             }
@@ -222,17 +216,14 @@ class BlackJack extends Phaser.Scene{
                 if (this.dealerSum2 <= 21)
                     this.dealerSum1 = this.dealerSum2
                 if (this.sum1 >= this.dealerSum1) {
-                    this.sum.setText("플레이어 승리")
                     if(this.playNum!=5)
                         this.playText.setVisible(true);
                 }
                 else {
-                    this.sum.setText("딜러 승리")
                     if(this.money>0){
                     this.money *= -1
                     this.playNum*=-1
                     }
-                    this.moneyText.setText("번돈 : " + this.money)
                     this.gameState = this.GAME_OVER
                 }
                 this.click_stop = false
@@ -249,15 +240,9 @@ class BlackJack extends Phaser.Scene{
                 this.click_go = false
                 this.gameState = this.GAME_START
                 this.money *= 2
-                this.moneyText.setText("판돈: " + this.money)
-                console.log(this.gameState)
-                this.sum.setText("합계1: " + this.sum1 + " 합계2: " + this.sum2, { fill: '#fff' })
             }
             if (this.click_stop) {
                 this.click_stop = false
-                this.moneyText.setText("번돈 : " + this.money)
-                this.sum.setText("게임 종료!!")
-                console.log(this.gameState)
                 this.gameState = this.GAME_OVER
             }
         }if(this.gameState == this.TURN_STOP && this.playNum==5){
