@@ -69,67 +69,6 @@ class Main extends Phaser.Scene{
     }
 
 
-    preload ()
-    {   
-        //BGM
-        this.load.audio('메인게임보통bgm','assets/music/메인게임보통bgm.mp3');
-        this.load.audio('메인게임좋음bgm','assets/music/메인게임좋음bgm.mp3');
-        this.load.audio('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
-        this.load.audio('피자나라bgm','assets/music/피자나라bgm.mp3');
-        this.load.audio('런닝런닝bgm','assets/music/런닝런닝bgm.mp3');
-        this.load.audio('블랙잭bgm','assets/music/블랙잭bgm.mp3');
-        this.load.audio('편의점bgm','assets/music/편의점bgm.mp3');
-
-        //메인게임 날짜, 즐거움, 돈 _ 왼쪽 바
-        this.load.image('머니바','assets/main/money_bar.png')
-        this.load.image('왼쪽바', 'assets/main/메인게임UI왼쪽바.png');
-
-
-        this.load.image('blackjack', 'assets/blackjack/cardA.png');
-        this.load.image('pizza', 'assets/pizza/Mr.Pizza.png');
-        this.load.image('running', 'assets/running/cat.PNG');
-        this.load.image('store24', 'assets/store24/과자_포카칩.PNG')
-
-
-        this.load.spritesheet('mainCharacter','assets/main/mainCharacter.PNG', { frameWidth: 64, frameHeight: 64 }); //mainCharacter
-        //건물들
-        this.load.image('공원','assets/main/공원.PNG');
-        this.load.image('블랙잭','assets/main/블랙잭.PNG');
-        this.load.image('편의점','assets/main/편의점.PNG');
-        this.load.image('피자나라','assets/main/피자나라.PNG');
-        this.load.image('집','assets/main/집.PNG');
-        this.load.image('덤불0','assets/main/덤불0.PNG');
-        this.load.image('덤불1','assets/main/덤불1.PNG');
-        this.load.image('덤불2','assets/main/덤불2.PNG');
-        this.load.image('덤불3','assets/main/덤불3.PNG');
-        this.load.image('덤불4','assets/main/덤불4.PNG');
-        this.load.image('땅바닥','assets/main/흙바닥3.PNG');
-        this.load.image('글귀1','assets/main/글귀1.PNG');
-        this.load.image('글귀2','assets/main/글귀2.PNG');
-        this.load.image('글귀3','assets/main/글귀3.PNG');
-        this.load.image('글귀4','assets/main/글귀4.PNG');
-        this.load.image('글귀5','assets/main/글귀5.PNG');
-        this.load.image('글귀6','assets/main/글귀6.PNG');
-        this.load.image('글귀7','assets/main/글귀7.PNG');
-        this.load.image('글귀8','assets/main/글귀8.PNG');
-        this.load.image('글귀9','assets/main/글귀9.PNG');
-        this.load.image('글귀10','assets/main/글귀10.PNG');
-
-        this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
-
-        this.load.image('okButton','assets/공통팝업창/확인버튼.PNG');
-        this.load.image('noButton','assets/공통팝업창/X_버튼.PNG');
-
-        this.load.image('런닝방법','assets/running/런닝런닝방법.PNG');
-        this.load.image('블랙잭방법','assets/blackjack/blackjack_tutorial.png')
-        this.load.image('편순이방법','assets/store24/편순이방법.png');
-        this.load.image('피자방법','assets/pizza/피자_방법.PNG');
-
-        
-
-    
-    }
-
     create ()   
     {   
         this.pause=false;
@@ -785,11 +724,94 @@ class GameStart extends Phaser.Scene {
         this.mainButton.setScale(0.4);
         this.mainButton.setInteractive();
         this.mainButton.on('pointerdown', (event) => {
-            this.scene.switch('Main');
+            this.scene.switch('Preloader');
         });
     }
 }
  
+
+class Preloader extends Phaser.Scene{
+
+    constructor ()
+    {
+        super({
+			key: 'Preloader',
+			pack: {
+			    files: [
+			        { type: 'image', key: 'nowloading', url: 'assets/main/욜로라이프타이틀.png' }
+			    ]
+			}
+		});
+    }
+	
+    preload()
+    {
+		// nowloading image is available in preload :) so like a pre-preloaded image
+		this.add.sprite(400, 300, "nowloading");
+		
+		// load all assets
+		//BGM
+        this.load.audio('메인게임보통bgm','assets/music/메인게임보통bgm.mp3');
+        this.load.audio('메인게임좋음bgm','assets/music/메인게임좋음bgm.mp3');
+        this.load.audio('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
+        this.load.audio('피자나라bgm','assets/music/피자나라bgm.mp3');
+        this.load.audio('런닝런닝bgm','assets/music/런닝런닝bgm.mp3');
+        this.load.audio('블랙잭bgm','assets/music/블랙잭bgm.mp3');
+        this.load.audio('편의점bgm','assets/music/편의점bgm.mp3');
+
+        //메인게임 날짜, 즐거움, 돈 _ 왼쪽 바
+        this.load.image('머니바','assets/main/money_bar.png')
+        this.load.image('왼쪽바', 'assets/main/메인게임UI왼쪽바.png');
+
+
+        this.load.image('blackjack', 'assets/blackjack/cardA.png');
+        this.load.image('pizza', 'assets/pizza/Mr.Pizza.png');
+        this.load.image('running', 'assets/running/cat.PNG');
+        this.load.image('store24', 'assets/store24/과자_포카칩.PNG')
+
+
+        this.load.spritesheet('mainCharacter','assets/main/mainCharacter.PNG', { frameWidth: 64, frameHeight: 64 }); //mainCharacter
+        //건물들
+        this.load.image('공원','assets/main/공원.PNG');
+        this.load.image('블랙잭','assets/main/블랙잭.PNG');
+        this.load.image('편의점','assets/main/편의점.PNG');
+        this.load.image('피자나라','assets/main/피자나라.PNG');
+        this.load.image('집','assets/main/집.PNG');
+        this.load.image('덤불0','assets/main/덤불0.PNG');
+        this.load.image('덤불1','assets/main/덤불1.PNG');
+        this.load.image('덤불2','assets/main/덤불2.PNG');
+        this.load.image('덤불3','assets/main/덤불3.PNG');
+        this.load.image('덤불4','assets/main/덤불4.PNG');
+        this.load.image('땅바닥','assets/main/흙바닥3.PNG');
+        this.load.image('글귀1','assets/main/글귀1.PNG');
+        this.load.image('글귀2','assets/main/글귀2.PNG');
+        this.load.image('글귀3','assets/main/글귀3.PNG');
+        this.load.image('글귀4','assets/main/글귀4.PNG');
+        this.load.image('글귀5','assets/main/글귀5.PNG');
+        this.load.image('글귀6','assets/main/글귀6.PNG');
+        this.load.image('글귀7','assets/main/글귀7.PNG');
+        this.load.image('글귀8','assets/main/글귀8.PNG');
+        this.load.image('글귀9','assets/main/글귀9.PNG');
+        this.load.image('글귀10','assets/main/글귀10.PNG');
+
+        this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
+
+        this.load.image('okButton','assets/공통팝업창/확인버튼.PNG');
+        this.load.image('noButton','assets/공통팝업창/X_버튼.PNG');
+
+        this.load.image('런닝방법','assets/running/런닝런닝방법.PNG');
+        this.load.image('블랙잭방법','assets/blackjack/blackjack_tutorial.png')
+        this.load.image('편순이방법','assets/store24/편순이방법.png');
+        this.load.image('피자방법','assets/pizza/피자_방법.PNG');
+		//etc.
+    }
+
+    create()
+    {
+		// start the game
+		this.scene.start('Main');
+    }
+}
 
 
 var config = {
@@ -803,7 +825,7 @@ var config = {
         default: 'arcade',
         arcade: {debug: false}
     },
-    scene: [GameStart, Main, Pizza, BlackJack, Store24, Running ,GameOver]
+    scene: [GameStart,Preloader, Main, Pizza, BlackJack, Store24, Running ,GameOver]
 };
 
 var game = new Phaser.Game(config);
