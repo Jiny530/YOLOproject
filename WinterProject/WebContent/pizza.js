@@ -39,7 +39,7 @@ class Pizza extends Phaser.Scene {
         this.bacc1;
         this.back2;
         this.BOX;
-        this.boxX = 693;
+        this.boxX = 710;
         this.boxY = 432;
         this.boxtext;
         this.isWrong; //틀렸을때 딜레이
@@ -47,6 +47,13 @@ class Pizza extends Phaser.Scene {
         this.wrongflag; //틀렸을때 잠시 지연
         this.timeSource;
         this.player;
+
+        this.endPopop;
+        this.OKbutton;
+
+        this.pizzaText;
+        this.moneyText;
+        this.joyText;
     }
 
     preload() {
@@ -70,6 +77,12 @@ class Pizza extends Phaser.Scene {
         this.load.image('player','assets/pizza/pizza_player.png')
         //this.load.image('timeBar','assets/pizza/timeBar.png')
 
+        this.load.image('게임끝팝업','assets/pizza/피자_게임끝.png');
+        this.load.image('ok','assets/공통팝업창/확인버튼.PNG');
+
+        this.load.image('타임바','assets/pizza/타임바_1.png');
+        this.load.image('타임바위','assets/pizza/타임바_2.png');
+        this.load.image('타임바아래','assets/pizza/타임바_2.png');
         this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
 
     }
@@ -98,6 +111,20 @@ class Pizza extends Phaser.Scene {
                 }
             }
         }
+
+        this.timerEvent = this.time.addEvent({ delay: 15000 });
+        this.graphics = this.add.graphics({ x: 20, y: 450 });
+        this.graphics.angle = -90;
+
+        for (var i=0; i<12;i++){
+            this.add.image(19,60+32*i,'타임바').setOrigin(0);
+        }
+        this.add.image(19,20,'타임바위').setOrigin(0);
+        this.add.image(19,412,'타임바오른').angle(180).setOrigin(0);
+        //this.add.image(3,,'왼').setOrigin(0);
+        //this.add.image(35,20,'오른').setOrigin(0);
+
+
 
         this.init();
         this.player = this.add.image(668,400,'player').setScale(0.15,0.15);
@@ -209,13 +236,25 @@ class Pizza extends Phaser.Scene {
             }
         });
 
+        this.endPopup=this.add.image(384, 256,'게임끝팝업').setScale(0.6);
+        this.endPopup.visible=false;
+        this.OKbutton=this.add.image(600, 375,'ok').setInteractive();
+        this.OKbutton.visible=false;
+
+        this.OKbutton.on('pointerdown', (event) => {
+
+            this.endPopup.visible=false;
+            this.OKbutton.visible=false;
+
+            this.scene.restart('pizza');
+            this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
+            music.stop();
+            console.log("노래끔");
+            this.scene.switch('Main');
+
+        });
 
 
-        //타이머
-        this.timerEvent = this.time.addEvent({ delay: 5000 });
-        this.graphics = this.add.graphics({ x: 0, y: 512 });
-
-        this.graphics.angle = -90;
     }
 
 
@@ -260,9 +299,9 @@ class Pizza extends Phaser.Scene {
 
         //타이머
         this.graphics.clear();
-        this.graphics.fillStyle(0xffcc00);
+        this.graphics.fillStyle(0x368AFF);
         if (!this.gameOver) {
-            this.graphics.fillRect(0, 0, 512 - 512 * this.timerEvent.getProgress(), 30);
+            this.graphics.fillRect(0, 0, 390 - 390 * this.timerEvent.getProgress(), 30);
             this.timeSource = 512-512 * this.timerEvent.getProgress();
         }
         else {
@@ -280,17 +319,18 @@ class Pizza extends Phaser.Scene {
             date-=1;
             joy-=2;
             money+=this.boxNum*1000;
-            this.scene.restart('pizza');
-            this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
-            music.stop();
-            console.log("노래끔");
-            this.scene.switch('Main');
+            this.endPizza();
         }
     }
 
-    endPopup()
+    endPizza()
     {
-
+        this.endPopup.visible=true;
+        this.OKbutton.visible=true;
+        this.pizzaText=this.add.bitmapText(400, 256, 'myfont','X'+this.boxNum,35 );
+        this.moneyTExt=this.add.bitmapText(384, 310, 'myfont',this.boxNum*1000,35 );
+        this.joyText=this.add.bitmapText(384, 370, 'myfont','-2',35 );
+        
     }
     shutdown()
     {

@@ -21,6 +21,7 @@ class Main extends Phaser.Scene{
 
         this.dateText;
         this.joyText;
+        this.moneyText;
         //메인 게임 변수
 
         this.mainCharacter;
@@ -38,9 +39,15 @@ class Main extends Phaser.Scene{
         this.집;
         this.덤불그룹;
         this.덤불;
+        this.땅바닥;
         this.flag;
         this.spacebar;
-        this.tf;
+
+        this.글귀1;
+        this.글귀2;
+        this.글귀3;
+        this.글귀4;
+        this.글귀5;
 
         
         this.런닝방법;
@@ -88,6 +95,12 @@ class Main extends Phaser.Scene{
         this.load.image('덤불2','assets/main/덤불2.PNG');
         this.load.image('덤불3','assets/main/덤불3.PNG');
         this.load.image('덤불4','assets/main/덤불4.PNG');
+        this.load.image('땅바닥','assets/main/흙바닥3.PNG');
+        this.load.image('글귀1','assets/main/글귀1.PNG');
+        this.load.image('글귀2','assets/main/글귀2.PNG');
+        this.load.image('글귀3','assets/main/글귀3.PNG');
+        this.load.image('글귀4','assets/main/글귀4.PNG');
+        this.load.image('글귀5','assets/main/글귀5.PNG');
 
         this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
 
@@ -97,7 +110,7 @@ class Main extends Phaser.Scene{
         this.load.image('런닝방법','assets/running/런닝런닝방법.PNG');
         this.load.image('블랙잭방법','assets/blackjack/blackjack_tutorial.png')
         this.load.image('편순이방법','assets/store24/편순이방법.png');
-        this.load.image('피자방법','assets/pizza/피자방법.PNG');
+        this.load.image('피자방법','assets/pizza/피자_방법.PNG');
 
         
 
@@ -120,18 +133,24 @@ class Main extends Phaser.Scene{
         music.play();
         console.log(music);
         //메인게임화면 설정
-        this.tf=true;
         /* 피자미니게임에서 가져온 시간초 설정
         this.timeBar = this.time.addEvent({ delay: money });
         this.graphics = this.add.graphics({ x: 0, y: 512 });
         this.graphics.angle = -90;
         */
+       //128,0~   10*8
+        for(var i=0; i<8;i++){
+            for(var j=0;j<10;j++){
+            this.땅바닥=this.add.image(128+62*(j),64*i,'땅바닥');
+            }
+        }
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.덤불 = ['덤불0', '덤불1', '덤불2', '덤불3', '덤불4'];
         this.flag = true;
-        this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
+        this.mainLeftBar = this.add.image(0, 0, '왼쪽바').setOrigin(0);
         this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
         this.joyText = this.add.bitmapText(68,120,'myfont',joy,26,'center')
+        this.moneyText = this.add.bitmapText(20,200,'myfont',money,26,'center')
 
         this.cursors = this.input.keyboard.createCursorKeys(); //위,아래,왼쪽,오른쪽 방향키
 
@@ -294,19 +313,28 @@ class Main extends Phaser.Scene{
         this.physics.add.overlap(this.mainCharacter, this.블랙잭, this.blackJackorNot, null, this);
         this.physics.add.overlap(this.mainCharacter, this.피자나라, this.pizzaOrNot, null, this);
         this.physics.add.overlap(this.mainCharacter, this.편의점, this.store24OrNot, null, this);
-        this.physics.add.overlap(this.mainCharacter, this.집, this.houseRandom, null, this);
+        //this.physics.add.overlap(this.mainCharacter, this.집, this.houseRandom, null, this);
         
         //this.덤불그룹.create(416, 416, '집');
         this.physics.add.collider(this.mainCharacter, this.덤불그룹);
         //var timedEvent = this.time.addEvent({ delay: 1000, callback: this.putGrass, callbackScope: this, loop: false });
-
+        this.글귀1=this.add.image(416, 352, '글귀1');
+        this.글귀2=this.add.image(416, 352, '글귀2');
+        this.글귀3=this.add.image(416, 352, '글귀3');
+        this.글귀4=this.add.image(416, 352, '글귀4');
+        this.글귀5=this.add.image(416, 352, '글귀5');
+        this.글귀1.visible=false;
+        this.글귀2.visible=false;
+        this.글귀3.visible=false;
+        this.글귀4.visible=false;
+        this.글귀5.visible=false;
         
         
     }
 
     update()
     {
-        this.dateText.setText(date)
+        this.dateText.setText(date);this.moneyText.setText(money);
         if(this.gameOver==0 && (joy<=0 || money<=0)){
             this.gameOver=2;
             this.scene.start('GameOver')
@@ -340,6 +368,7 @@ class Main extends Phaser.Scene{
 
           
         this.putGrass();
+        this.houseRandom();
         //메인 캐릭터 상하좌우 방향키 누를 때 움직임
         if (this.cursors.left.isDown && this.playerMove) {
             this.mainCharacter.setVelocityX(-160);
@@ -387,6 +416,11 @@ class Main extends Phaser.Scene{
         return num;
     }
 
+    randomText(){
+        var num=this.randomNumber(1, 5);
+        return num;
+    }
+
     putGrass(){
         if(this.flag){
             for (var i = 0; i < 10; i++) {
@@ -398,10 +432,6 @@ class Main extends Phaser.Scene{
                 this.덤불그룹.create(160, 96 + i * 64, this.덤불[this.randomGrass()]);
                 this.덤불그룹.create(736, 96 + i * 64, this.덤불[this.randomGrass()]);
             }
-           /* for (var i = 0; i < 2; i++) {
-                this.덤불그룹.create(224+i*128, 160, this.덤불[this.randomGrass()]);
-            }
-            */
             for (var i = 0; i < 2; i++) {
                 this.덤불그룹.create(416+i*64, 288, this.덤불[this.randomGrass()]);
             }
@@ -413,7 +443,6 @@ class Main extends Phaser.Scene{
             this.덤불그룹.create(224, 352, this.덤불[this.randomGrass()]);
             this.덤불그룹.create(352,416, this.덤불[this.randomGrass()]);
             this.덤불그룹.create(224, 160, this.덤불[this.randomGrass()]);
-            //this.덤불그룹.create(224+128, 160, this.덤불[this.randomGrass()]);
 
         }
         this.flag=false;
@@ -421,9 +450,68 @@ class Main extends Phaser.Scene{
     }
 
     //각 미니게임으로 넘어가기
-    houseRandom(){
-        if (this.spacebar.isDown) {
-            
+    houseRandom() {
+        if (this.mainCharacter.x > 384 && this.mainCharacter.x < 448) {
+            if (this.mainCharacter.y > 384 && this.mainCharacter.y < 448) {
+                if (this.spacebar.isDown) {
+                    var random = this.randomText();
+                    if (random == 1) {
+                        this.글귀1.visible = true;
+                        this.글귀2.visible = false;
+                        this.글귀3.visible = false;
+                        this.글귀4.visible = false;
+                        this.글귀5.visible = false;
+                    }
+                    else if (random == 2) {
+                        this.글귀2.visible = true;
+                        this.글귀1.visible = false;
+                        this.글귀3.visible = false;
+                        this.글귀4.visible = false;
+                        this.글귀5.visible = false;
+                    }
+                    else if (random == 3) {
+                        this.글귀3.visible = true;
+                        this.글귀1.visible = false;
+                        this.글귀2.visible = false;
+                        this.글귀4.visible = false;
+                        this.글귀5.visible = false;
+                    }
+                    else if (random == 4) {
+                        this.글귀4.visible = true;
+                        this.글귀1.visible = false;
+                        this.글귀2.visible = false;
+                        this.글귀3.visible = false;
+                        this.글귀5.visible = false;
+                    }
+                    else if (random == 5) {
+                        this.글귀5.visible = true;
+                        this.글귀1.visible = false;
+                        this.글귀2.visible = false;
+                        this.글귀3.visible = false;
+                        this.글귀4.visible = false;
+                    }
+                }
+
+
+            }
+            else {
+                this.글귀1.visible = false;
+                this.글귀2.visible = false;
+                this.글귀3.visible = false;
+                this.글귀4.visible = false;
+                this.글귀5.visible = false;
+            }
+
+        }
+        if (this.mainCharacter.y > 384 && this.mainCharacter.y < 448) {
+            if (this.mainCharacter.x > 384 && this.mainCharacter.x < 448) { }
+            else {
+                this.글귀1.visible = false;
+                this.글귀2.visible = false;
+                this.글귀3.visible = false;
+                this.글귀4.visible = false;
+                this.글귀5.visible = false;
+            }
         }
     }
 
