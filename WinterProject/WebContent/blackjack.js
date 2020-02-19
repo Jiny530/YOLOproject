@@ -50,10 +50,10 @@ class BlackJack extends Phaser.Scene{
         this.load.image('card9', 'assets/blackjack/card 9.png')
         this.load.image('cardk', 'assets/blackjack/card k.png')
 
-        this.load.image('bg','assets/blackjack/bg_pattern4.png')
+        this.load.image('bg_tile','assets/blackjack/bg_pattern4.png')
         this.load.image('board','assets/blackjack/board.png')
         this.load.image('cactus','assets/blackjack/cactus.png')
-        this.load.image('character','assets/blackjack/player (3).PNG')
+        this.load.image('주인공','assets/blackjack/player (3).PNG')
         this.load.image('dealerC','assets/blackjack/dealer (1).png')
         
         this.load.image('ending','assets/blackjack/버튼포함창.png')
@@ -88,11 +88,11 @@ class BlackJack extends Phaser.Scene{
       
         
         //배경 꾸미기
-        this.add.tileSprite(0,0,768,512,'bg').setOrigin(0)
+        this.add.tileSprite(0,0,768,512,'bg_tile').setOrigin(0)
         this.add.image(768/2,512/2,'board')
         var cactus=this.add.image(768/2+512/2,100,'cactus').setOrigin(0)
         cactus.setScale(0.2)
-        var character=this.add.image(768/2+512/2+50,400,'character')
+        var character=this.add.image(768/2+512/2+50,400,'주인공')
         character.setScale(0.2)
         var dealerCharacter = this.add.image(768/2-512/2-50,125,'dealerC')
         dealerCharacter.setScale(0.2)
@@ -153,7 +153,7 @@ class BlackJack extends Phaser.Scene{
                     this.gameState = this.GAME_OVER
                     if(this.money>0){
                         this.money *= -1
-                        this.playNum*=-1
+                        this.playNum *= -1
                     }
                     this.moneyText.setText("번돈 : " + this.money)
                     console.log(this.gameState)
@@ -166,10 +166,10 @@ class BlackJack extends Phaser.Scene{
                 // 딜러 카드 오픈
                 this.cardlocate = 768/2-512/2+10
                 this.cardNum=0;
+                var cardY=100;
                 while (this.dealerSum1 <= 11) {
                     var cardname = this.random_card(this.DEALER);
                     this.cardNum+=1;
-                    var cardY=100;
                     if(this.cardNum==6)
                         this.cardlocate = 768/2-512/2+10
                     if(this.cardNum>5){
@@ -185,8 +185,14 @@ class BlackJack extends Phaser.Scene{
                 while (this.dealerSum1 <= 21) {
                     rand = Math.floor(Math.random())
                     if (rand == 1) {
+                        if (this.cardNum == 6)
+                            this.cardlocate = 768 / 2 - 512 / 2 + 10
+                        if (this.cardNum > 5) {
+                            cardY = 200
+                        }
                         var cardname = this.random_card(this.DEALER);
-                        card = this.add.image(this.cardlocate, 150, cardname, 0);
+                        card = this.add.image(this.cardlocate, cardY, cardname, 0);
+                        this.cardNum+=1
                         this.cards.add(card)
                         card.scale = 0.2
                     }
@@ -200,7 +206,6 @@ class BlackJack extends Phaser.Scene{
                     this.dealerSum1 = this.dealerSum2
                 if (this.sum1 > this.dealerSum1) {
                     this.sum.setText("플레이어 승리")
-                    this.cards.clear(true, true)
                     this.playText.setVisible(true);
                 }
                 else {
@@ -217,6 +222,7 @@ class BlackJack extends Phaser.Scene{
         }
         if (this.gameState == this.TURN_STOP && this.playNum<5) {
             if (this.click_go) {
+                this.cards.clear(true, true)
                 this.playNum+=1;
                 this.cardNum=0;
                 this.playText.setVisible(false);
@@ -292,8 +298,8 @@ class BlackJack extends Phaser.Scene{
             }
         }
         if (who == this.DEALER) {
-        this.cardlocate += 75;
-        if (rand == 11) {
+            this.cardlocate += 75;
+            if (rand == 11) {
                 this.dealerSum1 += 1
                 this.dealerSum2 += 11
             } else {
