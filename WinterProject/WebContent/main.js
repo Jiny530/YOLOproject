@@ -128,7 +128,7 @@ class Main extends Phaser.Scene{
         this.flag = true;
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
         this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
-        this.joyText = this.add.bitmapText(70,125,'myfont',joy,20)
+        this.joyText = this.add.bitmapText(70,125,'myfont',joy,30)
 
         this.cursors = this.input.keyboard.createCursorKeys(); //위,아래,왼쪽,오른쪽 방향키
 
