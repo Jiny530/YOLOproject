@@ -1,6 +1,6 @@
   
 //공통변수
-date=3; //30일부터 1일 까지 0이면 게임 엔딩
+date=30; //30일부터 1일 까지 0이면 게임 엔딩
 joy=5; //즐거움 1~10일 까지 0이면 게임 오버
 money=50000; //돈 10000원에서 시작 0이면 게임 오버 -> 1초당 1000원씩 감소
 ending=0; //ending이 1이면 게임오버, ending이 2이면 엔딩씬
@@ -56,7 +56,6 @@ class Main extends Phaser.Scene{
         this.글귀9;
         this.글귀10;
 
-        
         this.런닝방법;
         this.블랙잭방법;
         this.피자방법;
@@ -68,10 +67,8 @@ class Main extends Phaser.Scene{
         playNum;
     }
 
-
     create ()   
-    {   
-
+    {  
         this.pause=false;
         if(joy<=2){
             music=this.sound.add('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
@@ -683,22 +680,6 @@ class GameOver extends Phaser.Scene {
 
         }
 
-        this.button=this.add.image(400,400,'다시시작버튼').setInteractive();
-        this.button.on('pointerdown', (event) => {
-            this.scene.restart('Main');
-            date = 3; //30일부터 1일 까지 0이면 게임 엔딩
-            joy = 5; //즐거움 1~10일 까지 0이면 게임 오버
-            money = 50000; //돈 10000원에서 시작 0이면 게임 오버 -> 1초당 1000원씩 감소
-            ending = 0; //ending이 1이면 게임오버, ending이 2이면 엔딩씬
-            playNum = new Array(0, 0, 0, 0);
-            // 0 공원 1 블랙잭 2 피자나라 3 편의점 
-            minigame_start = 0;
-            music.stop();
-            music = null;
-            
-            this.scene.switch('GameStart');
-        });
-
     }
 }
 
@@ -717,15 +698,15 @@ class GameStart extends Phaser.Scene {
 
     create() {
         var title=this.add.image(384, 256, '욜로라이프타이틀');
-        title.setScale(0.4);
+        title.setScale(0.49);
         var timedEvent=this.time.addEvent({ delay: 5000, callback:this.imageChange, callbackScope: this, loop: false });
     }
 
     imageChange(){
         var image=this.add.image(384, 256, '욜로게임방식팝업');
-        image.setScale(0.4);
-        this.mainButton=this.add.image(630, 435, '메인으로버튼');
-        this.mainButton.setScale(0.4);
+        image.setScale(0.49);
+        this.mainButton=this.add.image(670, 480, '메인으로버튼');
+        this.mainButton.setScale(0.48);
         this.mainButton.setInteractive();
         this.mainButton.on('pointerdown', (event) => {
             this.scene.switch('Preloader');
@@ -742,7 +723,7 @@ class Preloader extends Phaser.Scene{
 			key: 'Preloader',
 			pack: {
 			    files: [
-			        { type: 'image', key: 'nowloading', url: 'assets/main/욜로라이프타이틀.png' }
+			        { type: 'image', key: 'nowloading', url: 'assets/main/로딩중.png' }
 			    ]
 			}
 		});

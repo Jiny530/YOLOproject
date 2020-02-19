@@ -68,7 +68,8 @@ class Running extends Phaser.Scene{
 
     preload ()
     {
-            //640,360
+        this.add.image(768/2,512/2,'nowloading').setScale(0.4)
+        //640,360
         /* 배경 */
         this.load.image('background', 'assets/running/background4.png');
         this.load.image('bg', 'assets/running/bg5.png');
@@ -297,9 +298,9 @@ class Running extends Phaser.Scene{
         
 
 
-        var scoreText2=this.add.text(300, 210, ': 0',  { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
+        var scoreText2=this.add.bitmapText(300, 210, 'myfont',': 0',  40);
         scoreText2.setText(this.score);
-        var totalText2=this.add.text(400, 280, ': 0', { fontFamily: 'fantasy',fontSize: '40px', color: '#000'});
+        var totalText2=this.add.bitmapText(350, 280, 'myfont',': 0', 40);
         if(this.score<0){
             totalText2.setText(0);
         }

@@ -72,6 +72,7 @@ class Store24 extends Phaser.Scene {
 
     preload ()
     {
+        this.add.image(768/2,512/2,'nowloading').setScale(0.4)
         this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
         
         this.load.image('라면_까불닭', 'assets/store24/라면_까불닭.png');
