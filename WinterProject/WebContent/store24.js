@@ -16,13 +16,14 @@ class Store24 extends Phaser.Scene {
 
         this.물건속도=3; //작을수록 빠름
         this.speed;
-        this.life=5;  //생명갯수변수
+        this.life=3;  //생명갯수변수
         this.hearts; //이미지그룹
         this.diehearts;
         this.점수항목; //score 이미지
         this.콤보항목;
         this.score=0; //실제점수
         this.scoreText; //점수쓸공간
+        this.remainText;
         this.money; //계산된 돈
         this.combo=0;  //콤보변수
         this.topcombo=0; //제일 높은 콤보
@@ -71,7 +72,7 @@ class Store24 extends Phaser.Scene {
 
     preload ()
     {
-
+        this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
         
         this.load.image('라면_까불닭', 'assets/store24/라면_까불닭.png');
         this.load.image('라면_육개장', 'assets/store24/라면_육개장.png');
@@ -181,7 +182,8 @@ class Store24 extends Phaser.Scene {
         this.점수항목=this.add.image(8*64+20,0,'점수항목').setOrigin(0).setScale(1/4,1/4);
         this.scoreText = this.add.text(10*64+20, 13, '0', { fontFamily: 'fantasy',fontSize: '30px', color: '#000'});
         this.comboText = this.add.text(7*64+30, 13, '0', {fontFamily: 'fantasy',fontSize: '30px', color: '#000'});
-        this.speedText = this.add.text(700, 480, '0', { fontFamily: 'fantasy',fontSize: '30px', color: '#000'});
+        //this.speedText = this.add.text(700, 480, '0', { fontFamily: 'fantasy',fontSize: '30px', color: '#000'});
+        this.remainText=this.add.bitmapText(7*64,50,'myfont',this.할당량,20);
 
         this.콤보항목=this.add.image(5*64-10,-17,'콤보항목').setOrigin(0).setScale(1/2.7,1/2.7);
 
@@ -320,6 +322,8 @@ class Store24 extends Phaser.Scene {
 
     update(time,delta)
     {
+        this.remainText.setText('REMAIN '+(this.할당량-this.총상품));
+
         this.childs=this.products.getChildren();
         console.log(this.childs);
         if (this.그만==1 && this.childs.length==0){
@@ -349,7 +353,7 @@ class Store24 extends Phaser.Scene {
             if(this.speed<0.5){
                 var temp=this.score/100;
                 this.speed=this.speed+temp*0.0001 //speed 클수록 빠름
-                this.상품간격= this.상품간격/temp*100000;  //상품나오는 delay 작을수록 좋음
+                this.상품간격= this.상품간격/temp*1000000;  //상품나오는 delay 작을수록 좋음
             }
         }
 
@@ -359,7 +363,7 @@ class Store24 extends Phaser.Scene {
             this.상품간격=1000;
         }
         */
-        this.speedText.setText(this.speed); //작을수록 빠름
+        //this.speedText.setText(this.speed); //작을수록 빠름
         
 
 
@@ -457,7 +461,7 @@ class Store24 extends Phaser.Scene {
 
     init(){ //reset 값들
         this.물건속도=3; //작을수록 빠름
-        this.life=5;  //생명갯수변수
+        this.life=3;  //생명갯수변수
 
         this.score=0; //실제점수
         this.combo=0;  //콤보변수
