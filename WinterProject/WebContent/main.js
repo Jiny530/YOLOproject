@@ -440,11 +440,17 @@ class Main extends Phaser.Scene{
                 this.덤불그룹.create(544 + i * 64, 352, this.덤불[this.randomGrass()]);
             }
             this.덤불그룹.create(608, 160, this.덤불[this.randomGrass()]);
-            this.덤불그룹.create(480, 224, this.덤불[this.randomGrass()]);
+            //this.덤불그룹.create(480, 224, this.덤불[this.randomGrass()]);
             this.덤불그룹.create(224, 352, this.덤불[this.randomGrass()]);
             this.덤불그룹.create(352, 416, this.덤불[this.randomGrass()]);
             this.덤불그룹.create(224, 160, this.덤불[this.randomGrass()]);
-
+            
+            this.덤불그룹.create(672,192+32-64,this.덤불[this.randomGrass()]);
+            this.덤불그룹.create(224,288,this.덤불[this.randomGrass()]);
+            this.덤불그룹.create(608-64-64-64,192+32,this.덤불[this.randomGrass()]);
+            this.덤불그룹.create(320+32,192+32,this.덤불[this.randomGrass()]);
+            this.덤불그룹.create(416,160,this.덤불[this.randomGrass()]);
+            this.덤불그룹.create(672,224,this.덤불[this.randomGrass()]);
         }
         this.flag = false;
 
