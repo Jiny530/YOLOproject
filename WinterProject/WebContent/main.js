@@ -3,7 +3,10 @@
 date=30; //30일부터 1일 까지 0이면 게임 엔딩
 joy=5; //즐거움 1~10일 까지 0이면 게임 오버
 money=10000; //돈 10000원에서 시작 0이면 게임 오버 -> 1초당 1000원씩 감소
+ending=0; //ending이 1이면 게임오버, ending이 2이면 엔딩씬
 
+playNum=new Array(0,0,0,0);
+// 0 공원 1 블랙잭 2 피자나라 3 편의점 
 minigame_start=0;
 music=null;
 
@@ -13,7 +16,6 @@ class Main extends Phaser.Scene{
     {
         super({key:'Main'});
         this.gameOver=false; //true이면 게임종료
-        this.ending=0; //ending이 1이면 게임오버, ending이 2이면 엔딩씬
         //메인 화면 UI 설정
         this.mainLeftBar;
 
@@ -48,6 +50,7 @@ class Main extends Phaser.Scene{
 
         this.timeBar;
         this.graphics;
+        playNum;
     }
 
 
@@ -139,6 +142,8 @@ class Main extends Phaser.Scene{
         this.집=this.physics.add.image(416, 416, '집');
         this.덤불그룹=this.physics.add.staticGroup();
         this.putGrass();
+        this.add.bitmapText(300,85,'myfont','"SPACE TO ENTER"',34)
+        
 
         this.mainCharacter=this.physics.add.sprite(480,416,'mainCharacter');
         this.mainCharacter.setCollideWorldBounds(true);
@@ -190,6 +195,7 @@ class Main extends Phaser.Scene{
         });
 
         
+
         this.button_ok.on('pointerdown', (event) => {
             this.button_ok.visible=false;
             this.button_no.visible=false;
@@ -208,6 +214,7 @@ class Main extends Phaser.Scene{
                 this.sound.mute=false;
                 music.play();
                 console.log("런닝런닝노래");
+                playNum[0]+=1
                 this.scene.switch('Running');
                 console.log('Running clicked');
             }
@@ -218,7 +225,9 @@ class Main extends Phaser.Scene{
                 this.sound.mute=false;
                 music.play();
                 console.log("블랙잭노래");
+                playNum[1]+=1
                 this.scene.switch('BlackJack');
+
             }
             else if (this.whichGame==3){
                 this.피자방법.visible=false;
@@ -227,6 +236,7 @@ class Main extends Phaser.Scene{
                 this.sound.mute=false;
                 music.play();
                 console.log("피자나라노래");
+                playNum[2]+=1
                 this.scene.switch('Pizza');
             }
             else if (this.whichGame==4){
@@ -236,6 +246,7 @@ class Main extends Phaser.Scene{
                 this.sound.mute=false;
                 music.play();
                 console.log("편의점노래");
+                playNum[3]+=1
                 this.scene.switch('Store24');
             }
             
@@ -286,14 +297,33 @@ class Main extends Phaser.Scene{
         //this.덤불그룹.create(416, 416, '집');
         this.physics.add.collider(this.mainCharacter, this.덤불그룹);
         //var timedEvent = this.time.addEvent({ delay: 1000, callback: this.putGrass, callbackScope: this, loop: false });
+
+        
         
     }
 
     update()
     {
         this.dateText.setText(date)
-        if(!this.gameOver && (joy<=0 || money<=0)){
-            this.gameOver=true;
+        if(this.gameOver==0 && (joy<=0 || money<=0)){
+            this.gameOver=2;
+            this.scene.start('GameOver')
+        }
+        if(date<=0){
+            this.gameOver=1;
+            if(joy>=6){
+                console.log(playNum)
+                if(playNum[1]>playNum[0])
+                    ending=2
+                else
+                    ending=1
+            }else{
+                if(playNum[2]>playNum[3])
+                    ending=3
+                else
+                    ending=4
+            }
+
             this.scene.start('GameOver')
         }
         
@@ -303,21 +333,7 @@ class Main extends Phaser.Scene{
             this.timeSource = 512-512 * this.timerEvent.getProgress();
         }*/
 
-        if (this.gameOver)
-        {
-            if (this.ending==1){
-                this.scene.start('개미_편의점');
-            }
-            else if (this.ending==2){
-                this.scene.start('개미_피자나라');
-            }
-            else if (this.ending==3){
-                this.scene.start('베짱이_런닝');
-            }
-            else if (this.ending==4){
-                this.scene.start('베짱이_블랙잭');
-            }
-        }  
+          
         this.putGrass();
         //메인 캐릭터 상하좌우 방향키 누를 때 움직임
         if (this.cursors.left.isDown && this.playerMove) {
@@ -498,9 +514,23 @@ class GameOver extends Phaser.Scene {
     create() {
         //this.add.image(0,0,'popup').setOrigin(0)
         //this.add.image(768/2,115,'title')
-        if ( date >=0 && money<=0){
+        if ( date >0 && money<=0){
             var title = this.add.image(0,0,'돈게임오버').setOrigin(0)
             title.setScale(0.64)
+        }
+        if( date >0 && joy<=0){
+            this.add.image(0,0,'즐거움게임오버').setOrigin(0).setScale(0.64);
+        }
+        if( date <=0 ){
+            if(ending==1)
+                this.add.image(0,0,'공원게임엔딩').setOrigin(0).setScale(0.64)
+            if (ending == 2)
+                this.add.image(0, 0, '블랙잭게임엔딩').setOrigin(0).setScale(0.64)
+            if (ending == 3)
+                this.add.image(0, 0, '피자박스게임엔딩').setOrigin(0).setScale(0.64)
+            if (ending == 4)
+                this.add.image(0, 0, '편순이게임엔딩').setOrigin(0).setScale(0.64)
+
         }
     }
 }
