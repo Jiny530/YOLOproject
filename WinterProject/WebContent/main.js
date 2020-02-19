@@ -56,7 +56,6 @@ class Main extends Phaser.Scene{
         this.글귀9;
         this.글귀10;
 
-        
         this.런닝방법;
         this.블랙잭방법;
         this.피자방법;
@@ -68,9 +67,8 @@ class Main extends Phaser.Scene{
         playNum;
     }
 
-
     create ()   
-    {   
+    {  
         this.pause=false;
         if(joy<=2){
             music=this.sound.add('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
@@ -85,12 +83,7 @@ class Main extends Phaser.Scene{
         this.sound.mute=false;
         music.play();
         console.log(music);
-        //메인게임화면 설정
-        /* 피자미니게임에서 가져온 시간초 설정
-        this.timeBar = this.time.addEvent({ delay: money });
-        this.graphics = this.add.graphics({ x: 0, y: 512 });
-        this.graphics.angle = -90;
-        */
+
        //128,0~   10*8
         for(var i=0; i<7;i++){
             for(var j=0;j<9;j++){
@@ -154,19 +147,6 @@ class Main extends Phaser.Scene{
             this.블랙잭방법.visible = false;
             this.피자방법.visible = false;
             this.편순이방법.visible = false;
-           /* if (this.whichGame==1){
-                this.런닝방법.visible=false;
-            }
-            else if (this.whichGame==2){
-                this.블랙잭방법.visible=false;
-            }
-            else if (this.whichGame==3){
-                this.피자방법.visible=false;
-            }
-            else if (this.whichGame==4){
-                this.편순이방법.visible=false;
-            }*/
-
         });
 
         
@@ -329,11 +309,6 @@ class Main extends Phaser.Scene{
             joy=10;
         }
         this.joyText.setText(joy);
-        //money 시간초 (?)... 피자미니게임에 있던거 일단 옮겨온 상태에요
-        /*if (!this.gameOver) {
-            this.graphics.fillRect(0, 0, money/500*(1 - this.timeBar.getProgress()), 30);
-            this.timeSource = 512-512 * this.timerEvent.getProgress();
-        }*/
 
           
         this.putGrass();
@@ -652,6 +627,11 @@ class Main extends Phaser.Scene{
         //  We need to clear keyboard events, or they'll stack up when the Menu is re-run
         this.input.keyboard.shutdown();
     }
+
+    init(){
+        this.gameOver=false;
+        this.pause=false;
+    }
     
 }
 
@@ -659,6 +639,7 @@ class Main extends Phaser.Scene{
 class GameOver extends Phaser.Scene {
     constructor () {
         super({key:'GameOver'})
+        this.button;
 
     }
     preload() {
@@ -674,6 +655,8 @@ class GameOver extends Phaser.Scene {
         this.load.image('피자박스게임엔딩','/assets/ending/피자박스게임엔딩.png');
         this.load.image('편순이게임엔딩','/assets/ending/편순이게임엔딩.png');
         this.load.image('블랙잭게임엔딩','/assets/ending/블랙잭게임엔딩.png');
+
+        this.load.image('다시시작버튼','/assets/main/메인으로버튼.png');
     }
     create() {
         //this.add.image(0,0,'popup').setOrigin(0)
@@ -696,6 +679,7 @@ class GameOver extends Phaser.Scene {
                 this.add.image(0, 0, '편순이게임엔딩').setOrigin(0).setScale(0.64)
 
         }
+
     }
 }
 
@@ -708,20 +692,21 @@ class GameStart extends Phaser.Scene {
         this.load.image('욜로게임방식팝업','/assets/main/욜로게임방식팝업.png');
         this.load.image('욜로라이프타이틀','/assets/main/욜로라이프타이틀.png');
         this.load.image('메인으로버튼','/assets/main/메인으로버튼.png');
+        
    
     }
 
     create() {
         var title=this.add.image(384, 256, '욜로라이프타이틀');
-        title.setScale(0.4);
+        title.setScale(0.49);
         var timedEvent=this.time.addEvent({ delay: 5000, callback:this.imageChange, callbackScope: this, loop: false });
     }
 
     imageChange(){
         var image=this.add.image(384, 256, '욜로게임방식팝업');
-        image.setScale(0.4);
-        this.mainButton=this.add.image(630, 435, '메인으로버튼');
-        this.mainButton.setScale(0.4);
+        image.setScale(0.49);
+        this.mainButton=this.add.image(670, 480, '메인으로버튼');
+        this.mainButton.setScale(0.48);
         this.mainButton.setInteractive();
         this.mainButton.on('pointerdown', (event) => {
             this.scene.switch('Preloader');
