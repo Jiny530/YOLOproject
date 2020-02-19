@@ -51,7 +51,7 @@ class Running extends Phaser.Scene{
         this.happiness;
         this.okButton;
         this.okText;
-        this.result;
+        this.resultPOP;
         this.scoreResultText;
         this.totalScoreText;
         this.totalText;
@@ -100,7 +100,7 @@ class Running extends Phaser.Scene{
         //result 팝업
         this.load.image('happiness', 'assets/running/result/happiness.png');
         this.load.image('okButton', 'assets/공통팝업창/확인버튼.png');
-        this.load.image('result', 'assets/running/result/result.png');
+        this.load.image('resultPOP', 'assets/running/result/result.png');
         this.load.image('scoreResultText', 'assets/running/result/scoreResultText.png');
         this.load.image('totalScoreText', 'assets/running/result/totalScoreText.png');
         this.load.image('totalText', 'assets/running/result/totalText.png');
@@ -265,7 +265,7 @@ class Running extends Phaser.Scene{
     popUp(){
         this.add.image(35, 256, 'limitbg');
         this.add.image(740, 256, 'limitbg');
-        this.result = this.add.image(384, 256, 'result');
+        this.resultPOP = this.add.image(384, 256, 'resultPOP');
         this.happiness = this.add.image(320, 300, 'happiness');
         this.happiness.setScale(1/8,1/8);
         this.okButton = this.add.image(620, 395, 'okButton');
@@ -283,7 +283,7 @@ class Running extends Phaser.Scene{
             else if(this.score>90){
                 joy+=3;
             }
-            this.result.visible=false;
+            this.resultPOP.visible=false;
             date-=1;
             this.scene.restart('Running');
             this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
