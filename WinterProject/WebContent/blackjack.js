@@ -261,7 +261,7 @@ class BlackJack extends Phaser.Scene{
         money+=this.money
         date-=1
         joy+=this.playNum
-        this.scene.restart('BlackJack')
+        this.scene.restart('blackJack')
         this.scene.wake('Main')
                 music.stop();
                 this.scene.switch('Main')
