@@ -141,7 +141,7 @@ class Main extends Phaser.Scene{
        //128,0~   10*8
         for(var i=0; i<8;i++){
             for(var j=0;j<10;j++){
-            this.땅바닥=this.add.image(128+62*(j),64*i,'땅바닥');
+            this.땅바닥=this.add.image(128+62*(j+1),64*i,'땅바닥');
             }
         }
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
