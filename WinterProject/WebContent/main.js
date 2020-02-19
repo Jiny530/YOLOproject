@@ -141,7 +141,7 @@ class Main extends Phaser.Scene{
        //128,0~   10*8
         for(var i=0; i<8;i++){
             for(var j=0;j<10;j++){
-            this.땅바닥=this.add.image(128+62*(j),64*i,'땅바닥');
+            this.땅바닥=this.add.image(128+62*(j+1),64*i,'땅바닥');
             }
         }
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -318,16 +318,21 @@ class Main extends Phaser.Scene{
         //this.덤불그룹.create(416, 416, '집');
         this.physics.add.collider(this.mainCharacter, this.덤불그룹);
         //var timedEvent = this.time.addEvent({ delay: 1000, callback: this.putGrass, callbackScope: this, loop: false });
-        this.글귀1=this.add.image(416, 352, '글귀1');
-        this.글귀2=this.add.image(416, 352, '글귀2');
-        this.글귀3=this.add.image(416, 352, '글귀3');
-        this.글귀4=this.add.image(416, 352, '글귀4');
-        this.글귀5=this.add.image(416, 352, '글귀5');
+        this.글귀1=this.add.image(416, 365, '글귀1');
+        this.글귀2=this.add.image(416, 365, '글귀2');
+        this.글귀3=this.add.image(416, 365, '글귀3');
+        this.글귀4=this.add.image(416, 365, '글귀4');
+        this.글귀5=this.add.image(416, 365, '글귀5');
         this.글귀1.visible=false;
         this.글귀2.visible=false;
         this.글귀3.visible=false;
         this.글귀4.visible=false;
         this.글귀5.visible=false;
+        this.글귀1.setScale(0.65);
+        this.글귀2.setScale(0.65);
+        this.글귀3.setScale(0.65);
+        this.글귀4.setScale(0.65);
+        this.글귀5.setScale(0.65);
         
         
     }
