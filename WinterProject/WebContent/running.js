@@ -171,7 +171,7 @@ class Running extends Phaser.Scene{
         });
 
         this.sprite = this.physics.add.sprite(90, 345, 'character');
-        this.sprite.setGravityY(700);
+        this.sprite.setGravityY(750);
         this.sprite.setBounce(0.2);
         this.sprite.play('walk');
 
