@@ -461,9 +461,12 @@ class Main extends Phaser.Scene{
 
     howMuchMoney(){
         if(!this.pause){
-        var MAX=200000
-        money-=1000
-        this.moneyBar.setScale(1,money/MAX);
+            var MAX=200000
+            money-=1000
+            var yScale=money/MAX;
+            if(money>MAX)
+                yScale=1
+            this.moneyBar.setScale(1,yScale);
         }
     }
 
