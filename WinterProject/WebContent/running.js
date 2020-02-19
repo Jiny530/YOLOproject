@@ -68,6 +68,18 @@ class Running extends Phaser.Scene{
 
     preload ()
     {
+        this.load.on('progress', function (value) {
+            this.titleImage=this.add.image(384, 256, '욜로라이프타이틀');
+        });
+                    
+        this.load.on('fileprogress', function (file) {
+            console.log(file.src);
+        });
+         
+        this.load.on('complete', function () {
+            console.log('complete');
+            this.titleImage.destroy();
+        });
             //640,360
         /* 배경 */
         this.load.image('background', 'assets/running/background4.png');

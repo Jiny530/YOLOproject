@@ -56,7 +56,6 @@ class Main extends Phaser.Scene{
         this.글귀9;
         this.글귀10;
 
-        
         this.런닝방법;
         this.블랙잭방법;
         this.피자방법;
@@ -124,14 +123,10 @@ class Main extends Phaser.Scene{
         this.load.image('블랙잭방법','assets/blackjack/blackjack_tutorial.png')
         this.load.image('편순이방법','assets/store24/편순이방법.png');
         this.load.image('피자방법','assets/pizza/피자_방법.PNG');
-
-        
-
-    
     }
 
     create ()   
-    {   
+    {  
         this.pause=false;
         if(joy<=2){
             music=this.sound.add('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
@@ -732,6 +727,7 @@ class GameOver extends Phaser.Scene {
         this.load.image('피자박스게임엔딩','/assets/ending/피자박스게임엔딩.png');
         this.load.image('편순이게임엔딩','/assets/ending/편순이게임엔딩.png');
         this.load.image('블랙잭게임엔딩','/assets/ending/블랙잭게임엔딩.png');
+        this.load.image('refresh','/assets/main/refresh.png');
     }
     create() {
         //this.add.image(0,0,'popup').setOrigin(0)
@@ -754,7 +750,7 @@ class GameOver extends Phaser.Scene {
                 this.add.image(0, 0, '편순이게임엔딩').setOrigin(0).setScale(0.64)
 
         }
-    }
+
 }
 
 class GameStart extends Phaser.Scene {
