@@ -431,7 +431,6 @@ class Main extends Phaser.Scene{
             for (var i = 0; i < 10; i++) {
                 this.덤불그룹.create(160 + i * 64, 32, this.덤불[this.randomGrass()]);
                 this.덤불그룹.create(160 + i * 64, 480, this.덤불[this.randomGrass()]);
-                console.log('상하');
             }
             for (var i = 0; i < 6; i++) {
                 this.덤불그룹.create(160, 96 + i * 64, this.덤불[this.randomGrass()]);
