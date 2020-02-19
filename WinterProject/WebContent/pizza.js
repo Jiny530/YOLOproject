@@ -328,7 +328,7 @@ class Pizza extends Phaser.Scene {
     {
         this.endPopup.visible=true;
         this.OKbutton.visible=true;
-        this.pizzaText=this.add.bitmapText(410, 230, 'myfont','X '+this.boxNum,35 );
+        this.pizzaText=this.add.bitmapText(410, 230, 'myfont',this.boxNum+'판',35 );
         this.moneyTExt=this.add.bitmapText(384, 280, 'myfont',this.boxNum*1000,35 );
         this.joyText=this.add.bitmapText(370, 340, 'myfont','-2',35 );
         
