@@ -2,7 +2,7 @@
 //공통변수
 date=3; //30일부터 1일 까지 0이면 게임 엔딩
 joy=5; //즐거움 1~10일 까지 0이면 게임 오버
-money=10000; //돈 10000원에서 시작 0이면 게임 오버 -> 1초당 1000원씩 감소
+money=50000; //돈 10000원에서 시작 0이면 게임 오버 -> 1초당 1000원씩 감소
 ending=0; //ending이 1이면 게임오버, ending이 2이면 엔딩씬
 
 playNum=new Array(0,0,0,0);
@@ -18,6 +18,8 @@ class Main extends Phaser.Scene{
         this.gameOver=false; //true이면 게임종료
         //메인 화면 UI 설정
         this.mainLeftBar;
+        this.moneyBar;
+        this.pause=false;
 
         this.dateText;
         this.joyText;
@@ -74,6 +76,7 @@ class Main extends Phaser.Scene{
         this.load.audio('편의점bgm','assets/music/편의점bgm.mp3');
 
         //메인게임 날짜, 즐거움, 돈 _ 왼쪽 바
+        this.load.image('머니바','assets/main/money_bar.png')
         this.load.image('왼쪽바', 'assets/main/메인게임UI왼쪽바.png');
 
 
@@ -119,6 +122,7 @@ class Main extends Phaser.Scene{
 
     create ()   
     {   
+        this.pause=false;
         if(joy<=2){
             music=this.sound.add('메인게임나쁨bgm','assets/music/메인게임나쁨bgm.mp3');
         }
@@ -148,9 +152,10 @@ class Main extends Phaser.Scene{
         this.덤불 = ['덤불0', '덤불1', '덤불2', '덤불3', '덤불4'];
         this.flag = true;
         this.mainLeftBar = this.add.image(0, 0, '왼쪽바').setOrigin(0);
+        this.moneyBar=this.add.image(43,215,'머니바').setOrigin(0).setScale(1,50000/200000);
         this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
         this.joyText = this.add.bitmapText(68,120,'myfont',joy,26,'center')
-        this.moneyText = this.add.bitmapText(20,200,'myfont',money,26,'center')
+        this.moneyText = this.add.bitmapText(30,180,'myfont',money,26,'center')
 
         this.cursors = this.input.keyboard.createCursorKeys(); //위,아래,왼쪽,오른쪽 방향키
 
@@ -188,6 +193,7 @@ class Main extends Phaser.Scene{
         
         
         this.button_no.on('pointerdown', (event) => {
+            this.pause=false;
             this.button_ok.visible=false;
             this.button_no.visible=false;
             this.mainCharacter.setX(480);
@@ -334,7 +340,7 @@ class Main extends Phaser.Scene{
         this.글귀4.setScale(0.65);
         this.글귀5.setScale(0.65);
         
-        
+        this.moneyDecrease = this.time.addEvent({ delay:1000, callback:this.howMuchMoney,callbackScope:this,loop:true})
     }
 
     update()
@@ -453,6 +459,14 @@ class Main extends Phaser.Scene{
         
     }
 
+    howMuchMoney(){
+        if(!this.pause){
+        var MAX=200000
+        money-=1000
+        this.moneyBar.setScale(1,money/MAX);
+        }
+    }
+
     //각 미니게임으로 넘어가기
     houseRandom() {
         if (this.mainCharacter.x > 384 && this.mainCharacter.x < 448) {
@@ -521,6 +535,7 @@ class Main extends Phaser.Scene{
 
     runningOrNot(){
         if (this.spacebar.isDown) {
+            this.pause=true;
             this.whichGame = 1;
             this.playerMove = false;
             this.런닝방법.visible = true;
@@ -534,6 +549,7 @@ class Main extends Phaser.Scene{
 
     blackJackorNot(){
         if (this.spacebar.isDown) {
+            this.pause=true;
             this.whichGame = 2;
             this.블랙잭방법.visible = true;
             this.런닝방법.visible = false;
@@ -547,6 +563,7 @@ class Main extends Phaser.Scene{
 
     pizzaOrNot() {
         if (this.spacebar.isDown) {
+            this.pause=true;
             this.whichGame = 3;
             this.피자방법.visible = true;
             this.런닝방법.visible = false;
@@ -560,6 +577,7 @@ class Main extends Phaser.Scene{
 
     store24OrNot(){
         if (this.spacebar.isDown) {
+            this.pause=true;
             this.whichGame = 4;
             this.편순이방법.visible = true;
             this.런닝방법.visible = false;
