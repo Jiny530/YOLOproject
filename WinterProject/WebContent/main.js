@@ -14,7 +14,7 @@ class Main extends Phaser.Scene{
     
     constructor ()   //this.변수명으로 선언 및 사용
     {
-        super({key:'Main'});
+        super({key:'Main',active:false,auto_start:false});
         this.gameOver=false; //true이면 게임종료
         //메인 화면 UI 설정
         this.mainLeftBar;
@@ -623,6 +623,37 @@ class GameOver extends Phaser.Scene {
     }
 }
 
+class GameStart extends Phaser.Scene {
+    constructor () {
+        super({key:'GameStart'})
+        this.mainButton;
+    }
+    preload() {
+        this.load.image('욜로게임방식팝업','/assets/main/욜로게임방식팝업.png');
+        this.load.image('욜로라이프타이틀','/assets/main/욜로라이프타이틀.png');
+        this.load.image('메인으로버튼','/assets/main/메인으로버튼.png');
+   
+    }
+
+    create() {
+        var title=this.add.image(384, 256, '욜로라이프타이틀');
+        title.setScale(0.4);
+        var timedEvent=this.time.addEvent({ delay: 5000, callback:this.imageChange, callbackScope: this, loop: false });
+    }
+
+    imageChange(){
+        var image=this.add.image(384, 256, '욜로게임방식팝업');
+        image.setScale(0.4);
+        this.mainButton=this.add.image(630, 435, '메인으로버튼');
+        this.mainButton.setScale(0.4);
+        this.mainButton.setInteractive();
+        this.mainButton.on('pointerdown', (event) => {
+            this.scene.switch('Main');
+        });
+    }
+}
+ 
+
 
 var config = {
     type: Phaser.AUTO,
@@ -635,7 +666,7 @@ var config = {
         default: 'arcade',
         arcade: {debug: false}
     },
-    scene: [ Main, Pizza, BlackJack, Store24, Running ,GameOver]
+    scene: [GameStart, Main, Pizza, BlackJack, Store24, Running ,GameOver]
 };
 
 var game = new Phaser.Game(config);
