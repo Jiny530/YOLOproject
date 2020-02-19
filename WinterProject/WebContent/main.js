@@ -97,7 +97,7 @@ class Main extends Phaser.Scene{
         this.load.image('런닝방법','assets/running/런닝런닝방법.PNG');
         this.load.image('블랙잭방법','assets/blackjack/blackjack_tutorial.png')
         this.load.image('편순이방법','assets/store24/편순이방법.png');
-        this.load.image('피자방법','assets/pizza/피자방법.PNG');
+        this.load.image('피자방법','assets/pizza/피자_방법.PNG');
 
         
 
