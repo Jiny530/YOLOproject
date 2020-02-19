@@ -268,11 +268,7 @@ var config = {
         default: 'arcade',
         arcade: {debug: false}
     },
-<<<<<<< HEAD
-    scene: [ Main2, Running, Pizza, Store24]
-=======
     scene: [ Main2, Running, Pizza, BlackJack, Store24]
->>>>>>> 763cac27ffaa1b3898c70f2282ef2c22b946acc0
 };
 
 

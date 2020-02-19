@@ -38,6 +38,7 @@ class Main extends Phaser.Scene{
         this.덤불;
         this.flag;
         this.spacebar;
+        this.tf;
 
         
         this.런닝방법;
@@ -116,13 +117,13 @@ class Main extends Phaser.Scene{
         music.play();
         console.log(music);
         //메인게임화면 설정
-
+        this.tf=true;
         /* 피자미니게임에서 가져온 시간초 설정
         this.timeBar = this.time.addEvent({ delay: money });
         this.graphics = this.add.graphics({ x: 0, y: 512 });
         this.graphics.angle = -90;
         */
-        //this.spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.덤불 = ['덤불0', '덤불1', '덤불2', '덤불3', '덤불4'];
         this.flag = true;
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
@@ -296,6 +297,9 @@ class Main extends Phaser.Scene{
             this.gameOver=true;
             this.scene.start('GameOver')
         }
+        if(joy>9){
+            joy=10;
+        }
         
         //money 시간초 (?)... 피자미니게임에 있던거 일단 옮겨온 상태에요
         /*if (!this.gameOver) {
@@ -401,70 +405,55 @@ class Main extends Phaser.Scene{
 
     //각 미니게임으로 넘어가기
     runningOrNot(){
-        this.input.keyboard.on('keydown', (event) => {
-            if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE) {
-                this.whichGame = 1;
-                this.playerMove = false;
-                this.런닝방법.visible = true;
-                this.블랙잭방법.visible = false;
-                this.피자방법.visible = false;
-                this.편순이방법.visible = false;
-                this.button_ok.visible = true;
-                this.button_no.visible = true;
-            }
-        });
-        /*if (this.spacebar.isDown) {
+        if (this.spacebar.isDown) {
             this.whichGame = 1;
             this.playerMove = false;
             this.런닝방법.visible = true;
+            this.블랙잭방법.visible = false;
+            this.피자방법.visible = false;
+            this.편순이방법.visible = false;
             this.button_ok.visible = true;
             this.button_no.visible = true;
-        }*/
+        }
     }
 
     blackJackorNot(){
-        this.input.keyboard.on('keydown', (event) => {
-            if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE) {
-                this.whichGame = 2;
-                this.블랙잭방법.visible = true;
-                this.런닝방법.visible = false;
-                this.피자방법.visible = false;
-                this.편순이방법.visible = false;
-                this.playerMove = false;
-                this.button_ok.visible = true;
-                this.button_no.visible = true;
-            }
-        });
+        if (this.spacebar.isDown) {
+            this.whichGame = 2;
+            this.블랙잭방법.visible = true;
+            this.런닝방법.visible = false;
+            this.피자방법.visible = false;
+            this.편순이방법.visible = false;
+            this.playerMove = false;
+            this.button_ok.visible = true;
+            this.button_no.visible = true;
+        }
     }
 
-    pizzaOrNot(){
-        this.input.keyboard.on('keydown', (event) => {
-            if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE) {
-                this.whichGame = 3;
-                this.피자방법.visible = true;
-                this.런닝방법.visible = false;
-                this.블랙잭방법.visible = false;
-                this.편순이방법.visible = false;
-                this.playerMove = false;
-                this.button_ok.visible = true;
-                this.button_no.visible = true;
-            }
-        });
+    pizzaOrNot() {
+        if (this.spacebar.isDown) {
+            this.whichGame = 3;
+            this.피자방법.visible = true;
+            this.런닝방법.visible = false;
+            this.블랙잭방법.visible = false;
+            this.편순이방법.visible = false;
+            this.playerMove = false;
+            this.button_ok.visible = true;
+            this.button_no.visible = true;
+        }
     }
 
     store24OrNot(){
-        this.input.keyboard.on('keydown', (event) => {
-            if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE) {
-                this.whichGame = 4;
-                this.편순이방법.visible = true;
-                this.런닝방법.visible = false;
-                this.블랙잭방법.visible = false;
-                this.피자방법.visible = false;
-                this.playerMove = false;
-                this.button_ok.visible = true;
-                this.button_no.visible = true;
-            }
-        });
+        if (this.spacebar.isDown) {
+            this.whichGame = 4;
+            this.편순이방법.visible = true;
+            this.런닝방법.visible = false;
+            this.블랙잭방법.visible = false;
+            this.피자방법.visible = false;
+            this.playerMove = false;
+            this.button_ok.visible = true;
+            this.button_no.visible = true;
+        }
     }
 
     shutdown()
