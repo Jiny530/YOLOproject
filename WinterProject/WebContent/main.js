@@ -21,6 +21,7 @@ class Main extends Phaser.Scene{
 
         this.dateText;
         this.joyText;
+        this.moneyText;
         //메인 게임 변수
 
         this.mainCharacter;
@@ -38,6 +39,7 @@ class Main extends Phaser.Scene{
         this.집;
         this.덤불그룹;
         this.덤불;
+        this.땅바닥;
         this.flag;
         this.spacebar;
         this.tf;
@@ -88,6 +90,7 @@ class Main extends Phaser.Scene{
         this.load.image('덤불2','assets/main/덤불2.PNG');
         this.load.image('덤불3','assets/main/덤불3.PNG');
         this.load.image('덤불4','assets/main/덤불4.PNG');
+        this.load.image('땅바닥','assets/main/흙바닥3.PNG');
 
         this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
 
@@ -126,12 +129,19 @@ class Main extends Phaser.Scene{
         this.graphics = this.add.graphics({ x: 0, y: 512 });
         this.graphics.angle = -90;
         */
+       //128,0~   10*8
+        for(var i=0; i<8;i++){
+            for(var j=0;j<10;j++){
+            this.땅바닥=this.add.image(128+62*(j),64*i,'땅바닥');
+            }
+        }
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.덤불 = ['덤불0', '덤불1', '덤불2', '덤불3', '덤불4'];
         this.flag = true;
         this.mainLeftBar=this.add.image(0,0,'왼쪽바').setOrigin(0);
         this.dateText=this.add.bitmapText(45,45,'myfont',date,36)
         this.joyText = this.add.bitmapText(68,120,'myfont',joy,26,'center')
+        this.moneyText = this.add.bitmapText(20,200,'myfont',money,26,'center')
 
         this.cursors = this.input.keyboard.createCursorKeys(); //위,아래,왼쪽,오른쪽 방향키
 
@@ -306,7 +316,7 @@ class Main extends Phaser.Scene{
 
     update()
     {
-        this.dateText.setText(date)
+        this.dateText.setText(date);this.moneyText.setText(money);
         if(this.gameOver==0 && (joy<=0 || money<=0)){
             this.gameOver=2;
             this.scene.start('GameOver')
