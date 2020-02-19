@@ -38,6 +38,7 @@ class BlackJack extends Phaser.Scene{
 
     }
     preload() {
+        this.add.image(768/2,512/2,'nowloading').setScale(0.4)
 
         this.load.image('stop', 'assets/blackjack/stop.png');
         this.load.image('go', 'assets/blackjack/go.png');

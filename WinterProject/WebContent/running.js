@@ -68,7 +68,8 @@ class Running extends Phaser.Scene{
 
     preload ()
     {
-            //640,360
+        this.add.image(768/2,512/2,'nowloading').setScale(0.4)
+        //640,360
         /* 배경 */
         this.load.image('background', 'assets/running/background4.png');
         this.load.image('bg', 'assets/running/bg5.png');

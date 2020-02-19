@@ -738,7 +738,7 @@ class Preloader extends Phaser.Scene{
 			key: 'Preloader',
 			pack: {
 			    files: [
-			        { type: 'image', key: 'nowloading', url: 'assets/main/욜로라이프타이틀.png' }
+			        { type: 'image', key: 'nowloading', url: 'assets/main/로딩중.png' }
 			    ]
 			}
 		});

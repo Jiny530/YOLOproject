@@ -59,6 +59,7 @@ class Pizza extends Phaser.Scene {
     }
 
     preload() {
+        this.add.image(768/2,512/2,'nowloading').setScale(0.4)
 
 
         this.load.image('Domino', 'assets/pizza/미피4.png');
