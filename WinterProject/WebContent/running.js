@@ -1,4 +1,3 @@
-
 class Running extends Phaser.Scene{
     constructor ()
     {
@@ -288,6 +287,7 @@ class Running extends Phaser.Scene{
             date-=1;
             this.scene.restart('Running');
             this.scene.wake('Main'); //이거 없으면 이전 입력을 계속 갖고있음
+            music.stop();
             this.scene.switch('Main');
             
         });
