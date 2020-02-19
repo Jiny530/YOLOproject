@@ -50,6 +50,11 @@ class Main extends Phaser.Scene{
         this.글귀3;
         this.글귀4;
         this.글귀5;
+        this.글귀6;
+        this.글귀7;
+        this.글귀8;
+        this.글귀9;
+        this.글귀10;
 
         
         this.런닝방법;
@@ -104,6 +109,11 @@ class Main extends Phaser.Scene{
         this.load.image('글귀3','assets/main/글귀3.PNG');
         this.load.image('글귀4','assets/main/글귀4.PNG');
         this.load.image('글귀5','assets/main/글귀5.PNG');
+        this.load.image('글귀6','assets/main/글귀6.PNG');
+        this.load.image('글귀7','assets/main/글귀7.PNG');
+        this.load.image('글귀8','assets/main/글귀8.PNG');
+        this.load.image('글귀9','assets/main/글귀9.PNG');
+        this.load.image('글귀10','assets/main/글귀10.PNG');
 
         this.load.bitmapFont('myfont', 'assets/main/font/font.png', 'assets/main/font/font.fnt');
 
@@ -329,16 +339,25 @@ class Main extends Phaser.Scene{
         this.글귀3=this.add.image(416, 365, '글귀3');
         this.글귀4=this.add.image(416, 365, '글귀4');
         this.글귀5=this.add.image(416, 365, '글귀5');
+        this.글귀6=this.add.image(416, 365, '글귀6');
+        this.글귀7=this.add.image(416, 365, '글귀7');
+        this.글귀8=this.add.image(416, 365, '글귀8');
+        this.글귀9=this.add.image(416, 365, '글귀9');
+        this.글귀10=this.add.image(416, 365, '글귀10');
+
+        
         this.글귀1.visible=false;
         this.글귀2.visible=false;
         this.글귀3.visible=false;
         this.글귀4.visible=false;
         this.글귀5.visible=false;
-        this.글귀1.setScale(0.65);
-        this.글귀2.setScale(0.65);
-        this.글귀3.setScale(0.65);
-        this.글귀4.setScale(0.65);
-        this.글귀5.setScale(0.65);
+        this.글귀6.visible=false;
+        this.글귀7.visible=false;
+        this.글귀8.visible=false;
+        this.글귀9.visible=false;
+        this.글귀10.visible=false;
+        
+        
         
         this.moneyDecrease = this.time.addEvent({ delay:1000, callback:this.howMuchMoney,callbackScope:this,loop:true})
     }
@@ -428,7 +447,7 @@ class Main extends Phaser.Scene{
     }
 
     randomText(){
-        var num=this.randomNumber(1, 5);
+        var num=this.randomNumber(1, 10);
         return num;
     }
 
@@ -443,27 +462,27 @@ class Main extends Phaser.Scene{
                 this.덤불그룹.create(736, 96 + i * 64, this.덤불[this.randomGrass()]);
             }
             for (var i = 0; i < 2; i++) {
-                this.덤불그룹.create(416+i*64, 288, this.덤불[this.randomGrass()]);
+                this.덤불그룹.create(416 + i * 64, 288, this.덤불[this.randomGrass()]);
             }
             for (var i = 0; i < 2; i++) {
-                this.덤불그룹.create(544+i*64, 352, this.덤불[this.randomGrass()]);
+                this.덤불그룹.create(544 + i * 64, 352, this.덤불[this.randomGrass()]);
             }
             this.덤불그룹.create(608, 160, this.덤불[this.randomGrass()]);
             this.덤불그룹.create(480, 224, this.덤불[this.randomGrass()]);
             this.덤불그룹.create(224, 352, this.덤불[this.randomGrass()]);
-            this.덤불그룹.create(352,416, this.덤불[this.randomGrass()]);
+            this.덤불그룹.create(352, 416, this.덤불[this.randomGrass()]);
             this.덤불그룹.create(224, 160, this.덤불[this.randomGrass()]);
 
         }
-        this.flag=false;
-        
+        this.flag = false;
+
     }
 
-    howMuchMoney(){
-        if(!this.pause){
-        var MAX=200000
-        money-=1000
-        this.moneyBar.setScale(1,money/MAX);
+    howMuchMoney() {
+        if (!this.pause) {
+            var MAX = 200000
+            money -= 1000
+            this.moneyBar.setScale(1, money / MAX);
         }
     }
 
@@ -479,6 +498,11 @@ class Main extends Phaser.Scene{
                         this.글귀3.visible = false;
                         this.글귀4.visible = false;
                         this.글귀5.visible = false;
+                        this.글귀6.visible = false;
+                        this.글귀7.visible = false;
+                        this.글귀8.visible = false;
+                        this.글귀9.visible = false;
+                        this.글귀10.visible = false;
                     }
                     else if (random == 2) {
                         this.글귀2.visible = true;
@@ -486,6 +510,12 @@ class Main extends Phaser.Scene{
                         this.글귀3.visible = false;
                         this.글귀4.visible = false;
                         this.글귀5.visible = false;
+                        this.글귀6.visible = false;
+                        this.글귀7.visible = false;
+                        this.글귀8.visible = false;
+                        this.글귀9.visible = false;
+                        this.글귀10.visible = false;
+
                     }
                     else if (random == 3) {
                         this.글귀3.visible = true;
@@ -493,6 +523,11 @@ class Main extends Phaser.Scene{
                         this.글귀2.visible = false;
                         this.글귀4.visible = false;
                         this.글귀5.visible = false;
+                        this.글귀6.visible = false;
+                        this.글귀7.visible = false;
+                        this.글귀8.visible = false;
+                        this.글귀9.visible = false;
+                        this.글귀10.visible = false;
                     }
                     else if (random == 4) {
                         this.글귀4.visible = true;
@@ -500,6 +535,11 @@ class Main extends Phaser.Scene{
                         this.글귀2.visible = false;
                         this.글귀3.visible = false;
                         this.글귀5.visible = false;
+                        this.글귀6.visible = false;
+                        this.글귀7.visible = false;
+                        this.글귀8.visible = false;
+                        this.글귀9.visible = false;
+                        this.글귀10.visible = false;
                     }
                     else if (random == 5) {
                         this.글귀5.visible = true;
@@ -507,6 +547,71 @@ class Main extends Phaser.Scene{
                         this.글귀2.visible = false;
                         this.글귀3.visible = false;
                         this.글귀4.visible = false;
+                        this.글귀6.visible = false;
+                        this.글귀7.visible = false;
+                        this.글귀8.visible = false;
+                        this.글귀9.visible = false;
+                        this.글귀10.visible = false;
+                    }
+                    else if (random == 6) {
+                        this.글귀6.visible = true;
+                        this.글귀1.visible = false;
+                        this.글귀2.visible = false;
+                        this.글귀3.visible = false;
+                        this.글귀4.visible = false;
+                        this.글귀5.visible = false;
+                        this.글귀7.visible = false;
+                        this.글귀8.visible = false;
+                        this.글귀9.visible = false;
+                        this.글귀10.visible = false;
+                    }
+                    else if (random == 7) {
+                        this.글귀7.visible = true;
+                        this.글귀1.visible = false;
+                        this.글귀2.visible = false;
+                        this.글귀3.visible = false;
+                        this.글귀4.visible = false;
+                        this.글귀5.visible = false;
+                        this.글귀6.visible = false;
+                        this.글귀8.visible = false;
+                        this.글귀9.visible = false;
+                        this.글귀10.visible = false;
+                    }
+                    else if (random == 8) {
+                        this.글귀8.visible = true;
+                        this.글귀1.visible = false;
+                        this.글귀2.visible = false;
+                        this.글귀3.visible = false;
+                        this.글귀4.visible = false;
+                        this.글귀5.visible = false;
+                        this.글귀6.visible = false;
+                        this.글귀7.visible = false;
+                        this.글귀9.visible = false;
+                        this.글귀10.visible = false;
+                    }
+                    else if (random == 9) {
+                        this.글귀9.visible = true;
+                        this.글귀1.visible = false;
+                        this.글귀2.visible = false;
+                        this.글귀3.visible = false;
+                        this.글귀4.visible = false;
+                        this.글귀5.visible = false;
+                        this.글귀6.visible = false;
+                        this.글귀7.visible = false;
+                        this.글귀8.visible = false;
+                        this.글귀10.visible = false;
+                    }
+                    else if (random == 10) {
+                        this.글귀10.visible = true;
+                        this.글귀1.visible = false;
+                        this.글귀2.visible = false;
+                        this.글귀3.visible = false;
+                        this.글귀4.visible = false;
+                        this.글귀5.visible = false;
+                        this.글귀6.visible = false;
+                        this.글귀7.visible = false;
+                        this.글귀8.visible = false;
+                        this.글귀9.visible = false;
                     }
                 }
 
@@ -518,6 +623,12 @@ class Main extends Phaser.Scene{
                 this.글귀3.visible = false;
                 this.글귀4.visible = false;
                 this.글귀5.visible = false;
+                this.글귀6.visible = false;
+                this.글귀7.visible = false;
+                this.글귀8.visible = false;
+                this.글귀9.visible = false;
+                this.글귀10.visible = false;
+
             }
 
         }
@@ -529,6 +640,11 @@ class Main extends Phaser.Scene{
                 this.글귀3.visible = false;
                 this.글귀4.visible = false;
                 this.글귀5.visible = false;
+                this.글귀6.visible = false;
+                this.글귀7.visible = false;
+                this.글귀8.visible = false;
+                this.글귀9.visible = false;
+                this.글귀10.visible = false;
             }
         }
     }
