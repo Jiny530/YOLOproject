@@ -4,6 +4,9 @@ class BlackJack extends Phaser.Scene{
         super({ key: 'BlackJack'});
         console.log('sceneB called')
 
+        this.button_go
+        this.button_stop
+        this.button_result
 
         this.sum1=0
         this.sum2 = 0
@@ -18,6 +21,7 @@ class BlackJack extends Phaser.Scene{
         this.cardlocate = 0;
         this.click_stop = false;
         this.click_go = false;
+        this.click_result=false;
 
         this.GAME_OVER = 0
         this.GAME_START = 1
@@ -37,6 +41,7 @@ class BlackJack extends Phaser.Scene{
 
         this.load.image('stop', 'assets/blackjack/stop.png');
         this.load.image('go', 'assets/blackjack/go.png');
+        this.load.image('result','assets/blackjack/result.png')
 
         this.load.image('card1', 'assets/blackjack/card1.png')
         this.load.image('card2', 'assets/blackjack/card2.png')
@@ -74,10 +79,12 @@ class BlackJack extends Phaser.Scene{
         this.cardlocate = 769/2+512/2-15;
         this.click_stop = false;
         this.click_go = false;
+        this.click_result=false;
 
         this.GAME_OVER = 0
         this.GAME_START = 1
         this.TURN_STOP = 2
+        this.READY=3
 
         this.PLAYER = 1
         this.DEALER = 2
@@ -98,23 +105,32 @@ class BlackJack extends Phaser.Scene{
         dealerCharacter.setScale(0.2)
 
 
-        var button_stop;
-        var button_go;
-        button_stop = this.add.image(525, 275, 'stop', 0);
-        button_stop.scale = 0.2
-        button_go = this.add.image(525, 225, 'go', 0)
-        button_go.scale = 0.2
+        
+        this.button_stop = this.add.image(525, 275, 'stop', 0);
+        this.button_stop.scale = 0.1
+        this.button_go = this.add.image(525, 225, 'go', 0)
+        this.button_go.scale = 0.1
         this.cards = this.add.group();
 
-        button_stop.setInteractive();
-        button_stop.on('pointerdown', function (event) {
-            console.log(this.click_stop)
+        this.button_stop.setInteractive();
+        this.button_stop.on('pointerdown', function (event) {
             if (!this.click_stop) this.click_stop = true;
         },this);
-        button_go.setInteractive();
-        button_go.on('pointerdown', function (event) {
+        this.button_go.setInteractive();
+        this.button_go.on('pointerdown', function (event) {
             if (!this.click_go) this.click_go = true;
         },this)
+
+        this.button_result=this.add.image(525,245,'result')
+        this.button_result.setInteractive();
+        this.button_result.setScale(0.15)
+        this.button_result.on('pointerdown', function (event) {
+            if (!this.click_result) 
+                this.click_result = true;
+            console.log('click'+this.click_result)
+        },this)
+        this.button_result.setVisible(false)
+
         this.sum = this.add.text(768/2, 512/2, "합계1: " + this.sum1 + " 합계2: " + this.sum2, { fill: '#fff' });
         this.moneyText = this.add.text(768/2, 512/2+25, "판돈: " + this.money)
         this.gameState = this.GAME_START
@@ -204,7 +220,7 @@ class BlackJack extends Phaser.Scene{
                     this.sum1 = this.sum2
                 if (this.dealerSum2 <= 21)
                     this.dealerSum1 = this.dealerSum2
-                if (this.sum1 > this.dealerSum1) {
+                if (this.sum1 >= this.dealerSum1) {
                     this.sum.setText("플레이어 승리")
                     this.playText.setVisible(true);
                 }
@@ -244,22 +260,37 @@ class BlackJack extends Phaser.Scene{
             }
         }
         if (this.gameState == this.GAME_OVER) {
+            this.button_go.setVisible(false)
+            this.button_stop.setVisible(false)
+            if(this.money>0){
+                this.playText.setText('WIN!!')
+            }else
+                this.playText.setText('LOSE!!')
+            this.playText.setVisible(true)
+            this.button_result.setVisible(true)
             this.gameState=this.READY
-            this.add.image(0,0,'ending').setOrigin(0)
-            if(this.money>0)
-                this.add.bitmapText(370,205,'myfont','WIN','34')
-            else
-                this.add.bitmapText(370,210,'myfont','LOSE',34)
-            this.add.bitmapText(400,260,'myfont',''+Math.abs(this.playNum)+'판',34)
-            //175,360
-            this.add.bitmapText(175,365,'myfont',this.money,38)
-            this.add.bitmapText(400,365,'myfont',this.playNum,34)
-            var ok = this.add.image(565+112/2,365+65/2,'ok');
-            ok.setInteractive();
-            ok.on('pointerdown', function (event) {
-                this.backToMain();
-            },this)
-                
+            console.log(this.gameState)
+        }
+        if(this.gameState==this.READY){
+            if (this.click_result) {
+                console.log('function')
+                this.add.image(0, 0, 'ending').setOrigin(0)
+                if (this.money > 0)
+                    this.add.bitmapText(370, 205, 'myfont', 'WIN', '34')
+                else
+                    this.add.bitmapText(370, 210, 'myfont', 'LOSE', 34)
+                this.add.bitmapText(400, 260, 'myfont', '' + Math.abs(this.playNum) + '판', 34)
+                //175,360
+                this.add.bitmapText(175, 365, 'myfont', this.money, 38)
+                this.add.bitmapText(400, 365, 'myfont', this.playNum, 34)
+                var ok = this.add.image(565 + 112 / 2, 365 + 65 / 2, 'ok');
+                ok.setInteractive();
+                ok.on('pointerdown', function (event) {
+                    this.backToMain();
+                }, this)
+            this.click_result=false;
+            }
+
 
         }
     }
