@@ -236,12 +236,13 @@ class BlackJack extends Phaser.Scene{
                 this.click_stop = false
             }
         }
-        if (this.gameState == this.TURN_STOP && this.playNum<5) {
+        if (this.gameState == this.TURN_STOP && this.playNum<=5) {
             if (this.click_go) {
                 this.cards.clear(true, true)
                 this.playNum+=1;
                 this.cardNum=0;
-                this.playText.setVisible(false);
+                if(this.playNum!=5)
+                    this.playText.setVisible(false);
                 this.sum1 = this.sum2 = this.dealerSum1 = this.dealerSum2 = 0;
                 this.cardlocate=769/2+512/2;
                 this.click_go = false
