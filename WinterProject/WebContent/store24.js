@@ -23,6 +23,7 @@ class Store24 extends Phaser.Scene {
         this.콤보항목;
         this.score=0; //실제점수
         this.scoreText; //점수쓸공간
+        this.money; //계산된 돈
         this.combo=0;  //콤보변수
         this.topcombo=0; //제일 높은 콤보
         this.bonustag=0; //all combo 해서 보너스 있나? 없으면0
@@ -421,21 +422,30 @@ class Store24 extends Phaser.Scene {
         }
         //콤보만큼 100원씩 더줌
         //100점 마다 1000원
-        var money=1000*(this.score/100)+(this.topcombo*100);
+        this.money=1000*(this.score/100)+(this.topcombo*100);
         console.log(this.bonustag);
         if(this.bonustag==1){
             this.endpopup_joy.setText('+2'); 
-            this.endpopup_money.setText(money*2);
+            this.endpopup_money.setText(this.money*2);
         }
         else{ //보통
-            this.endpopup_money.setText(money);
+            this.endpopup_money.setText(this.money);
             this.endpopup_joy.setText('-'); 
         }
 
         this.okbtn = this.add.image(620, 395, 'okbtn');
         this.okbtn.setInteractive();
         this.okbtn.on('pointerdown', (event) => {
-            
+            //날, 돈, 즐거움 소비하고 얻은거 처리
+            date=date-1;
+            joy=joy-3;//소비
+            if(this.bonustag==1){ //보너스
+                joy=joy+2;
+                money=money+this.money*2;
+            }
+            else{
+                money=money+this.money;
+            }
             console.log("clicked!!!!!!!!!!!!!!");
             this.endpopup.visible=false;
             this.scene.restart('store24');
