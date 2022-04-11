@@ -1,6 +1,5 @@
 # YOLOproject
-KING 2020 겨울 프로젝트\
-실제 게임 코드 주소 => https://github.com/sojung127/sojung127.github.io
+KING 2020 겨울 프로젝트
 
 # [play YOLO](https://sojung127.github.io/)
 
